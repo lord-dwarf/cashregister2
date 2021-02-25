@@ -1,0 +1,15 @@
+# logs
+logs
+
+# Maven
+target
+
+# IDEA
+.idea
+*.iml
+
+# macOS
+.DS_Store
+
+# Vim swap files
+*.swp
