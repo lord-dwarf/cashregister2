@@ -1,15 +1,11 @@
 package com.polinakulyk.cashregister2.service;
 
-import com.polinakulyk.cashregister2.db.DbHelper;
-import com.polinakulyk.cashregister2.db.dto.ReceiptStatus;
 import com.polinakulyk.cashregister2.db.entity.Cashbox;
 import com.polinakulyk.cashregister2.db.entity.Receipt;
 import com.polinakulyk.cashregister2.db.entity.User;
 import com.polinakulyk.cashregister2.exception.CashRegisterException;
-import com.polinakulyk.cashregister2.security.AuthHelper;
 import com.polinakulyk.cashregister2.service.dto.ReportKind;
 import com.polinakulyk.cashregister2.service.dto.XZReportResponseDto;
-import com.polinakulyk.cashregister2.util.CashRegisterUtil;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -20,7 +16,7 @@ import static com.polinakulyk.cashregister2.db.DbHelper.calcReceiptCode;
 import static com.polinakulyk.cashregister2.db.dto.ReceiptStatus.CANCELED;
 import static com.polinakulyk.cashregister2.db.dto.ReceiptStatus.COMPLETED;
 import static com.polinakulyk.cashregister2.service.ServiceHelper.calcXZReportId;
-import static com.polinakulyk.cashregister2.util.CashRegisterUtil.*;
+import static com.polinakulyk.cashregister2.util.Util.*;
 import static java.util.stream.Collectors.toList;
 
 public class ReportService {

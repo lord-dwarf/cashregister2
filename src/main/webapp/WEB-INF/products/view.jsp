@@ -10,7 +10,7 @@
 <body>
 <jsp:include page="../parts/navbar.jsp"/>
 <h1>
-    <%= "Product - VIEW" %>
+    <%= "View Product" %>
 </h1>
 <form class="w-40">
     <div class="form-group mt-2">

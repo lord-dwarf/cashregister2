@@ -13,7 +13,7 @@
 <body>
 <jsp:include page="../parts/navbar.jsp"/>
 <h1>
-    <%= "Receipts - LIST" %>
+    <%= "All Receipts" %>
 </h1>
 <table class="table">
     <thead>
@@ -50,10 +50,10 @@
             </td>
             <td>
                 <a class="btn btn-outline-primary"
-                   href="<%=view.makeUrl(RECEIPTS_VIEW)%>?id=${receipt.id}"
+                   href="<%=view.makeUrl(RECEIPTS_VIEW)%>?receiptId=${receipt.id}"
                    role="button">View</a>
                 <a class="btn btn-outline-warning"
-                   href="<%=view.makeUrl(RECEIPTS_EDIT)%>?id=${receipt.id}"
+                   href="<%=view.makeUrl(RECEIPTS_EDIT)%>?receiptId=${receipt.id}"
                    role="button">Edit</a>
             </td>
         </tr>

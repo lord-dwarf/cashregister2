@@ -11,7 +11,7 @@
 <body>
 <jsp:include page="../parts/navbar.jsp" />
 <h1>
-    <%= "My Receipts - VIEW" %>
+    <%= "View My Receipt" %>
 </h1>
 <form class="w-40">
     <div class="form-group mt-2">
@@ -46,7 +46,7 @@
     </div>
 </form>
 <h1>
-    <%= "RECEIPT ITEMS" %>
+    <%= "My Receipt Items" %>
 </h1>
 <table class="table">
     <thead>

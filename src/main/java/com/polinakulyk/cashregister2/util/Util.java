@@ -25,7 +25,7 @@ import static java.util.Optional.ofNullable;
 /**
  * Application wide static utility class.
  */
-public class CashRegisterUtil {
+public class Util {
 
     public static final int PRECISION = 9;
     public static final RoundingMode RM = RoundingMode.HALF_UP;
@@ -38,7 +38,7 @@ public class CashRegisterUtil {
 
     public static final String PROPERTIES_FILE_NAME = "application.properties";
 
-    private CashRegisterUtil() {
+    private Util() {
         throw new UnsupportedOperationException("Cannot instantiate");
     }
 
@@ -56,7 +56,7 @@ public class CashRegisterUtil {
     }
 
     /**
-     * An overloaded version of {@link CashRegisterUtil#quote(String, Object)} with 2 object params.
+     * An overloaded version of {@link Util#quote(String, Object)} with 2 object params.
      *
      * @param message
      * @param value1
@@ -174,7 +174,7 @@ public class CashRegisterUtil {
     }
 
     public static Properties getProperties() {
-        var classLoader = CashRegisterUtil.class.getClassLoader();
+        var classLoader = Util.class.getClassLoader();
         try (InputStream input = classLoader.getResourceAsStream(PROPERTIES_FILE_NAME)) {
             var properties = new Properties();
             properties.load(input);

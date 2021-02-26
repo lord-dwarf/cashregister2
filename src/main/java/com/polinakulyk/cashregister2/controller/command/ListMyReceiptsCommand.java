@@ -15,7 +15,7 @@ public class ListMyReceiptsCommand implements Command {
     private final AuthHelper authHelper = new AuthHelper();
 
     @Override
-    public Optional<HttpRoute> execute(HttpServletRequest request, HttpServletResponse response) {
+    public Optional<String> execute(HttpServletRequest request, HttpServletResponse response) {
         var userId = authHelper.getUserFromSession(request).get().getId();
         var receipts = receiptService.findAllByTellerId(userId);
         request.setAttribute("receipts", receipts);

@@ -11,7 +11,7 @@
 <body>
 <jsp:include page="../parts/navbar.jsp" />
 <h1>
-    <%= "Receipts - VIEW" %>
+    <%= "View Receipt" %>
 </h1>
 <form class="w-40">
     <div class="form-group mt-2">
@@ -46,7 +46,7 @@
     </div>
 </form>
 <h1>
-    <%= "RECEIPT ITEMS" %>
+    <%= "Receipt Items" %>
 </h1>
 <table class="table">
     <thead>
@@ -82,12 +82,7 @@
                 <c:out value="${receiptItem.cost}"/>
             </td>
             <td>
-                    <%--                <a class="btn btn-outline-primary"--%>
-                    <%--                   href="<%=view.makeUrl(PRODUCTS_VIEW)%>?id=${product.id}"--%>
-                    <%--                   role="button">View</a>--%>
-                    <%--                <a class="btn btn-outline-warning"--%>
-                    <%--                   href="<%=view.makeUrl(PRODUCTS_EDIT)%>?id=${product.id}"--%>
-                    <%--                   role="button">Edit</a>--%>
+                <!-- Actions -->
             </td>
         </tr>
     </c:forEach>

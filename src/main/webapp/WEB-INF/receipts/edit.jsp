@@ -1,3 +1,4 @@
+<%@ page import="static com.polinakulyk.cashregister2.controller.api.HttpRoute.RECEIPTS_CANCEL" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <jsp:useBean id="view" class="com.polinakulyk.cashregister2.view.ReceiptsView"/>
 <%
@@ -11,8 +12,12 @@
 <body>
 <jsp:include page="../parts/navbar.jsp"/>
 <h1>
-    <%= "Receipts - EDIT" %>
+    <%= "Edit Receipt" %>
 </h1>
+<form method="post"
+      action="<%=view.makeUrl(RECEIPTS_CANCEL)%>?receiptId=${receipt.id}">
+    <button type="submit" class="btn btn-primary">Cancel Receipt</button>
+</form>
 <form class="w-40">
     <div class="form-group mt-2">
         <label for="code-input">Code</label>
@@ -46,7 +51,7 @@
     </div>
 </form>
 <h1>
-    <%= "RECEIPT ITEMS" %>
+    <%= "Receipt Items" %>
 </h1>
 <table class="table">
     <thead>
@@ -82,12 +87,7 @@
                 <c:out value="${receiptItem.cost}"/>
             </td>
             <td>
-<%--                <a class="btn btn-outline-primary"--%>
-<%--                   href="<%=view.makeUrl(PRODUCTS_VIEW)%>?id=${product.id}"--%>
-<%--                   role="button">View</a>--%>
-<%--                <a class="btn btn-outline-warning"--%>
-<%--                   href="<%=view.makeUrl(PRODUCTS_EDIT)%>?id=${product.id}"--%>
-<%--                   role="button">Edit</a>--%>
+                <!-- Actions -->
             </td>
         </tr>
     </c:forEach>

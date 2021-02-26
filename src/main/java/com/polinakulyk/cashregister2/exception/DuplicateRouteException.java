@@ -1,6 +1,6 @@
 package com.polinakulyk.cashregister2.exception;
 
-import static com.polinakulyk.cashregister2.util.CashRegisterUtil.quote;
+import static com.polinakulyk.cashregister2.util.Util.quote;
 
 public class DuplicateRouteException extends CashRegisterException {
 

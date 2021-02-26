@@ -13,7 +13,7 @@ import java.util.Optional;
 import static com.polinakulyk.cashregister2.db.DbHelper.*;
 import static com.polinakulyk.cashregister2.db.DbHelper.getLocalDateTime;
 import static com.polinakulyk.cashregister2.db.dto.ShiftStatus.fromExistingInteger;
-import static com.polinakulyk.cashregister2.util.CashRegisterUtil.quote;
+import static com.polinakulyk.cashregister2.util.Util.quote;
 
 public class UserRepository {
 

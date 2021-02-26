@@ -2,13 +2,24 @@ package com.polinakulyk.cashregister2.service;
 
 import com.polinakulyk.cashregister2.db.entity.Product;
 import com.polinakulyk.cashregister2.db.repository.ProductRepository;
+import com.polinakulyk.cashregister2.exception.CashRegisterEntityNotFoundException;
+import com.polinakulyk.cashregister2.service.dto.ProductFilterKind;
+import com.polinakulyk.cashregister2.util.Util;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Function;
+import java.util.regex.Pattern;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import static com.polinakulyk.cashregister2.util.Util.quote;
+import static java.util.stream.Collectors.toList;
+import static java.util.stream.StreamSupport.stream;
+
 public class ProductService {
     private static final Logger log = LoggerFactory.getLogger(ProductService.class);
+
+    private static final int FOUND_PRODUCTS_LIMIT = 5;
 
     private final ProductRepository productRepository = new ProductRepository();
 
@@ -41,6 +52,24 @@ public class ProductService {
         return product;
     }
 
+    /**
+     * Find the existing product by id, otherwise throw
+     * {@link CashRegisterEntityNotFoundException}.
+     * <p>
+     * Used as a way to retrieve the product entity that must be present. Otherwise the specific
+     * exception is thrown, that will result in HTTP 404.
+     *
+     * @param productId
+     * @return
+     */
+    public Product findExistingById(String productId) {
+        var product = productRepository.findById(productId).orElseThrow(() ->
+                new CashRegisterEntityNotFoundException(productId));
+
+        log.debug("DONE Find product: '{}'", productId);
+        return product;
+    }
+
     public boolean update(Product product) {
         var isUpdated = productRepository.update(product);
 
@@ -51,5 +80,31 @@ public class ProductService {
 
         log.debug("DONE Update product with id: {}", product.getId());
         return true;
+    }
+
+    public List<Product> findByFilter(ProductFilterKind filterKind, String filterValue) {
+        Pattern filterPattern = Pattern.compile(filterValue + ".*", Pattern.CASE_INSENSITIVE);
+        Function<Product, String> fun;
+        switch (filterKind) {
+            case CODE: {
+                fun = Product::getCode;
+                break;
+            }
+            case NAME: {
+                fun = Product::getName;
+                break;
+            }
+            default:
+                throw new UnsupportedOperationException(quote(
+                        "Product filter kind not supported", filterKind));
+        }
+        var getProductFieldFun = fun;
+        var filteredProducts = stream(productRepository.findAll().spliterator(), false)
+                .filter(p -> filterPattern.matcher(getProductFieldFun.apply(p)).matches())
+                .limit(FOUND_PRODUCTS_LIMIT)
+                .collect(toList());
+
+        log.debug("DONE Filter products: {}", filteredProducts.size());
+        return filteredProducts;
     }
 }

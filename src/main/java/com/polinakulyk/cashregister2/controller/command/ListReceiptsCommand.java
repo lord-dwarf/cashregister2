@@ -13,7 +13,7 @@ public class ListReceiptsCommand implements Command {
     private final ReceiptService receiptService = new ReceiptService();
 
     @Override
-    public Optional<HttpRoute> execute(HttpServletRequest request, HttpServletResponse response) {
+    public Optional<String> execute(HttpServletRequest request, HttpServletResponse response) {
         var receipts = receiptService.findAll();
         request.setAttribute("receipts", receipts);
         return Optional.empty();

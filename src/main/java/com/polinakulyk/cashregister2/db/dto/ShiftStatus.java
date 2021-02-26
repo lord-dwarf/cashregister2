@@ -1,10 +1,9 @@
 package com.polinakulyk.cashregister2.db.dto;
 
 import com.polinakulyk.cashregister2.exception.CashRegisterException;
-import com.polinakulyk.cashregister2.security.dto.UserRole;
 import java.util.Optional;
 
-import static com.polinakulyk.cashregister2.util.CashRegisterUtil.quote;
+import static com.polinakulyk.cashregister2.util.Util.quote;
 
 public enum ShiftStatus {
     ACTIVE,

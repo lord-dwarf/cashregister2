@@ -12,8 +12,8 @@ import java.util.List;
 import java.util.Optional;
 
 import static com.polinakulyk.cashregister2.db.DbHelper.getConnection;
-import static com.polinakulyk.cashregister2.util.CashRegisterUtil.*;
-import static com.polinakulyk.cashregister2.util.CashRegisterUtil.quote;
+import static com.polinakulyk.cashregister2.util.Util.*;
+import static com.polinakulyk.cashregister2.util.Util.quote;
 
 public class ProductRepository {
     private static final String INSERT_PRODUCT_SQL =

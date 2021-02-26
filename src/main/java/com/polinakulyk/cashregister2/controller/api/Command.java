@@ -9,7 +9,7 @@ import javax.servlet.http.HttpServletResponse;
 @FunctionalInterface
 public interface Command {
 
-    Optional<HttpRoute> execute(HttpServletRequest request, HttpServletResponse response)
+    Optional<String> execute(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException;
 
 }

@@ -17,7 +17,7 @@ public class ListProductsCommand implements Command {
     private final ProductService productService = new ProductService();
 
     @Override
-    public Optional<HttpRoute> execute(HttpServletRequest request, HttpServletResponse response) {
+    public Optional<String> execute(HttpServletRequest request, HttpServletResponse response) {
         var products = productService.findAll();
         request.setAttribute("products", products);
         return Optional.empty();

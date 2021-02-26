@@ -1,6 +1,5 @@
 package com.polinakulyk.cashregister2.controller.command;
 
-import com.polinakulyk.cashregister2.controller.MainRouter;
 import com.polinakulyk.cashregister2.controller.api.Command;
 import com.polinakulyk.cashregister2.controller.api.HttpRoute;
 import java.io.IOException;
@@ -9,7 +8,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import static com.polinakulyk.cashregister2.controller.MainRouter.*;
+import static com.polinakulyk.cashregister2.controller.Router.*;
 
 public class JspCommand implements Command {
 
@@ -20,7 +19,7 @@ public class JspCommand implements Command {
     }
 
     @Override
-    public Optional<HttpRoute> execute(HttpServletRequest request, HttpServletResponse response)
+    public Optional<String> execute(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         forwardToJsp(request, response, jspName);
         return Optional.empty();
@@ -40,7 +39,7 @@ public class JspCommand implements Command {
         }
 
         @Override
-        public Optional<HttpRoute> execute(HttpServletRequest request, HttpServletResponse response)
+        public Optional<String> execute(HttpServletRequest request, HttpServletResponse response)
                 throws ServletException, IOException {
             var nextRoute = initCommand.execute(request, response);
             if (nextRoute.isEmpty()) {

@@ -6,8 +6,6 @@ import com.polinakulyk.cashregister2.security.dto.UserRole;
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.KeySpec;
-import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import javax.crypto.SecretKeyFactory;
@@ -16,9 +14,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import static com.polinakulyk.cashregister2.security.dto.UserRole.GUEST;
-import static com.polinakulyk.cashregister2.util.CashRegisterUtil.getProperties;
-import static com.polinakulyk.cashregister2.util.CashRegisterUtil.getProperty;
-import static com.polinakulyk.cashregister2.util.CashRegisterUtil.toBase64;
+import static com.polinakulyk.cashregister2.util.Util.getProperties;
+import static com.polinakulyk.cashregister2.util.Util.getProperty;
+import static com.polinakulyk.cashregister2.util.Util.toBase64;
 import static java.nio.charset.StandardCharsets.UTF_8;
 
 public class AuthHelper {

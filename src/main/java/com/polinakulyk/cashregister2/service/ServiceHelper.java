@@ -2,12 +2,11 @@ package com.polinakulyk.cashregister2.service;
 
 import com.polinakulyk.cashregister2.db.entity.Cashbox;
 import com.polinakulyk.cashregister2.db.entity.Receipt;
-import com.polinakulyk.cashregister2.util.CashRegisterUtil;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 
 import static com.polinakulyk.cashregister2.db.dto.ShiftStatus.ACTIVE;
-import static com.polinakulyk.cashregister2.util.CashRegisterUtil.now;
+import static com.polinakulyk.cashregister2.util.Util.now;
 
 public class ServiceHelper {
 

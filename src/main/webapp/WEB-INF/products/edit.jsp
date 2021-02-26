@@ -11,7 +11,7 @@
 <body>
 <jsp:include page="../parts/navbar.jsp" />
 <h1>
-    <%= "Product - EDIT" %>
+    <%= "Edit Product" %>
 </h1>
 <form class="w-40" method="post" action="<%=view.makeUrl(PRODUCTS_EDIT)%>?id=${product.id}">
     <div class="form-group mt-2">

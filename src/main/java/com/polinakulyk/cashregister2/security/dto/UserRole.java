@@ -1,11 +1,10 @@
 package com.polinakulyk.cashregister2.security.dto;
 
 import com.polinakulyk.cashregister2.exception.CashRegisterException;
-import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
 
-import static com.polinakulyk.cashregister2.util.CashRegisterUtil.quote;
+import static com.polinakulyk.cashregister2.util.Util.quote;
 import static java.util.Arrays.stream;
 
 public enum UserRole {

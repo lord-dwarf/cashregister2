@@ -1,7 +1,6 @@
 package com.polinakulyk.cashregister2.db;
 
 import com.polinakulyk.cashregister2.exception.CashRegisterException;
-import com.polinakulyk.cashregister2.util.CashRegisterUtil;
 import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -10,13 +9,12 @@ import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
-import java.util.Date;
 import java.util.Optional;
 import java.util.Properties;
 
-import static com.polinakulyk.cashregister2.util.CashRegisterUtil.*;
-import static com.polinakulyk.cashregister2.util.CashRegisterUtil.getProperties;
-import static com.polinakulyk.cashregister2.util.CashRegisterUtil.getProperty;
+import static com.polinakulyk.cashregister2.util.Util.*;
+import static com.polinakulyk.cashregister2.util.Util.getProperties;
+import static com.polinakulyk.cashregister2.util.Util.getProperty;
 
 public class DbHelper {
 

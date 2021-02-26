@@ -8,8 +8,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import static com.polinakulyk.cashregister2.controller.MainRouter.getRouteStringFromMainServlet;
-import static com.polinakulyk.cashregister2.controller.MainRouter.redirect;
+import static com.polinakulyk.cashregister2.controller.Router.getRouteStringFromMainServlet;
+import static com.polinakulyk.cashregister2.controller.Router.redirect;
 import static com.polinakulyk.cashregister2.controller.api.HttpMethod.DELETE;
 import static com.polinakulyk.cashregister2.controller.api.HttpMethod.GET;
 import static com.polinakulyk.cashregister2.controller.api.HttpMethod.POST;
@@ -20,11 +20,11 @@ import static com.polinakulyk.cashregister2.controller.api.HttpRoute.fromRouteSt
 @WebServlet(name = "mainServlet", value = "/")
 public class MainServlet extends HttpServlet {
 
-    private MainRouter router;
+    private Router router;
 
     @Override
     public void init() {
-        router = MainRouter.Router.INSTANCE;
+        router = MainRouter.Singleton.INSTANCE;
     }
 
     @Override

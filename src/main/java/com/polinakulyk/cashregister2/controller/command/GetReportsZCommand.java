@@ -20,7 +20,7 @@ public class GetReportsZCommand implements Command {
     private final AuthHelper authHelper = new AuthHelper();
 
     @Override
-    public Optional<HttpRoute> execute(HttpServletRequest request, HttpServletResponse response)
+    public Optional<String> execute(HttpServletRequest request, HttpServletResponse response)
             throws IOException {
         String userId = authHelper.getUserFromSession(request).get().getId();
         var zReport = reportService.createXZReport(userId, Z);

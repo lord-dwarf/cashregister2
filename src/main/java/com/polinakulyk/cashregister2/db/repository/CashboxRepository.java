@@ -6,10 +6,9 @@ import com.polinakulyk.cashregister2.exception.CashRegisterException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
-import java.sql.Timestamp;
 
 import static com.polinakulyk.cashregister2.db.DbHelper.getConnection;
-import static com.polinakulyk.cashregister2.util.CashRegisterUtil.quote;
+import static com.polinakulyk.cashregister2.util.Util.quote;
 
 public class CashboxRepository {
     private static final String UPDATE_CASHBOX_SQL =

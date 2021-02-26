@@ -13,8 +13,8 @@ import org.slf4j.LoggerFactory;
 
 import static com.polinakulyk.cashregister2.db.dto.ShiftStatus.*;
 import static com.polinakulyk.cashregister2.db.dto.ShiftStatus.ACTIVE;
-import static com.polinakulyk.cashregister2.util.CashRegisterUtil.*;
-import static com.polinakulyk.cashregister2.util.CashRegisterUtil.quote;
+import static com.polinakulyk.cashregister2.util.Util.*;
+import static com.polinakulyk.cashregister2.util.Util.quote;
 import static java.lang.String.format;
 
 public class CashboxService {

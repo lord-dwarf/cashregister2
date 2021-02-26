@@ -14,7 +14,7 @@
 <body>
 <jsp:include page="../parts/navbar.jsp" />
 <h1>
-    <%= "My Receipts - LIST" %>
+    <%= "My Receipts" %>
 </h1>
 <a class="btn btn-primary" href="<%=view.makeUrl(MYRECEIPTS_ADD)%>" role="button">Add Receipt</a>
 <table class="table">
@@ -51,9 +51,11 @@
                 <c:out value="${receipt.sumTotal}"/>
             </td>
             <td>
-                <a class="btn btn-outline-primary" href="<%=view.makeUrl(MYRECEIPTS_VIEW)%>?id=${receipt.id}"
+                <a class="btn btn-outline-primary"
+                   href="<%=view.makeUrl(MYRECEIPTS_VIEW)%>?receiptId=${receipt.id}"
                    role="button">View</a>
-                <a class="btn btn-outline-warning" href="<%=view.makeUrl(MYRECEIPTS_EDIT)%>?id=${receipt.id}"
+                <a class="btn btn-outline-warning"
+                   href="<%=view.makeUrl(MYRECEIPTS_EDIT)%>?receiptId=${receipt.id}"
                    role="button">Edit</a>
             </td>
         </tr>

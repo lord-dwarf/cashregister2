@@ -2,7 +2,7 @@ package com.polinakulyk.cashregister2.exception;
 
 import java.net.HttpURLConnection;
 
-import static com.polinakulyk.cashregister2.util.CashRegisterUtil.quote;
+import static com.polinakulyk.cashregister2.util.Util.quote;
 
 /**
  * The exception to be thrown when user not found in DB.

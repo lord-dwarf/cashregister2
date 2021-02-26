@@ -10,12 +10,10 @@ import com.polinakulyk.cashregister2.db.entity.Receipt;
 import com.polinakulyk.cashregister2.db.entity.ReceiptItem;
 import com.polinakulyk.cashregister2.db.entity.User;
 import com.polinakulyk.cashregister2.exception.CashRegisterException;
-import com.polinakulyk.cashregister2.util.CashRegisterUtil;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -23,26 +21,30 @@ import java.util.Optional;
 import static com.polinakulyk.cashregister2.db.DbHelper.getConnection;
 import static com.polinakulyk.cashregister2.db.DbHelper.getLocalDateTime;
 import static com.polinakulyk.cashregister2.db.DbHelper.getLocalDateTimeNullable;
-import static com.polinakulyk.cashregister2.util.CashRegisterUtil.generateUuid;
-import static com.polinakulyk.cashregister2.util.CashRegisterUtil.quote;
+import static com.polinakulyk.cashregister2.util.Util.generateUuid;
+import static com.polinakulyk.cashregister2.util.Util.quote;
 
 public class ReceiptRepository {
 
     private static final String FIND_ALL_RECEIPTS_SQL =
-            "SELECT r.id, r.created_time, r.checkout_time, r.status, r.sum_total, r.user_id, "
-                    + "u.full_name, u.username, u.cashbox_id, "
-                    + "c.name, c.shift_status, c.shift_status_time "
-                    + "FROM receipt AS r LEFT JOIN user AS u ON r.user_id = u.id "
-                    + "LEFT JOIN cashbox AS c ON u.cashbox_id = c.id;";
+            "SELECT r.id, r.created_time, r.checkout_time, r.status, r.sum_total, r.user_id, " +
+                    "u.full_name, u.username, u.cashbox_id, " +
+                    "c.name, c.shift_status, c.shift_status_time " +
+                    "FROM receipt AS r LEFT JOIN user AS u ON r.user_id = u.id " +
+                    "LEFT JOIN cashbox AS c ON u.cashbox_id = c.id;";
 
     private static final String FIND_RECEIPT_BY_ID_SQL =
-            "SELECT r.id, r.created_time, r.checkout_time, r.status, r.sum_total, " +
-                    "r.user_id, u.username, u.full_name FROM receipt AS r " +
-                    "LEFT JOIN user AS u ON r.user_id = u.id " +
+            "SELECT r.id, r.created_time, r.checkout_time, r.status, r.sum_total, r.user_id, " +
+                    "u.full_name, u.username, u.cashbox_id, " +
+                    "c.name, c.shift_status, c.shift_status_time " +
+                    "FROM receipt AS r LEFT JOIN user AS u ON r.user_id = u.id " +
+                    "LEFT JOIN cashbox AS c ON u.cashbox_id = c.id " +
                     "WHERE r.id = ?;";
 
     private static final String FIND_RECEIPT_ITEMS_BY_RECEIPT_ID_SQL =
-            "SELECT ri.id, ri.name, ri.price, ri.amount_unit, ri.amount, p.code " +
+            "SELECT ri.id, ri.name, ri.price, ri.amount_unit, ri.amount, " +
+                    "ri.product_id , p.code, p.amount_unit, p.amount_available, " +
+                    "p.category, p.details, p.name AS product_name, p.price AS product_price " +
                     "FROM receipt_item AS ri LEFT JOIN product AS p ON ri.product_id = p.id " +
                     "WHERE ri.receipt_id = ?;";
 
@@ -51,13 +53,30 @@ public class ReceiptRepository {
                     "(id, created_time, checkout_time, status, sum_total, user_id) " +
                     "VALUES (?, ?, ?, ?, ?, ?);";
 
+    private static final String UPDATE_RECEIPT_SQL =
+            "UPDATE receipt " +
+                    "SET created_time = ?, checkout_time = ?, status = ?, " +
+                    "sum_total = ?, user_id = ? " +
+                    "WHERE id = ?;";
+
+    private static final String INSERT_RECEIPT_ITEM_SQL =
+            "INSERT INTO receipt_item " +
+                    "(id, amount, amount_unit, name, price, receipt_id, product_id) " +
+                    "VALUES (?, ?, ?, ?, ?, ?, ?);";
+
+    private static final String UPDATE_RECEIPT_ITEM_SQL =
+            "UPDATE receipt_item " +
+                    "SET amount = ?, amount_unit = ?, name = ?, " +
+                    "price = ?, receipt_id = ?, product_id = ? " +
+                    "WHERE id = ?;";
+
     public List<Receipt> findAll() {
         try (Connection connection = getConnection()) {
             PreparedStatement statement = connection.prepareStatement(FIND_ALL_RECEIPTS_SQL);
             ResultSet resultSet = statement.executeQuery();
             List<Receipt> result = new ArrayList<>();
             while (resultSet.next()) {
-                result.add(getReceiptWithCashbox(resultSet));
+                result.add(getReceiptWithUserAndCashbox(resultSet));
             }
             return result;
         } catch (SQLException e) {
@@ -73,7 +92,7 @@ public class ReceiptRepository {
             if (!resultSet.next()) {
                 return Optional.empty();
             }
-            var receipt = getReceiptWithUser(resultSet);
+            var receipt = getReceiptWithUserAndCashbox(resultSet);
             var receiptItems = findReceiptItemsByReceiptId(connection, receiptId);
             receipt.setReceiptItems(receiptItems);
             return Optional.of(receipt);
@@ -89,7 +108,6 @@ public class ReceiptRepository {
         try (Connection connection = getConnection()) {
             PreparedStatement statement = connection.prepareStatement(INSERT_RECEIPT_SQL);
             statement.setString(1, receipt.getId());
-            CashRegisterUtil a = null;
             statement.setTimestamp(2, DbHelper.toTimestamp(receipt.getCreatedTime()));
             statement.setTimestamp(3, DbHelper.toTimestampNullable(receipt.getCheckoutTime()));
             statement.setInt(4, receipt.getStatus().ordinal());
@@ -105,6 +123,77 @@ public class ReceiptRepository {
         } catch (SQLException e) {
             throw new CashRegisterException(
                     quote("Can't create receipt with id", receipt.getId()), e);
+        }
+    }
+
+    public Receipt update(String userId, Receipt receipt) {
+        try (Connection connection = getConnection()) {
+            PreparedStatement statement = connection.prepareStatement(UPDATE_RECEIPT_SQL);
+            statement.setTimestamp(1, DbHelper.toTimestamp(receipt.getCreatedTime()));
+            statement.setTimestamp(2, DbHelper.toTimestampNullable(receipt.getCheckoutTime()));
+            statement.setInt(3, receipt.getStatus().ordinal());
+            statement.setBigDecimal(4, receipt.getSumTotal());
+            statement.setString(5, userId);
+            statement.setString(6, receipt.getId());
+
+            int numOfRows = statement.executeUpdate();
+            if (numOfRows != 1) {
+                throw new CashRegisterException(
+                        quote("Can't update receipt with id", receipt.getId()));
+            }
+            return receipt;
+        } catch (SQLException e) {
+            throw new CashRegisterException(
+                    quote("Can't update receipt with id", receipt.getId()), e);
+        }
+    }
+
+    public ReceiptItem insertReceiptItem(
+            String receiptId, String productId, ReceiptItem receiptItem) {
+        receiptItem.setId(generateUuid());
+        try (Connection connection = getConnection()) {
+            PreparedStatement statement = connection.prepareStatement(INSERT_RECEIPT_ITEM_SQL);
+            statement.setString(1, receiptItem.getId());
+            statement.setBigDecimal(2, receiptItem.getAmount());
+            statement.setInt(3, receiptItem.getAmountUnit().ordinal());
+            statement.setString(4, receiptItem.getName());
+            statement.setBigDecimal(5, receiptItem.getPrice());
+            statement.setString(6, receiptId);
+            statement.setString(7, productId);
+
+            int numOfRows = statement.executeUpdate();
+            if (numOfRows != 1) {
+                throw new CashRegisterException(
+                        quote("Can't create receipt item with id", receiptItem.getId()));
+            }
+            return receiptItem;
+        } catch (SQLException e) {
+            throw new CashRegisterException(
+                    quote("Can't create receipt item with id", receiptItem.getId()), e);
+        }
+    }
+
+    public ReceiptItem updateReceiptItem(
+            String receiptId, String productId, ReceiptItem receiptItem) {
+        try (Connection connection = getConnection()) {
+            PreparedStatement statement = connection.prepareStatement(UPDATE_RECEIPT_ITEM_SQL);
+            statement.setBigDecimal(1, receiptItem.getAmount());
+            statement.setInt(2, receiptItem.getAmountUnit().ordinal());
+            statement.setString(3, receiptItem.getName());
+            statement.setBigDecimal(4, receiptItem.getPrice());
+            statement.setString(5, receiptId);
+            statement.setString(6, productId);
+            statement.setString(7, receiptItem.getId());
+
+            int numOfRows = statement.executeUpdate();
+            if (numOfRows != 1) {
+                throw new CashRegisterException(
+                        quote("Can't update receipt item with id", receiptItem.getId()));
+            }
+            return receiptItem;
+        } catch (SQLException e) {
+            throw new CashRegisterException(
+                    quote("Can't update receipt item with id", receiptItem.getId()), e);
         }
     }
 
@@ -131,10 +220,19 @@ public class ReceiptRepository {
                 .setId(rs.getString("id"))
                 .setName(rs.getString("name"))
                 .setPrice(rs.getBigDecimal("price"))
-                .setAmountUnit(ProductAmountUnit.fromExistingInteger(rs.getInt("amount_unit")))
+                .setAmountUnit(
+                        ProductAmountUnit.fromExistingInteger(rs.getInt("amount_unit")))
                 .setAmount(rs.getBigDecimal("amount"));
         var product = new Product()
-                .setCode(rs.getString("code"));
+                .setId(rs.getString("product_id"))
+                .setCode(rs.getString("code"))
+                .setAmountUnit(
+                        ProductAmountUnit.fromExistingInteger(rs.getInt("amount_unit")))
+                .setAmountAvailable(rs.getBigDecimal("amount_available"))
+                .setCategory(rs.getString("category"))
+                .setDetails(rs.getString("details"))
+                .setName(rs.getString("product_name"))
+                .setPrice(rs.getBigDecimal("product_price"));
         receiptItem.setProduct(product);
         return receiptItem;
     }
@@ -154,7 +252,7 @@ public class ReceiptRepository {
         return receipt;
     }
 
-    private Receipt getReceiptWithCashbox(ResultSet rs) throws SQLException {
+    private Receipt getReceiptWithUserAndCashbox(ResultSet rs) throws SQLException {
         var receipt = getReceiptWithUser(rs);
         var cashbox = new Cashbox()
                 .setId(rs.getString("cashbox_id"))

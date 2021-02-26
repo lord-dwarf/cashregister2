@@ -1,10 +1,9 @@
 package com.polinakulyk.cashregister2.controller.api;
 
-import com.polinakulyk.cashregister2.controller.MainRouter;
-import com.polinakulyk.cashregister2.util.CashRegisterUtil;
+import com.polinakulyk.cashregister2.controller.Router;
 import java.util.Optional;
 
-import static com.polinakulyk.cashregister2.util.CashRegisterUtil.*;
+import static com.polinakulyk.cashregister2.util.Util.*;
 import static java.util.Arrays.stream;
 
 public enum HttpRoute {
@@ -19,11 +18,16 @@ public enum HttpRoute {
     RECEIPTS_LIST,
     RECEIPTS_VIEW,
     RECEIPTS_EDIT,
+    RECEIPTS_CANCEL,
     // My receipts
     MYRECEIPTS_LIST,
     MYRECEIPTS_ADD,
     MYRECEIPTS_VIEW,
     MYRECEIPTS_EDIT,
+    MYRECEIPTS_COMPLETE,
+    MYRECEIPTS_CANCEL,
+    MYRECEIPTS_ADDITEM_SEARCH,
+    MYRECEIPTS_ADDITEM,
     // Reports
     REPORTS_LIST,
     REPORTS_X,
@@ -49,7 +53,7 @@ public enum HttpRoute {
         if ("/".equals(routeString)) {
             return Optional.of(INDEX);
         }
-        routeString = removeSuffix(routeString, MainRouter.INDEX_PATH);
+        routeString = removeSuffix(routeString, Router.INDEX_PATH);
         routeString = removePrefix(routeString, "/");
         var httpRouteString = routeString.replaceAll("/", "_");
         return stream(values())
