@@ -1,4 +1,4 @@
 package com.polinakulyk.cashregister2.view;
 
-public class ReportsView extends RouterView {
+public class ReportsView extends BaseView {
 }

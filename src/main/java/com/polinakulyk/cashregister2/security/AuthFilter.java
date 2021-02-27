@@ -21,7 +21,7 @@ import static com.polinakulyk.cashregister2.controller.api.HttpRoute.ERROR_AUTH;
 import static com.polinakulyk.cashregister2.controller.api.HttpRoute.ERROR_NOTFOUND;
 import static com.polinakulyk.cashregister2.controller.api.HttpRoute.toRouteString;
 
-@WebFilter("/*")
+@WebFilter(filterName = "authFilter")
 public class AuthFilter implements Filter {
 
     private Router router;

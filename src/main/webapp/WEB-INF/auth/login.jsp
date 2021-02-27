@@ -1,5 +1,5 @@
 <%@ page import="static com.polinakulyk.cashregister2.controller.api.HttpRoute.*" %>
-<jsp:useBean id="router" class="com.polinakulyk.cashregister2.view.RouterView"/>
+<jsp:useBean id="router" class="com.polinakulyk.cashregister2.view.BaseView"/>
 <%
     router.init(request);
 %>
@@ -12,16 +12,16 @@
 <div class="d-flex justify-content-center align-items-center container">
     <form class="w-25" method="post" action="<%=router.makeUrl(AUTH_LOGIN)%>">
         <div class="form-group mt-2">
-            <label for="login-input">Login</label>
+            <label for="login-input">${messages_loginUsernameLabel}</label>
             <input name="login" type="text" class="form-control" id="login-input"
-                   placeholder="Enter login">
+                   placeholder="${messages_loginUsernamePlaceholder}">
         </div>
         <div class="form-group mt-2">
-            <label for="password-input">Password</label>
+            <label for="password-input">${messages_loginPasswordLabel}</label>
             <input name="password" type="password" class="form-control" id="password-input"
-                   placeholder="Password">
+                   placeholder="${messages_loginPasswordPlaceholder}">
         </div>
-        <button type="submit" class="btn btn-primary mt-3">Login</button>
+        <button type="submit" class="btn btn-primary mt-3">${messages_loginSignIn}</button>
     </form>
 </div>
 <jsp:include page="../parts/bodyjs.jsp"/>

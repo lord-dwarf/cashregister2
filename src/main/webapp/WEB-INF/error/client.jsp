@@ -5,8 +5,11 @@
 <body>
 <jsp:include page="../parts/navbar.jsp" />
 <h1>
-    <%= "Bad Request" %>
+    Bad Request
 </h1>
+<h3>
+    ${errorMessage}
+</h3>
 <jsp:include page="../parts/bodyjs.jsp" />
 </body>
 </html>

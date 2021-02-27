@@ -1,10 +1,9 @@
-<%@ page import="static com.polinakulyk.cashregister2.controller.api.HttpRoute.PRODUCTS_ADD" %>
 <%@ page
         import="static com.polinakulyk.cashregister2.controller.api.HttpRoute.MYRECEIPTS_ADDITEM" %>
-<%@ page import="static com.polinakulyk.cashregister2.controller.api.HttpRoute.MYRECEIPTS_EDIT" %>
-<%@ page import="static com.polinakulyk.cashregister2.controller.api.HttpRoute.MYRECEIPTS_ADDITEM_SEARCH" %>
+<%@ page
+        import="static com.polinakulyk.cashregister2.controller.api.HttpRoute.MYRECEIPTS_ADDITEM_SEARCH" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<jsp:useBean id="view" class="com.polinakulyk.cashregister2.view.RouterView"/>
+<jsp:useBean id="view" class="com.polinakulyk.cashregister2.view.BaseView"/>
 <%
     view.init(request);
 %>

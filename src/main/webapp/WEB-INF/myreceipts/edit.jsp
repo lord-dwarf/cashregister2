@@ -18,20 +18,18 @@
 <h1>
     <%= "Edit My Receipt" %>
 </h1>
-<div class="container">
-    <div class="row justify-content-left">
-        <div class="col-4">
-            <form method="post"
-                  action="<%=view.makeUrl(MYRECEIPTS_CANCEL)%>?receiptId=${receipt.id}">
-                <button type="submit" class="btn btn-primary">Cancel Receipt</button>
-            </form>
-        </div>
-        <div class="col-4">
-            <form class="mt-2" method="post"
+<div class="container-fluid mt-2 px-0">
+    <div class="row">
+            <form class="box col-auto px-0" method="post"
                   action="<%=view.makeUrl(MYRECEIPTS_COMPLETE)%>?receiptId=${receipt.id}">
-                <button type="submit" class="btn btn-primary">Complete Receipt</button>
+                <button type="submit" class="btn btn-success">Complete</button>
             </form>
-        </div>
+            <form class="box col-auto px-0" method="post"
+                  action="<%=view.makeUrl(MYRECEIPTS_CANCEL)%>?receiptId=${receipt.id}">
+                <button type="submit" class="btn btn-danger">Cancel</button>
+            </form>
+            <div class="col w-100">
+            </div>
     </div>
 </div>
 <form class="w-40">

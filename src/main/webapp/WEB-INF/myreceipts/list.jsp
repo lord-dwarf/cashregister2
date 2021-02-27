@@ -1,6 +1,7 @@
 <%@ page import="static com.polinakulyk.cashregister2.controller.api.HttpRoute.MYRECEIPTS_VIEW" %>
 <%@ page import="static com.polinakulyk.cashregister2.controller.api.HttpRoute.MYRECEIPTS_EDIT" %>
 <%@ page import="static com.polinakulyk.cashregister2.controller.api.HttpRoute.MYRECEIPTS_ADD" %>
+<%@ page import="static com.polinakulyk.cashregister2.controller.api.HttpRoute.MYRECEIPTS_LIST" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <jsp:useBean id="view" class="com.polinakulyk.cashregister2.view.MyReceiptsView"/>
 <%
@@ -62,6 +63,30 @@
     </c:forEach>
     </tbody>
 </table>
+<nav aria-label="Navigation">
+    <ul class="pagination">
+        <c:forEach begin="1" end="${pagesTotal}" var="i">
+            <c:choose>
+                <c:when test="${currentPage eq i}">
+                    <li class="page-item active">
+                        <a class="page-link">
+                                ${i} <span class="sr-only">(current)</span>
+                        </a>
+                    </li>
+                </c:when>
+                <c:otherwise>
+                    <li class="page-item">
+                        <a class="page-link"
+                           href="<%=view.makeUrl(MYRECEIPTS_LIST)%>?currentPage=${i}"
+                        >
+                                ${i}
+                        </a>
+                    </li>
+                </c:otherwise>
+            </c:choose>
+        </c:forEach>
+    </ul>
+</nav>
 <jsp:include page="../parts/bodyjs.jsp" />
 </body>
 </html>

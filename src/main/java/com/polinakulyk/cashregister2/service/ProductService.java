@@ -30,6 +30,21 @@ public class ProductService {
         return products;
     }
 
+    public List<Product> findWithPagination(int page, int rowsPerPage) {
+        var products = productRepository.findWithPagination(
+                rowsPerPage, (page - 1) * rowsPerPage);
+
+        log.debug("DONE Find products with pagination: {}", products.size());
+        return products;
+    }
+
+    public int count() {
+        var productsTotal = productRepository.count();
+
+        log.debug("DONE Count products: {}", productsTotal);
+        return productsTotal;
+    }
+
     public Product create(String userId, Product product) {
         log.debug("BEGIN Create product by user: '{}'", userId);
 

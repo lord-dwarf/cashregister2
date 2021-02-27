@@ -5,7 +5,7 @@
 <body>
 <jsp:include page="../parts/navbar.jsp" />
 <h1>
-    <%= "Not Authorized" %>
+    ${messages_errorNotAuthorized}
 </h1>
 <jsp:include page="../parts/bodyjs.jsp" />
 </body>

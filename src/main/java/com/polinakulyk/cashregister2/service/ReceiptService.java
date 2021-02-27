@@ -43,15 +43,37 @@ public class ReceiptService {
         return receipts;
     }
 
-    public List<Receipt> findAllByTellerId(String tellerId) {
+    public List<Receipt> findWithPagination(int page, int rowsPerPage) {
+        var receipts = receiptRepository.findAllWithPagination(
+                rowsPerPage, (page - 1) * rowsPerPage);
 
-        // filter teller's receipts that belong to the active shift
-        var receipts = receiptRepository.findAll().stream()
-                .filter(r -> tellerId.equals(r.getUser().getId()) && isReceiptInActiveShift(r))
-                .collect(toList());
-
-        log.debug("DONE Find receipts by teller: '{}', size: {}", tellerId, receipts.size());
+        log.debug("DONE Find receipts with pagination: {}", receipts.size());
         return receipts;
+    }
+
+    public int count() {
+        var receiptsTotal = receiptRepository.count();
+
+        log.debug("DONE Count receipts: {}", receiptsTotal);
+        return receiptsTotal;
+    }
+
+    public List<Receipt> findByTellerWithPagination(String tellerId, int page, int rowsPerPage) {
+
+        // filter teller's receipts that belong to the active shift, with pagination
+        var receipts = receiptRepository.findByTellerWithPagination(
+                tellerId, rowsPerPage, (page - 1) * rowsPerPage);
+
+        log.debug("DONE Find receipts by teller with pagination: '{}', size: {}",
+                tellerId, receipts.size());
+        return receipts;
+    }
+
+    public int countByTeller(String tellerId) {
+        var receiptsTotal = receiptRepository.countByTeller(tellerId);
+
+        log.debug("DONE Count receipts by teller: '{}', size: {}", tellerId, receiptsTotal);
+        return receiptsTotal;
     }
 
     public Optional<Receipt> findById(String receiptId) {

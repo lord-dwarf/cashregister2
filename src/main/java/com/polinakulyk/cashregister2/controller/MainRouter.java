@@ -7,6 +7,7 @@ import com.polinakulyk.cashregister2.controller.command.AddReceiptItemCommand;
 import com.polinakulyk.cashregister2.controller.command.BeforeAddReceiptItemCommand;
 import com.polinakulyk.cashregister2.controller.command.CancelMyReceiptCommand;
 import com.polinakulyk.cashregister2.controller.command.CancelReceiptCommand;
+import com.polinakulyk.cashregister2.controller.command.ChangeLangCommand;
 import com.polinakulyk.cashregister2.controller.command.CompleteMyReceiptCommand;
 import com.polinakulyk.cashregister2.controller.command.GetAuthLogoutCommand;
 import com.polinakulyk.cashregister2.controller.command.GetProductCommand;
@@ -17,11 +18,13 @@ import com.polinakulyk.cashregister2.controller.command.ListMyReceiptsCommand;
 import com.polinakulyk.cashregister2.controller.command.ListProductsCommand;
 import com.polinakulyk.cashregister2.controller.command.ListReceiptsCommand;
 import com.polinakulyk.cashregister2.controller.command.LoginCommand;
+import com.polinakulyk.cashregister2.controller.command.GetErrorMessageCommand;
 import com.polinakulyk.cashregister2.controller.command.SearchReceiptItemCommand;
 import com.polinakulyk.cashregister2.controller.command.UpdateProductCommand;
 import java.util.Set;
 
 import static com.polinakulyk.cashregister2.controller.api.HttpMethod.*;
+import static com.polinakulyk.cashregister2.controller.api.HttpRoute.AUTH_LANG;
 import static com.polinakulyk.cashregister2.controller.api.HttpRoute.AUTH_LOGIN;
 import static com.polinakulyk.cashregister2.controller.api.HttpRoute.AUTH_LOGOUT;
 import static com.polinakulyk.cashregister2.controller.api.HttpRoute.ERROR_AUTH;
@@ -93,8 +96,11 @@ public class MainRouter extends Router {
         addCommand(GET, AUTH_LOGIN, "auth/login.jsp", Set.of(GUEST));
         addCommand(POST, AUTH_LOGIN, new LoginCommand(), any());
         addCommand(GET, AUTH_LOGOUT, new GetAuthLogoutCommand(), authenticated());
+        // Localization
+        addCommand(POST, AUTH_LANG, new ChangeLangCommand(), any());
         // Errors
-        addCommand(GET, ERROR_CLIENT, "error/client.jsp", any());
+        addCommandThenForward(
+                GET, ERROR_CLIENT, new GetErrorMessageCommand(), "error/client.jsp", any());
         addCommand(GET, ERROR_AUTH, "error/auth.jsp", any());
         addCommand(GET, ERROR_NOTFOUND, "error/notfound.jsp", any());
         addCommand(GET, ERROR_SERVER, "error/server.jsp", any());

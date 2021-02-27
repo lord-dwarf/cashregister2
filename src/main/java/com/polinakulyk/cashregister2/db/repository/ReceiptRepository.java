@@ -33,6 +33,48 @@ public class ReceiptRepository {
                     "FROM receipt AS r LEFT JOIN user AS u ON r.user_id = u.id " +
                     "LEFT JOIN cashbox AS c ON u.cashbox_id = c.id;";
 
+    private static final String FIND_ALL_RECEIPTS_WITH_PAGINATION_SQL =
+            "SELECT r.id, r.created_time, r.checkout_time, r.status, r.sum_total, r.user_id, " +
+                    "u.full_name, u.username, u.cashbox_id, " +
+                    "c.name, c.shift_status, c.shift_status_time " +
+                    "FROM receipt AS r LEFT JOIN user AS u ON r.user_id = u.id " +
+                    "LEFT JOIN cashbox AS c ON u.cashbox_id = c.id " +
+                    "ORDER BY r.created_time DESC LIMIT ? OFFSET ?;";
+
+    private static final String COUNT_RECEIPTS_SQL =
+            "SELECT count(1) AS count " +
+                    "FROM receipt AS r LEFT JOIN user AS u ON r.user_id = u.id " +
+                    "LEFT JOIN cashbox AS c ON u.cashbox_id = c.id;";
+
+    /**
+     * WARNING change the predicate in sync:
+     * {@link ReceiptRepository#FIND_RECEIPTS_BY_TELLER_WITH_PAGINATION_SQL}
+     * {@link ReceiptRepository#COUNT_RECEIPTS_BY_TELLER_SQL}
+     * {@link com.polinakulyk.cashregister2.service.ServiceHelper#isReceiptInActiveShift}
+     */
+    public static final String FIND_RECEIPTS_BY_TELLER_WITH_PAGINATION_SQL =
+            "SELECT r.id, r.created_time, r.checkout_time, r.status, r.sum_total, r.user_id, " +
+                    "u.full_name, u.username, u.cashbox_id, " +
+                    "c.name, c.shift_status, c.shift_status_time " +
+                    "FROM receipt AS r LEFT JOIN user AS u ON r.user_id = u.id " +
+                    "LEFT JOIN cashbox AS c ON u.cashbox_id = c.id " +
+                    "WHERE u.id = ? AND c.shift_status = 'ACTIVE' AND " +
+                    "r.created_time >= c.shift_status_time " +
+                    "ORDER BY r.created_time DESC LIMIT ? OFFSET ?;";
+
+    /**
+     * WARNING change the predicate in sync:
+     * {@link ReceiptRepository#FIND_RECEIPTS_BY_TELLER_WITH_PAGINATION_SQL}
+     * {@link ReceiptRepository#COUNT_RECEIPTS_BY_TELLER_SQL}
+     * {@link com.polinakulyk.cashregister2.service.ServiceHelper#isReceiptInActiveShift}
+     */
+    public static final String COUNT_RECEIPTS_BY_TELLER_SQL =
+            "SELECT count(1) as count " +
+                    "FROM receipt AS r LEFT JOIN user AS u ON r.user_id = u.id " +
+                    "LEFT JOIN cashbox AS c ON u.cashbox_id = c.id " +
+                    "WHERE u.id = ? AND c.shift_status = 'ACTIVE' AND " +
+                    "r.created_time >= c.shift_status_time;";
+
     private static final String FIND_RECEIPT_BY_ID_SQL =
             "SELECT r.id, r.created_time, r.checkout_time, r.status, r.sum_total, r.user_id, " +
                     "u.full_name, u.username, u.cashbox_id, " +
@@ -81,6 +123,69 @@ public class ReceiptRepository {
             return result;
         } catch (SQLException e) {
             throw new CashRegisterException("Can't query all receipts", e);
+        }
+    }
+
+    public List<Receipt> findAllWithPagination(int rowsLimit, int rowsOffset) {
+        try (Connection connection = getConnection()) {
+            PreparedStatement statement =
+                    connection.prepareStatement(FIND_ALL_RECEIPTS_WITH_PAGINATION_SQL);
+            statement.setInt(1, rowsLimit);
+            statement.setInt(2, rowsOffset);
+            ResultSet resultSet = statement.executeQuery();
+            List<Receipt> result = new ArrayList<>();
+            while (resultSet.next()) {
+                result.add(getReceiptWithUserAndCashbox(resultSet));
+            }
+            return result;
+        } catch (SQLException e) {
+            throw new CashRegisterException("Can't query receipts with pagination", e);
+        }
+    }
+
+    public int count() {
+        try (Connection connection = getConnection()) {
+            PreparedStatement statement = connection.prepareStatement(COUNT_RECEIPTS_SQL);
+            ResultSet resultSet = statement.executeQuery();
+            if (!resultSet.next()) {
+                throw new CashRegisterException("Can't count receipts");
+            }
+            return resultSet.getInt("count");
+        } catch (SQLException e) {
+            throw new CashRegisterException("Can't count receipts", e);
+        }
+    }
+
+    public List<Receipt> findByTellerWithPagination(
+            String tellerId, int rowsLimit, int rowsOffset) {
+        try (Connection connection = getConnection()) {
+            PreparedStatement statement =
+                    connection.prepareStatement(FIND_RECEIPTS_BY_TELLER_WITH_PAGINATION_SQL);
+            statement.setString(1, tellerId);
+            statement.setInt(2, rowsLimit);
+            statement.setInt(3, rowsOffset);
+            ResultSet resultSet = statement.executeQuery();
+            List<Receipt> result = new ArrayList<>();
+            while (resultSet.next()) {
+                result.add(getReceiptWithUserAndCashbox(resultSet));
+            }
+            return result;
+        } catch (SQLException e) {
+            throw new CashRegisterException("Can't query receipts by teller with pagination", e);
+        }
+    }
+
+    public int countByTeller(String tellerId) {
+        try (Connection connection = getConnection()) {
+            PreparedStatement statement = connection.prepareStatement(COUNT_RECEIPTS_BY_TELLER_SQL);
+            statement.setString(1, tellerId);
+            ResultSet resultSet = statement.executeQuery();
+            if (!resultSet.next()) {
+                throw new CashRegisterException("Can't count receipts by teller");
+            }
+            return resultSet.getInt("count");
+        } catch (SQLException e) {
+            throw new CashRegisterException("Can't count receipts by teller", e);
         }
     }
 

@@ -60,6 +60,30 @@
     </c:forEach>
     </tbody>
 </table>
+<nav aria-label="Navigation">
+    <ul class="pagination">
+        <c:forEach begin="1" end="${pagesTotal}" var="i">
+            <c:choose>
+                <c:when test="${currentPage eq i}">
+                    <li class="page-item active">
+                        <a class="page-link">
+                                ${i} <span class="sr-only">(current)</span>
+                        </a>
+                    </li>
+                </c:when>
+                <c:otherwise>
+                    <li class="page-item">
+                        <a class="page-link"
+                           href="<%=view.makeUrl(RECEIPTS_LIST)%>?currentPage=${i}"
+                        >
+                                ${i}
+                        </a>
+                    </li>
+                </c:otherwise>
+            </c:choose>
+        </c:forEach>
+    </ul>
+</nav>
 <jsp:include page="../parts/bodyjs.jsp"/>
 </body>
 </html>

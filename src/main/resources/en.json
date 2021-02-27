@@ -1,0 +1,141 @@
+{
+  "default": {
+    "shift": "Shift",
+    "shiftActive": "ACTIVE",
+    "shiftInactive": "INACTIVE",
+    "shiftLoading": "LOADING...",
+    "shiftStart": "Start Shift",
+    "copyright": "Polina Kulyk",
+    "errorMessageClose": "Close",
+    "creamery": "Creamery",
+    "userRoleTeller": "TELLER",
+    "userRoleSrTeller": "SR TELLER",
+    "userRoleMerch": "MERCHANDISER",
+    "userRoleGuest": "GUEST",
+    "menuHome": "Home",
+    "menuLogin": "Login",
+    "menuLogout": "Logout",
+    "menuProducts": "Products",
+    "menuReports": "Reports",
+    "menuReceipts": "Receipts",
+    "menuMyReceipts": "My Receipts",
+    "menuVIEWProduct": "VIEW Product",
+    "menuEDITProduct": "EDIT Product",
+    "menuADDProduct": "ADD Product",
+    "menuVIEWReceipt": "VIEW Receipt",
+    "menuEDITReceipt": "EDIT Receipt",
+    "menuVIEWMyReceipt": "VIEW My Receipt",
+    "menuEDITMyReceipt": "EDIT My Receipt",
+    "menuNEWMyReceipt": "NEW My Receipt"
+  },
+  "products": {
+    "products": "Products",
+    "addProduct": "Add Product",
+    "tableCode": "Code",
+    "tableName": "Name",
+    "tableCategory": "Category",
+    "tablePrice": "Price",
+    "tableInStock": "In Stock",
+    "tableActions": "Actions"
+  },
+  "productsOne": {
+    "product": "Product",
+    "code": "Code",
+    "name": "Name",
+    "category": "Category",
+    "price": "Price",
+    "inStock": "In Stock",
+    "unit": "Units",
+    "details": "Details",
+    "backToProducts": "Back to Products",
+    "save": "Save"
+  },
+  "receipts": {
+    "receipts": "Receipts",
+    "all": "All",
+    "tableReceiptCode": "Code",
+    "tableCreatedTime": "Created At",
+    "tableCheckoutTime": "Closed At",
+    "tableStatus": "Status",
+    "tableTellerName": "Teller",
+    "tableSumTotal": "Total",
+    "tableActions": "Actions"
+  },
+  "receiptsOne": {
+    "receipt": "Receipt",
+    "cancel": "Cancel",
+    "backToReceipts": "Back to Receipts",
+    "createdTime": "Created At",
+    "checkoutTime": "Closed At",
+    "status": "Status",
+    "tellerName": "Teller",
+    "sumTotal": "Total",
+    "tableProductCode": "Product Code",
+    "tableProductName": "Product Name",
+    "tableAmount": "Amount",
+    "tablePrice": "Price",
+    "tableCost": "Cost",
+    "tableActions": "Actions"
+  },
+  "myReceipts": {
+    "myReceipts": "My Receipts",
+    "newReceipt": "New Receipt",
+    "tableReceiptCode": "Code",
+    "tableCreatedTime": "Created At",
+    "tableCheckoutTime": "Closed At",
+    "tableStatus": "Status",
+    "tableTellerName": "Teller",
+    "tableSumTotal": "Total",
+    "tableActions": "Actions"
+  },
+  "myReceiptsOne": {
+    "receipt": "Receipt",
+    "complete": "Complete",
+    "cancel": "Cancel",
+    "createdTime": "Created At",
+    "checkoutTime": "Closed At",
+    "status": "Status",
+    "tellerName": "Teller",
+    "sumTotal": "Total",
+    "backToMyReceipts": "Back to My Receipts",
+    "tableProductCode": "Product Code",
+    "tableProductName": "Product Name",
+    "tableAmount": "Amount",
+    "tablePrice": "Price",
+    "tableCost": "Cost",
+    "tableActions": "Actions",
+    "addItem": "Add Product Item",
+    "enterAmount": "Enter Amount",
+    "amount": "Amount",
+    "save": "Save",
+    "findByCode": "find by code",
+    "findByName": "find by name"
+  },
+  "reports": {
+    "reports": "Reports",
+    "tableReportName": "Name",
+    "tableStart": "From",
+    "tableEnd": "To",
+    "tableActions": "Actions"
+  },
+  "login": {
+    "welcomeToCreamery": "Welcome to Creamery",
+    "usernameLabel": "Username",
+    "passwordLabel": "Password",
+    "signIn": "Sign In"
+  },
+  "componentDataTable": {
+    "reload": "Reload",
+    "itemsPerPage": "Items per page"
+  },
+  "errorMessages": {
+    "serverError": "Server error",
+    "clientError": "Browser error",
+    "userNotAuthorized": "User not authorized",
+    "userNotAuthenticated": "User not authenticated"
+  },
+  "unit": {
+    "kilo": "kg",
+    "unit": "unit"
+  }
+}

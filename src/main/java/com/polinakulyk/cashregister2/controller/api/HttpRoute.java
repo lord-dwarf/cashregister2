@@ -35,6 +35,8 @@ public enum HttpRoute {
     // Auth
     AUTH_LOGIN,
     AUTH_LOGOUT,
+    // Localization
+    AUTH_LANG,
     // error
     ERROR_CLIENT,     // 400 and 4xx
     ERROR_AUTH,       // 401 and 403

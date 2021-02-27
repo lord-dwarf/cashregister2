@@ -27,6 +27,11 @@ public class CashRegisterException extends RuntimeException {
         this.httpStatus = httpStatus;
     }
 
+    public CashRegisterException(Integer httpStatus, String message, Throwable cause) {
+        super(message, cause);
+        this.httpStatus = httpStatus;
+    }
+
     public Integer getHttpStatus() {
         return httpStatus;
     }

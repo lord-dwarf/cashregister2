@@ -1,12 +1,15 @@
 package com.polinakulyk.cashregister2.db.repository;
 
+import com.polinakulyk.cashregister2.db.DbHelper;
 import com.polinakulyk.cashregister2.db.dto.ProductAmountUnit;
 import com.polinakulyk.cashregister2.db.entity.Product;
 import com.polinakulyk.cashregister2.exception.CashRegisterException;
+import java.net.HttpURLConnection;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -14,6 +17,7 @@ import java.util.Optional;
 import static com.polinakulyk.cashregister2.db.DbHelper.getConnection;
 import static com.polinakulyk.cashregister2.util.Util.*;
 import static com.polinakulyk.cashregister2.util.Util.quote;
+import static java.net.HttpURLConnection.HTTP_BAD_REQUEST;
 
 public class ProductRepository {
     private static final String INSERT_PRODUCT_SQL =
@@ -24,6 +28,13 @@ public class ProductRepository {
     private static final String FIND_ALL_PRODUCTS_SQL =
             "SELECT id, amount_available, amount_unit, category, code, details, name, price "
                     + "FROM product";
+
+    private static final String FIND_PRODUCTS_WITH_PAGINATION_SQL =
+            "SELECT id, amount_available, amount_unit, category, code, details, name, price "
+                    + "FROM product ORDER BY name ASC LIMIT ? OFFSET ?";
+
+    private static final String COUNT_PRODUCTS_SQL =
+            "SELECT count(1) as count from product";
 
     private static final String FIND_PRODUCT_BY_ID_SQL =
             "SELECT id, amount_available, amount_unit, category, code, details, name, price "
@@ -54,6 +65,11 @@ public class ProductRepository {
                         quote("Can't create product with id", product.getId()));
             }
             return product;
+        } catch (SQLIntegrityConstraintViolationException e) {
+            throw new CashRegisterException(
+                    HTTP_BAD_REQUEST,
+                    quote("Can't create product with duplicate code", product.getCode()),
+                    e);
         } catch (SQLException e) {
             throw new CashRegisterException(
                     quote("Can't create product with id", product.getId()), e);
@@ -71,6 +87,36 @@ public class ProductRepository {
             return result;
         } catch (SQLException e) {
             throw new CashRegisterException("Can't query all products", e);
+        }
+    }
+
+    public List<Product> findWithPagination(int rowsLimit, int rowsOffset) {
+        try (Connection connection = getConnection()) {
+            PreparedStatement statement =
+                    connection.prepareStatement(FIND_PRODUCTS_WITH_PAGINATION_SQL);
+            statement.setInt(1, rowsLimit);
+            statement.setInt(2, rowsOffset);
+            ResultSet resultSet = statement.executeQuery();
+            List<Product> result = new ArrayList<>();
+            while (resultSet.next()) {
+                result.add(getProduct(resultSet));
+            }
+            return result;
+        } catch (SQLException e) {
+            throw new CashRegisterException("Can't query products with pagination", e);
+        }
+    }
+
+    public int count() {
+        try (Connection connection = getConnection()) {
+            PreparedStatement statement = connection.prepareStatement(COUNT_PRODUCTS_SQL);
+            ResultSet resultSet = statement.executeQuery();
+            if (!resultSet.next()) {
+                throw new CashRegisterException("Can't count products");
+            }
+            return resultSet.getInt("count");
+        } catch (SQLException e) {
+            throw new CashRegisterException("Can't count products", e);
         }
     }
 

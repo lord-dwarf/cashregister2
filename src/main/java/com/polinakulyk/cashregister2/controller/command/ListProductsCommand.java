@@ -11,15 +11,26 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import static com.polinakulyk.cashregister2.controller.api.HttpRoute.INDEX;
+import static java.util.Optional.*;
 
 public class ListProductsCommand implements Command {
+
+    private static final int ROWS_PER_PAGE = 10;
 
     private final ProductService productService = new ProductService();
 
     @Override
     public Optional<String> execute(HttpServletRequest request, HttpServletResponse response) {
-        var products = productService.findAll();
+        var currentPage = Integer.parseInt(
+                ofNullable(request.getParameter("currentPage")).orElse("1"));
+        var products = productService.findWithPagination(currentPage, ROWS_PER_PAGE);
+        var productsTotal = productService.count();
+        var pagesTotal = productsTotal / ROWS_PER_PAGE;
+        if (productsTotal % ROWS_PER_PAGE != 0) {
+            ++pagesTotal;
+        }
         request.setAttribute("products", products);
-        return Optional.empty();
+        request.setAttribute("pagesTotal", pagesTotal);
+        return empty();
     }
 }
