@@ -1,8 +1,9 @@
-package com.polinakulyk.cashregister2.security;
+package com.polinakulyk.cashregister2.filter;
 
-import com.polinakulyk.cashregister2.controller.MainRouter;
-import com.polinakulyk.cashregister2.controller.Router;
-import com.polinakulyk.cashregister2.controller.api.HttpRoute;
+import com.polinakulyk.cashregister2.controller.router.MainRouter;
+import com.polinakulyk.cashregister2.controller.router.Router;
+import com.polinakulyk.cashregister2.controller.router.RouterHelper;
+import com.polinakulyk.cashregister2.security.AuthHelper;
 import java.io.IOException;
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
@@ -14,12 +15,11 @@ import javax.servlet.annotation.WebFilter;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import static com.polinakulyk.cashregister2.controller.Router.getRouteStringFromMainServlet;
-import static com.polinakulyk.cashregister2.controller.Router.redirect;
+import static com.polinakulyk.cashregister2.controller.router.RouterHelper.getCurrentRoutePathFromServlet;
+import static com.polinakulyk.cashregister2.controller.router.RouterHelper.redirect;
 import static com.polinakulyk.cashregister2.controller.api.HttpMethod.fromString;
 import static com.polinakulyk.cashregister2.controller.api.HttpRoute.ERROR_AUTH;
 import static com.polinakulyk.cashregister2.controller.api.HttpRoute.ERROR_NOTFOUND;
-import static com.polinakulyk.cashregister2.controller.api.HttpRoute.toRouteString;
 
 @WebFilter(filterName = "authFilter")
 public class AuthFilter implements Filter {
@@ -38,20 +38,20 @@ public class AuthFilter implements Filter {
     public void doFilter(ServletRequest req, ServletResponse res, FilterChain chain) throws IOException, ServletException {
         var request = (HttpServletRequest) req;
         var response = (HttpServletResponse) res;
-        var routeString = getRouteStringFromMainServlet(request);
-        var route = HttpRoute.fromRouteString(routeString);
+        var routeString = getCurrentRoutePathFromServlet(request);
+        var route = RouterHelper.routePathToHttpRoute(routeString);
         if (route.isEmpty()) {
-            redirect(request, response, toRouteString(ERROR_NOTFOUND));
+            redirect(request, response, ERROR_NOTFOUND);
             return;
         }
         var httpMethod = fromString(request.getMethod()).get();
         var roles = router.getRoles(httpMethod, route.get());
         if (routeString.isEmpty()) {
-            redirect(request, response, toRouteString(ERROR_NOTFOUND));
+            redirect(request, response, ERROR_NOTFOUND);
             return;
         }
         if (!authHelper.isAuthorized(request, roles.get())) {
-            redirect(request, response, toRouteString(ERROR_AUTH));
+            redirect(request, response, ERROR_AUTH);
             return;
         }
         chain.doFilter(request, response);

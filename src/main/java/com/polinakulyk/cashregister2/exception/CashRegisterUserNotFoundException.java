@@ -1,5 +1,6 @@
 package com.polinakulyk.cashregister2.exception;
 
+import com.polinakulyk.cashregister2.controller.api.HttpStatus;
 import java.net.HttpURLConnection;
 
 import static com.polinakulyk.cashregister2.util.Util.quote;
@@ -12,7 +13,7 @@ public class CashRegisterUserNotFoundException extends CashRegisterException {
     public CashRegisterUserNotFoundException(String userIdentifier) {
 
         // by default, the associated HTTP status points to HTTP 401 Unauthorized
-        // as a general interpretation of exception for client
-        super(HttpURLConnection.HTTP_UNAUTHORIZED, quote("User not found", userIdentifier));
+        // as a general interpretation of authentication problem for client
+        super(HttpStatus.UNAUTHORIZED, quote("User not found", userIdentifier));
     }
 }

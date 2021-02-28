@@ -1,8 +1,3 @@
-<jsp:useBean id="view" class="com.polinakulyk.cashregister2.view.ProductsView"/>
-<%
-    view.init(request);
-%>
-
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <!DOCTYPE html>
 <html>

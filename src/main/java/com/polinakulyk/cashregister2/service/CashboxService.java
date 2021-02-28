@@ -1,9 +1,10 @@
 package com.polinakulyk.cashregister2.service;
 
+import com.polinakulyk.cashregister2.db.Transaction;
 import com.polinakulyk.cashregister2.db.dto.ShiftStatus;
 import com.polinakulyk.cashregister2.db.entity.Cashbox;
 import com.polinakulyk.cashregister2.db.entity.User;
-import com.polinakulyk.cashregister2.db.repository.CashboxRepository;
+import com.polinakulyk.cashregister2.db.dao.CashboxDao;
 import com.polinakulyk.cashregister2.exception.CashRegisterException;
 import com.polinakulyk.cashregister2.service.dto.ShiftStatusSummaryResponseDto;
 import java.time.LocalDateTime;
@@ -20,45 +21,53 @@ import static java.lang.String.format;
 public class CashboxService {
     private static final Logger log = LoggerFactory.getLogger(CashboxService.class);
 
-    private final CashboxRepository cashboxRepository = new CashboxRepository();
+    private final CashboxDao cashboxDao = new CashboxDao();
     private final UserService userService = new UserService();
 
     public ShiftStatusSummaryResponseDto activateShift(String userId) {
-        log.debug("BEGIN Activate shift by user: '{}'", userId);
+        try (Transaction t = Transaction.beginTransaction()) {
 
-        User user = userService.findExistingById(userId);
+            log.debug("BEGIN Activate shift by user: '{}'", userId);
+            User user = userService.findExistingById(userId);
 
-        Cashbox cashbox = user.getCashbox();
-        validateShiftStatusTransitionToActive(cashbox);
+            Cashbox cashbox = user.getCashbox();
+            validateShiftStatusTransitionToActive(cashbox);
 
-        var shiftStatusSummaryResponseDto =
-                updateShiftStatus(cashbox, ACTIVE);
+            var shiftStatusSummaryResponseDto =
+                    updateShiftStatus(cashbox, ACTIVE);
 
-        log.info("DONE Activate shift by user: '{}', for cash box: '{}'",
-                userId, cashbox.getId());
-        return shiftStatusSummaryResponseDto;
+            t.commitIfNeeded();
+            log.info("DONE Activate shift by user: '{}', for cash box: '{}'",
+                    userId, cashbox.getId());
+
+            return shiftStatusSummaryResponseDto;
+        }
     }
 
     public ShiftStatusSummaryResponseDto deactivateShift(String userId) {
-        log.debug("BEGIN Deactivate shift by user: '{}'", userId);
+        try (Transaction t = Transaction.beginTransaction()) {
+            log.debug("BEGIN Deactivate shift by user: '{}'", userId);
 
-        User user = userService.findExistingById(userId);
+            User user = userService.findExistingById(userId);
 
-        Cashbox cashbox = user.getCashbox();
-        validateShiftStatusTransitionToInactive(cashbox);
+            Cashbox cashbox = user.getCashbox();
+            validateShiftStatusTransitionToInactive(cashbox);
 
-        var shiftStatusSummaryResponseDto =
-                updateShiftStatus(cashbox, INACTIVE);
+            var shiftStatusSummaryResponseDto =
+                    updateShiftStatus(cashbox, INACTIVE);
 
-        log.info("DONE Deactivate shift by user: '{}', for cash box: '{}'",
-                userId, cashbox.getId());
-        return shiftStatusSummaryResponseDto;
+            t.commitIfNeeded();
+            log.info("DONE Deactivate shift by user: '{}', for cash box: '{}'",
+                    userId, cashbox.getId());
+
+            return shiftStatusSummaryResponseDto;
+        }
     }
 
     private ShiftStatusSummaryResponseDto updateShiftStatus(Cashbox cashbox, ShiftStatus shiftStatus) {
         cashbox.setShiftStatus(shiftStatus);
         cashbox.setShiftStatusTime(now());
-        cashbox = cashboxRepository.update(cashbox);
+        cashbox = cashboxDao.update(cashbox);
 
         LocalDateTime shiftStatusTime = cashbox.getShiftStatusTime();
         return new ShiftStatusSummaryResponseDto()

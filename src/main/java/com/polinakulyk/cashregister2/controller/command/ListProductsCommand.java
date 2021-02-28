@@ -1,17 +1,13 @@
 package com.polinakulyk.cashregister2.controller.command;
 
-import com.polinakulyk.cashregister2.controller.api.Command;
-import com.polinakulyk.cashregister2.controller.api.HttpRoute;
-import com.polinakulyk.cashregister2.security.AuthHelper;
+import com.polinakulyk.cashregister2.controller.api.RouteString;
 import com.polinakulyk.cashregister2.service.ProductService;
 import java.util.Optional;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
-import static com.polinakulyk.cashregister2.controller.api.HttpRoute.INDEX;
-import static java.util.Optional.*;
+import static java.util.Optional.empty;
+import static java.util.Optional.ofNullable;
 
 public class ListProductsCommand implements Command {
 
@@ -20,7 +16,7 @@ public class ListProductsCommand implements Command {
     private final ProductService productService = new ProductService();
 
     @Override
-    public Optional<String> execute(HttpServletRequest request, HttpServletResponse response) {
+    public Optional<RouteString> execute(HttpServletRequest request, HttpServletResponse response) {
         var currentPage = Integer.parseInt(
                 ofNullable(request.getParameter("currentPage")).orElse("1"));
         var products = productService.findWithPagination(currentPage, ROWS_PER_PAGE);

@@ -1,8 +1,6 @@
 <%@ page import="static com.polinakulyk.cashregister2.controller.api.HttpRoute.PRODUCTS_EDIT" %>
-<jsp:useBean id="view" class="com.polinakulyk.cashregister2.view.ProductsView"/>
-<%
-    view.init(request);
-%>
+<%@ page import="com.polinakulyk.cashregister2.controller.router.RouterHelper" %>
+<%@ page import="static com.polinakulyk.cashregister2.controller.router.RouterHelper.*" %>
 
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <!DOCTYPE html>
@@ -13,7 +11,7 @@
 <h1>
     <%= "Edit Product" %>
 </h1>
-<form class="w-40" method="post" action="<%=view.makeUrl(PRODUCTS_EDIT)%>?id=${product.id}">
+<form class="w-40" method="post" action="<%=getRoutePath(request, PRODUCTS_EDIT)%>?id=${product.id}">
     <div class="form-group mt-2">
         <label for="code-input">Code</label>
         <input name="code" type="text" class="form-control" id="code-input"

@@ -1,6 +1,6 @@
 package com.polinakulyk.cashregister2.controller.api;
 
-import com.polinakulyk.cashregister2.controller.Router;
+import com.polinakulyk.cashregister2.controller.router.RouterHelper;
 import java.util.Optional;
 
 import static com.polinakulyk.cashregister2.util.Util.*;
@@ -43,23 +43,4 @@ public enum HttpRoute {
     ERROR_NOTFOUND,   // 404
     ERROR_SERVER;     // 5xx
 
-    public static String toRouteString(HttpRoute route) {
-        if (INDEX == route) {
-            return "/";
-        }
-        var routeString = route.name().toLowerCase().replaceAll("_", "/");
-        return addPrefix(routeString, "/");
-    }
-
-    public static Optional<HttpRoute> fromRouteString(String routeString) {
-        if ("/".equals(routeString)) {
-            return Optional.of(INDEX);
-        }
-        routeString = removeSuffix(routeString, Router.INDEX_PATH);
-        routeString = removePrefix(routeString, "/");
-        var httpRouteString = routeString.replaceAll("/", "_");
-        return stream(values())
-                .filter(httpRoute -> httpRouteString.equalsIgnoreCase(httpRoute.name()))
-                .findFirst();
-    }
 }

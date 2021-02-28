@@ -3,50 +3,20 @@ package com.polinakulyk.cashregister2.db;
 import com.polinakulyk.cashregister2.exception.CashRegisterException;
 import java.math.BigDecimal;
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.util.Optional;
-import java.util.Properties;
 
-import static com.polinakulyk.cashregister2.util.Util.*;
-import static com.polinakulyk.cashregister2.util.Util.getProperties;
-import static com.polinakulyk.cashregister2.util.Util.getProperty;
+import static com.polinakulyk.cashregister2.util.Util.MC;
+import static com.polinakulyk.cashregister2.util.Util.MONEY_SCALE;
+import static com.polinakulyk.cashregister2.util.Util.RM;
+import static com.polinakulyk.cashregister2.util.Util.calendar;
+import static com.polinakulyk.cashregister2.util.Util.toLocalDateTime;
 
 public class DbHelper {
-
-    private static final String datasourceUrl;
-    private static final String datasourceUsername;
-    private static final String datasourcePassword;
-
-    static {
-        var properties = getProperties();
-        datasourceUrl = getProperty(properties, "datasource.url");
-        datasourceUsername = getProperty(properties, "datasource.username");
-        datasourcePassword = getProperty(properties, "datasource.password");
-    }
-
-    public static Connection getConnection() {
-        try {
-            Class.forName("com.mysql.cj.jdbc.Driver");
-        } catch (ClassNotFoundException e) {
-            throw new CashRegisterException("Can't find MySQL Driver", e);
-        }
-        Properties dbProperties = new Properties();
-        dbProperties.put("user", datasourceUsername);
-        dbProperties.put("password", datasourcePassword);
-        try {
-
-            Connection connection = DriverManager.getConnection(datasourceUrl, dbProperties);
-            connection.setAutoCommit(true);
-            return connection;
-        } catch (SQLException e) {
-            throw new CashRegisterException("Can't establish the connection to DB.", e);
-        }
-    }
 
     public static LocalDateTime getLocalDateTime(ResultSet rs, String fieldName)
             throws SQLException {
@@ -85,5 +55,33 @@ public class DbHelper {
 
     public static Timestamp toTimestampNullable(LocalDateTime localDateTime) {
         return localDateTime != null ? toTimestamp(localDateTime) : null;
+    }
+
+    public static void tryCommit(Connection conn) {
+        try {
+            conn.commit();
+        } catch (SQLException e) {
+            throw new CashRegisterException("Could not commit", e);
+        }
+    }
+
+    public static void tryRollback(Connection conn) {
+        try {
+            if (!conn.isClosed()) {
+                conn.rollback();
+            }
+        } catch (SQLException e) {
+            throw new CashRegisterException("Could not rollback", e);
+        }
+    }
+
+    public static void tryClose(Connection conn) {
+        try {
+            if (!conn.isClosed()) {
+                conn.close();
+            }
+        } catch (SQLException e) {
+            throw new CashRegisterException("Could not close connection", e);
+        }
     }
 }

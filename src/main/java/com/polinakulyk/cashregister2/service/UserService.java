@@ -1,7 +1,7 @@
 package com.polinakulyk.cashregister2.service;
 
 import com.polinakulyk.cashregister2.db.entity.User;
-import com.polinakulyk.cashregister2.db.repository.UserRepository;
+import com.polinakulyk.cashregister2.db.dao.UserDao;
 import com.polinakulyk.cashregister2.exception.CashRegisterAuthorizationException;
 import com.polinakulyk.cashregister2.exception.CashRegisterUserNotFoundException;
 import com.polinakulyk.cashregister2.security.AuthHelper;
@@ -11,7 +11,7 @@ import org.slf4j.LoggerFactory;
 public class UserService {
     private static final Logger log = LoggerFactory.getLogger(UserService.class);
 
-    private final UserRepository userRepository = new UserRepository();
+    private final UserDao userDao = new UserDao();
     private final AuthHelper authHelper = new AuthHelper();
 
     public User login(String login, String password) {
@@ -29,7 +29,7 @@ public class UserService {
     }
 
     public User findExistingById(String userId) {
-        var user = userRepository.findById(userId).orElseThrow(() ->
+        var user = userDao.findById(userId).orElseThrow(() ->
                 new CashRegisterUserNotFoundException(userId));
 
         log.debug("DONE Find existing user by id: '{}'", user.getId());
@@ -37,7 +37,7 @@ public class UserService {
     }
 
     public User findExistingByUsername(String username) {
-        User user = userRepository.findByUsername(username).orElseThrow(() ->
+        User user = userDao.findByUsername(username).orElseThrow(() ->
                 new CashRegisterUserNotFoundException(username));
 
         log.debug("DONE Find existing user by username: '{}', user: '{}'", username, user.getId());

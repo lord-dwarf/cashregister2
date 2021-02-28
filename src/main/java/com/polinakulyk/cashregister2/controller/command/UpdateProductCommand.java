@@ -1,18 +1,14 @@
 package com.polinakulyk.cashregister2.controller.command;
 
-import com.polinakulyk.cashregister2.controller.api.Command;
-import com.polinakulyk.cashregister2.controller.api.HttpRoute;
+import com.polinakulyk.cashregister2.controller.api.RouteString;
+import com.polinakulyk.cashregister2.db.dto.ProductAmountUnit;
 import com.polinakulyk.cashregister2.db.entity.Product;
 import com.polinakulyk.cashregister2.service.ProductService;
-import com.polinakulyk.cashregister2.util.Util;
-import java.math.BigDecimal;
 import java.util.Optional;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import static com.polinakulyk.cashregister2.controller.api.HttpRoute.PRODUCTS_LIST;
-import static com.polinakulyk.cashregister2.controller.api.HttpRoute.toRouteString;
-import static com.polinakulyk.cashregister2.db.dto.ProductAmountUnit.fromString;
 import static com.polinakulyk.cashregister2.util.Util.bigDecimalAmount;
 import static com.polinakulyk.cashregister2.util.Util.bigDecimalMoney;
 
@@ -21,8 +17,9 @@ public class UpdateProductCommand implements Command {
     private final ProductService productService = new ProductService();
 
     @Override
-    public Optional<String> execute(HttpServletRequest request, HttpServletResponse response) {
-        var amountUnit = fromString(request.getParameter("amountUnit")).get();
+    public Optional<RouteString> execute(HttpServletRequest request, HttpServletResponse response) {
+        var amountUnit =
+                ProductAmountUnit.fromExistingString(request.getParameter("amountUnit"));
         var product = new Product()
                 .setId(request.getParameter("id"))
                 .setCode(request.getParameter("code"))
@@ -35,6 +32,6 @@ public class UpdateProductCommand implements Command {
                 .setDetails(request.getParameter("details"));
 
         productService.update(product);
-        return Optional.of(toRouteString(PRODUCTS_LIST));
+        return Optional.of(RouteString.of(PRODUCTS_LIST));
     }
 }

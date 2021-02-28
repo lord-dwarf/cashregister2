@@ -1,15 +1,14 @@
 package com.polinakulyk.cashregister2.service;
 
-import com.polinakulyk.cashregister2.db.DbHelper;
+import com.polinakulyk.cashregister2.db.Transaction;
 import com.polinakulyk.cashregister2.db.dto.ReceiptStatus;
 import com.polinakulyk.cashregister2.db.entity.Product;
 import com.polinakulyk.cashregister2.db.entity.Receipt;
 import com.polinakulyk.cashregister2.db.entity.ReceiptItem;
 import com.polinakulyk.cashregister2.db.entity.User;
-import com.polinakulyk.cashregister2.db.repository.ReceiptRepository;
+import com.polinakulyk.cashregister2.db.dao.ReceiptDao;
 import com.polinakulyk.cashregister2.exception.CashRegisterException;
 import com.polinakulyk.cashregister2.exception.CashRegisterEntityNotFoundException;
-import com.polinakulyk.cashregister2.util.Util;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
@@ -27,24 +26,16 @@ import static com.polinakulyk.cashregister2.util.Util.generateUuid;
 import static com.polinakulyk.cashregister2.util.Util.now;
 import static com.polinakulyk.cashregister2.util.Util.quote;
 import static com.polinakulyk.cashregister2.util.Util.subtract;
-import static java.util.stream.Collectors.toList;
 
 public class ReceiptService {
     private static final Logger log = LoggerFactory.getLogger(ReceiptService.class);
 
-    private final ReceiptRepository receiptRepository = new ReceiptRepository();
+    private final ReceiptDao receiptDao = new ReceiptDao();
     private final ProductService productService = new ProductService();
     private final UserService userService = new UserService();
 
-    public List<Receipt> findAll() {
-        var receipts = receiptRepository.findAll();
-
-        log.debug("DONE Find receipts: {}", receipts.size());
-        return receipts;
-    }
-
     public List<Receipt> findWithPagination(int page, int rowsPerPage) {
-        var receipts = receiptRepository.findAllWithPagination(
+        var receipts = receiptDao.findAllWithPagination(
                 rowsPerPage, (page - 1) * rowsPerPage);
 
         log.debug("DONE Find receipts with pagination: {}", receipts.size());
@@ -52,7 +43,7 @@ public class ReceiptService {
     }
 
     public int count() {
-        var receiptsTotal = receiptRepository.count();
+        var receiptsTotal = receiptDao.count();
 
         log.debug("DONE Count receipts: {}", receiptsTotal);
         return receiptsTotal;
@@ -61,7 +52,7 @@ public class ReceiptService {
     public List<Receipt> findByTellerWithPagination(String tellerId, int page, int rowsPerPage) {
 
         // filter teller's receipts that belong to the active shift, with pagination
-        var receipts = receiptRepository.findByTellerWithPagination(
+        var receipts = receiptDao.findByTellerWithPagination(
                 tellerId, rowsPerPage, (page - 1) * rowsPerPage);
 
         log.debug("DONE Find receipts by teller with pagination: '{}', size: {}",
@@ -70,22 +61,10 @@ public class ReceiptService {
     }
 
     public int countByTeller(String tellerId) {
-        var receiptsTotal = receiptRepository.countByTeller(tellerId);
+        var receiptsTotal = receiptDao.countByTeller(tellerId);
 
         log.debug("DONE Count receipts by teller: '{}', size: {}", tellerId, receiptsTotal);
         return receiptsTotal;
-    }
-
-    public Optional<Receipt> findById(String receiptId) {
-        var receipt = receiptRepository.findById(receiptId);
-
-        if (receipt.isEmpty()) {
-            log.info("DONE Can't find receipt with id: {}", receiptId);
-            return receipt;
-        }
-
-        log.debug("DONE Find receipt with id: {}", receiptId);
-        return receipt;
     }
 
     /**
@@ -99,28 +78,36 @@ public class ReceiptService {
      * @return
      */
     public Receipt findExistingById(String receiptId) {
-        var receipt = receiptRepository.findById(receiptId).orElseThrow(() ->
-                new CashRegisterEntityNotFoundException(receiptId));
+        try (Transaction t = Transaction.beginTransaction()) {
+            var receipt = receiptDao.findById(receiptId).orElseThrow(() ->
+                    new CashRegisterEntityNotFoundException(receiptId));
 
-        log.debug("DONE Find existing receipt: '{}'", receiptId);
-        return receipt;
+            t.commitIfNeeded();
+            log.debug("DONE Find existing receipt: '{}'", receiptId);
+
+            return receipt;
+        }
     }
 
     public Receipt createReceipt(String tellerId) {
-        log.debug("BEGIN Create receipt by user: '{}'", tellerId);
-        User user = userService.findExistingById(tellerId);
+        try (Transaction t = Transaction.beginTransaction()) {
+            log.debug("BEGIN Create receipt by user: '{}'", tellerId);
+            User user = userService.findExistingById(tellerId);
 
-        validateIsUserShiftActive(user);
+            validateIsUserShiftActive(user);
 
-        var receipt = receiptRepository.insert(tellerId, new Receipt()
-                .setStatus(CREATED)
-                .setCreatedTime(now())
-                .setSumTotal(ZERO_MONEY)
-                .setUser(user)
-        );
+            var receipt = receiptDao.insert(tellerId, new Receipt()
+                    .setStatus(CREATED)
+                    .setCreatedTime(now())
+                    .setSumTotal(ZERO_MONEY)
+                    .setUser(user)
+            );
 
-        log.info("DONE Create receipt by user: '{}', receipt: '{}'", tellerId, receipt.getId());
-        return receipt;
+            t.commitIfNeeded();
+            log.info("DONE Create receipt by user: '{}', receipt: '{}'", tellerId, receipt.getId());
+
+            return receipt;
+        }
     }
 
     public Receipt addReceiptItem(
@@ -129,130 +116,143 @@ public class ReceiptService {
             String receiptItemProductId,
             BigDecimal receiptItemAmount
     ) {
-        log.debug("BEGIN Add receipt item by user: '{}', in receipt: '{}', for product: '{}'",
-                userId, receiptId, receiptItemProductId);
+        try (Transaction t = Transaction.beginTransaction()) {
 
-        Receipt receipt = findExistingById(receiptId);
+            log.debug("BEGIN Add receipt item by user: '{}', in receipt: '{}', for product: '{}'",
+                    userId, receiptId, receiptItemProductId);
 
-        validateShiftStatus(receipt);
-        validateIsReceiptItemsModificationAllowed(receipt);
+            Receipt receipt = findExistingById(receiptId);
 
-        Product product = productService.findExistingById(receiptItemProductId);
+            validateShiftStatus(receipt);
+            validateIsReceiptItemsModificationAllowed(receipt);
 
-        // find an already existing receipt item with the same product,
-        // to prevent adding duplicate receipt items
-        Optional<ReceiptItem> existingReceiptItemOpt = receipt.getReceiptItems().stream()
-                .filter(ri -> product.getId().equals(ri.getProduct().getId()))
-                .findFirst();
+            Product product = productService.findExistingById(receiptItemProductId);
 
-        ReceiptItem receiptItem;
-        if (existingReceiptItemOpt.isPresent()) {
+            // find an already existing receipt item with the same product,
+            // to prevent adding duplicate receipt items
+            Optional<ReceiptItem> existingReceiptItemOpt = receipt.getReceiptItems().stream()
+                    .filter(ri -> product.getId().equals(ri.getProduct().getId()))
+                    .findFirst();
 
-            // update existing receipt item
-            receiptItem = existingReceiptItemOpt.get();
-            receiptItem.setAmount(add(receiptItem.getAmount(), receiptItemAmount));
-        } else {
+            ReceiptItem receiptItem;
+            if (existingReceiptItemOpt.isPresent()) {
 
-            // create receipt item by copying some fields from product, then add to receipt
-            receiptItem = new ReceiptItem()
-                    .setId(generateUuid())
-                    .setReceipt(receipt)
-                    .setProduct(product)
-                    .setName(product.getName())
-                    .setAmount(receiptItemAmount)
-                    .setAmountUnit(product.getAmountUnit())
-                    .setPrice(product.getPrice());
-            receipt.getReceiptItems().add(receiptItem);
+                // update existing receipt item
+                receiptItem = existingReceiptItemOpt.get();
+                receiptItem.setAmount(add(receiptItem.getAmount(), receiptItemAmount));
+            } else {
+
+                // create receipt item by copying some fields from product, then add to receipt
+                receiptItem = new ReceiptItem()
+                        .setId(generateUuid())
+                        .setReceipt(receipt)
+                        .setProduct(product)
+                        .setName(product.getName())
+                        .setAmount(receiptItemAmount)
+                        .setAmountUnit(product.getAmountUnit())
+                        .setPrice(product.getPrice());
+                receipt.getReceiptItems().add(receiptItem);
+            }
+
+            // validate product amount at the stage after receipt item amount finalized
+            validateProductAmountNotExceeded(receiptItem);
+
+            // calculate and increase receipt price total
+            BigDecimal sumTotalIncrease = calcCostByPriceAndAmount(
+                    receiptItem.getPrice(), receiptItemAmount);
+            receipt.setSumTotal(add(receipt.getSumTotal(), sumTotalIncrease));
+
+            // update receipt and associated receipt item
+            receipt = receiptDao.update(receipt.getUser().getId(), receipt);
+            if (existingReceiptItemOpt.isEmpty()) {
+                receiptDao.insertReceiptItem(receiptId, receiptItemProductId, receiptItem);
+            } else {
+                receiptDao.updateReceiptItem(receiptId, receiptItemProductId, receiptItem);
+            }
+
+            t.commitIfNeeded();
+            log.info("DONE Add receipt item by user: '{}', in receipt: '{}', receipt item: '{}'",
+                    userId, receiptId, receiptItem.getId());
+
+            return receipt;
         }
-
-        // validate product amount at the stage after receipt item amount finalized
-        validateProductAmountNotExceeded(receiptItem);
-
-        // calculate and increase receipt price total
-        BigDecimal sumTotalIncrease = calcCostByPriceAndAmount(
-                receiptItem.getPrice(), receiptItemAmount);
-        receipt.setSumTotal(add(receipt.getSumTotal(), sumTotalIncrease));
-
-        // update receipt and associated receipt item
-        receipt = receiptRepository.update(receipt.getUser().getId(), receipt);
-        if (existingReceiptItemOpt.isEmpty()) {
-            receiptRepository.insertReceiptItem(receiptId, receiptItemProductId, receiptItem);
-        } else {
-            receiptRepository.updateReceiptItem(receiptId, receiptItemProductId, receiptItem);
-        }
-
-        log.info("DONE Add receipt item by user: '{}', in receipt: '{}', receipt item: '{}'",
-                userId, receiptId, receiptItem.getId());
-        return receipt;
     }
 
     public Receipt completeReceipt(String userId, String receiptId) {
-        log.debug("BEGIN Complete receipt by user: '{}', receipt: '{}'", userId, receiptId);
+        try (Transaction t = Transaction.beginTransaction()) {
+            log.debug("BEGIN Complete receipt by user: '{}', receipt: '{}'", userId, receiptId);
 
-        Receipt receipt = findExistingById(receiptId);
+            Receipt receipt = findExistingById(receiptId);
 
-        validateShiftStatus(receipt);
-        validateReceiptStatusTransitionToCompleted(receipt);
+            validateShiftStatus(receipt);
+            validateReceiptStatusTransitionToCompleted(receipt);
 
-        // decrease amount available for products in receipt items
-        var productsToUpdateAmountAvailable = new ArrayList<Product>();
-        for (ReceiptItem receiptItem : receipt.getReceiptItems()) {
+            // decrease amount available for products in receipt items
+            var productsToUpdateAmountAvailable = new ArrayList<Product>();
+            for (ReceiptItem receiptItem : receipt.getReceiptItems()) {
 
-            validateProductAmountNotExceeded(receiptItem);
+                validateProductAmountNotExceeded(receiptItem);
 
-            // decrease amount available for product
-            Product receiptItemProduct = receiptItem.getProduct();
-            receiptItemProduct.setAmountAvailable(
-                    subtract(receiptItemProduct.getAmountAvailable(), receiptItem.getAmount()));
-            productsToUpdateAmountAvailable.add(receiptItemProduct);
+                // decrease amount available for product
+                Product receiptItemProduct = receiptItem.getProduct();
+                receiptItemProduct.setAmountAvailable(
+                        subtract(receiptItemProduct.getAmountAvailable(), receiptItem.getAmount()));
+                productsToUpdateAmountAvailable.add(receiptItemProduct);
+            }
+
+            // set status
+            receipt.setStatus(COMPLETED);
+            receipt.setCheckoutTime(now());
+
+            for (Product product : productsToUpdateAmountAvailable) {
+                productService.update(product);
+            }
+            receipt = receiptDao.update(userId, receipt);
+
+            t.commitIfNeeded();
+            log.info("DONE Complete receipt by user: '{}', receipt: '{}'", userId, receiptId);
+
+            return receipt;
         }
-
-        // set status
-        receipt.setStatus(COMPLETED);
-        receipt.setCheckoutTime(now());
-
-        for (Product product : productsToUpdateAmountAvailable) {
-            productService.update(product);
-        }
-        receipt = receiptRepository.update(userId, receipt);
-
-        log.info("DONE Complete receipt by user: '{}', receipt: '{}'", userId, receiptId);
-        return receipt;
     }
 
     public Receipt cancelReceipt(String userId, String receiptId) {
-        log.debug("BEGIN Cancel receipt by user: '{}', receipt: '{}'", userId, receiptId);
+        try (Transaction t = Transaction.beginTransaction()) {
+            log.debug("BEGIN Cancel receipt by user: '{}', receipt: '{}'", userId, receiptId);
 
-        Receipt receipt = findExistingById(receiptId);
+            Receipt receipt = findExistingById(receiptId);
 
-        validateShiftStatus(receipt);
-        validateReceiptStatusTransitionToCanceled(receipt);
+            validateShiftStatus(receipt);
+            validateReceiptStatusTransitionToCanceled(receipt);
 
-        var productsToUpdateAmountAvailable = new ArrayList<Product>();
-        if (COMPLETED == receipt.getStatus()) {
+            var productsToUpdateAmountAvailable = new ArrayList<Product>();
+            if (COMPLETED == receipt.getStatus()) {
 
-            // increase amount available for products in receipt items
-            for (ReceiptItem receiptItem : receipt.getReceiptItems()) {
+                // increase amount available for products in receipt items
+                for (ReceiptItem receiptItem : receipt.getReceiptItems()) {
 
-                // increase amount available for product
-                Product receiptItemProduct = receiptItem.getProduct();
-                receiptItemProduct.setAmountAvailable(
-                        add(receiptItemProduct.getAmountAvailable(), receiptItem.getAmount()));
-                productsToUpdateAmountAvailable.add(receiptItemProduct);
+                    // increase amount available for product
+                    Product receiptItemProduct = receiptItem.getProduct();
+                    receiptItemProduct.setAmountAvailable(
+                            add(receiptItemProduct.getAmountAvailable(), receiptItem.getAmount()));
+                    productsToUpdateAmountAvailable.add(receiptItemProduct);
+                }
             }
+
+            // set status
+            receipt.setStatus(CANCELED);
+            receipt.setCheckoutTime(now());
+
+            for (Product product : productsToUpdateAmountAvailable) {
+                productService.update(product);
+            }
+            receipt = receiptDao.update(userId, receipt);
+
+            t.commitIfNeeded();
+            log.info("DONE Cancel receipt by user: '{}', receipt: '{}'", userId, receiptId);
+
+            return receipt;
         }
-
-        // set status
-        receipt.setStatus(CANCELED);
-        receipt.setCheckoutTime(now());
-
-        for (Product product : productsToUpdateAmountAvailable) {
-            productService.update(product);
-        }
-        receipt = receiptRepository.update(userId, receipt);
-        log.info("DONE Cancel receipt by user: '{}', receipt: '{}'", userId, receiptId);
-
-        return receipt;
     }
 
     private static void validateShiftStatus(Receipt receipt) {

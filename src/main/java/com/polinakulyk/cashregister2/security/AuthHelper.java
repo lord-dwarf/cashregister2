@@ -1,6 +1,7 @@
 package com.polinakulyk.cashregister2.security;
 
 import com.polinakulyk.cashregister2.db.entity.User;
+import com.polinakulyk.cashregister2.exception.CashRegisterAuthorizationException;
 import com.polinakulyk.cashregister2.exception.CashRegisterException;
 import com.polinakulyk.cashregister2.security.dto.UserRole;
 import java.security.NoSuchAlgorithmException;
@@ -15,7 +16,7 @@ import javax.servlet.http.HttpSession;
 
 import static com.polinakulyk.cashregister2.security.dto.UserRole.GUEST;
 import static com.polinakulyk.cashregister2.util.Util.getProperties;
-import static com.polinakulyk.cashregister2.util.Util.getProperty;
+import static com.polinakulyk.cashregister2.util.Util.getExistingProperty;
 import static com.polinakulyk.cashregister2.util.Util.toBase64;
 import static java.nio.charset.StandardCharsets.UTF_8;
 
@@ -28,7 +29,7 @@ public class AuthHelper {
     static {
         var properties = getProperties();
         SALT = toBase64(
-                getProperty(properties, "cashregister.auth.salt"));
+                getExistingProperty(properties, "cashregister.auth.salt"));
     }
 
     public String encodePassword(String password) {
@@ -64,7 +65,19 @@ public class AuthHelper {
 
     public Optional<User> getUserFromSession(HttpServletRequest request) {
         return Optional.ofNullable(request.getSession(false))
-                .map((session) -> (User)session.getAttribute(SESSION_AUTHENTICATED_USER));
+                .map((session) -> (User) session.getAttribute(SESSION_AUTHENTICATED_USER));
+    }
+
+    public String getUserIdFromSession(HttpServletRequest request) {
+        return getUserFromSession(request)
+                .orElseThrow(() -> new CashRegisterAuthorizationException("No user session"))
+                .getId();
+    }
+
+    public UserRole getUserRoleFromSession(HttpServletRequest request) {
+        return getUserFromSession(request)
+                .orElseThrow(() -> new CashRegisterAuthorizationException("No user session"))
+                .getRole();
     }
 
     public boolean isAuthorized(HttpServletRequest request, Set<UserRole> roles) {

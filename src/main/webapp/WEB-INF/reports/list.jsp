@@ -1,9 +1,8 @@
 <%@ page import="static com.polinakulyk.cashregister2.controller.api.HttpRoute.REPORTS_X" %>
 <%@ page import="static com.polinakulyk.cashregister2.controller.api.HttpRoute.REPORTS_Z" %>
-<jsp:useBean id="view" class="com.polinakulyk.cashregister2.view.ReportsView"/>
-<%
-    view.init(request);
-%>
+<%@ page import="com.polinakulyk.cashregister2.controller.router.RouterHelper" %>
+<%@ page
+        import="static com.polinakulyk.cashregister2.controller.router.RouterHelper.getRoutePath" %>
 
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <!DOCTYPE html>
@@ -25,14 +24,14 @@
     <tr>
         <td>X Report</td>
         <td>
-            <a class="btn btn-outline-primary" href="<%=view.makeUrl(REPORTS_X)%>"
+            <a class="btn btn-outline-primary" href="<%=getRoutePath(request, REPORTS_X)%>"
                role="button">Create</a>
         </td>
     </tr>
     <tr>
         <td>Z Report</td>
         <td>
-            <a class="btn btn-outline-primary" href="<%=view.makeUrl(REPORTS_Z)%>"
+            <a class="btn btn-outline-primary" href="<%=getRoutePath(request, REPORTS_Z)%>"
                role="button">Create</a>
         </td>
     </tr>

@@ -1,4 +1,4 @@
-package com.polinakulyk.cashregister2.controller;
+package com.polinakulyk.cashregister2.controller.router;
 
 import com.polinakulyk.cashregister2.controller.api.HttpRoute;
 import com.polinakulyk.cashregister2.controller.command.AddProductCommand;
@@ -63,46 +63,46 @@ public class MainRouter extends Router {
 
     public MainRouter() {
         // Home
-        addCommand(GET, INDEX, "index.jsp", any());
+        addForwardToJsp(GET, INDEX, "index.jsp", any());
         // Products and Products -> Product
-        addCommandThenForward(GET, PRODUCTS_LIST, new ListProductsCommand(), "products/list.jsp", authenticated());
-        addCommand(GET, PRODUCTS_ADD, "products/add.jsp", Set.of(MERCH));
+        addCommandThenForwardToJsp(GET, PRODUCTS_LIST, new ListProductsCommand(), "products/list.jsp", authenticated());
+        addForwardToJsp(GET, PRODUCTS_ADD, "products/add.jsp", Set.of(MERCH));
         addCommand(POST, PRODUCTS_ADD, new AddProductCommand(), Set.of(MERCH));
-        addCommandThenForward(GET, PRODUCTS_VIEW, new GetProductCommand(), "products/view.jsp", authenticated());
-        addCommandThenForward(GET, PRODUCTS_EDIT, new GetProductCommand(), "products/edit.jsp", Set.of(MERCH));
+        addCommandThenForwardToJsp(GET, PRODUCTS_VIEW, new GetProductCommand(), "products/view.jsp", authenticated());
+        addCommandThenForwardToJsp(GET, PRODUCTS_EDIT, new GetProductCommand(), "products/edit.jsp", Set.of(MERCH));
         addCommand(POST, PRODUCTS_EDIT, new UpdateProductCommand(), Set.of(MERCH));
         // Receipts and Receipts -> Receipt
-        addCommandThenForward(GET, RECEIPTS_LIST, new ListReceiptsCommand(), "receipts/list.jsp", Set.of(SR_TELLER));
-        addCommandThenForward(GET, RECEIPTS_VIEW, new GetReceiptCommand(), "receipts/view.jsp", Set.of(SR_TELLER));
-        addCommandThenForward(GET, RECEIPTS_EDIT, new GetReceiptCommand(), "receipts/edit.jsp", Set.of(SR_TELLER));
+        addCommandThenForwardToJsp(GET, RECEIPTS_LIST, new ListReceiptsCommand(), "receipts/list.jsp", Set.of(SR_TELLER));
+        addCommandThenForwardToJsp(GET, RECEIPTS_VIEW, new GetReceiptCommand(), "receipts/view.jsp", Set.of(SR_TELLER));
+        addCommandThenForwardToJsp(GET, RECEIPTS_EDIT, new GetReceiptCommand(), "receipts/edit.jsp", Set.of(SR_TELLER));
         addCommand(POST, RECEIPTS_CANCEL, new CancelReceiptCommand(), Set.of(SR_TELLER));
         // My Receipts and My Receipts -> Receipt
-        addCommandThenForward(GET, MYRECEIPTS_LIST, new ListMyReceiptsCommand(), "myreceipts/list.jsp", tellers());
-        addCommandThenForward(GET, MYRECEIPTS_ADD, new AddReceiptCommand(), "myreceipts/edit.jsp", tellers());
-        addCommandThenForward(GET, MYRECEIPTS_VIEW, new GetReceiptCommand(), "myreceipts/view.jsp", tellers());
-        addCommandThenForward(GET, MYRECEIPTS_EDIT, new GetReceiptCommand(), "myreceipts/edit.jsp", tellers());
+        addCommandThenForwardToJsp(GET, MYRECEIPTS_LIST, new ListMyReceiptsCommand(), "myreceipts/list.jsp", tellers());
+        addCommandThenForwardToJsp(GET, MYRECEIPTS_ADD, new AddReceiptCommand(), "myreceipts/edit.jsp", tellers());
+        addCommandThenForwardToJsp(GET, MYRECEIPTS_VIEW, new GetReceiptCommand(), "myreceipts/view.jsp", tellers());
+        addCommandThenForwardToJsp(GET, MYRECEIPTS_EDIT, new GetReceiptCommand(), "myreceipts/edit.jsp", tellers());
         addCommand(POST, MYRECEIPTS_CANCEL, new CancelMyReceiptCommand(), Set.of(SR_TELLER));
         addCommand(POST, MYRECEIPTS_COMPLETE, new CompleteMyReceiptCommand(), tellers());
 
         // My Receipts -> Receipt -> Receipt Item
-        addCommandThenForward(GET, MYRECEIPTS_ADDITEM, new BeforeAddReceiptItemCommand(), "myreceipts/additem.jsp", tellers());
-        addCommandThenForward(POST, MYRECEIPTS_ADDITEM_SEARCH, new SearchReceiptItemCommand(), "myreceipts/additem.jsp", tellers());
+        addCommandThenForwardToJsp(GET, MYRECEIPTS_ADDITEM, new BeforeAddReceiptItemCommand(), "myreceipts/additem.jsp", tellers());
+        addCommandThenForwardToJsp(POST, MYRECEIPTS_ADDITEM_SEARCH, new SearchReceiptItemCommand(), "myreceipts/additem.jsp", tellers());
         addCommand(POST, MYRECEIPTS_ADDITEM, new AddReceiptItemCommand(), tellers());
         // Reports
-        addCommand(GET, HttpRoute.REPORTS_LIST, "reports/list.jsp", Set.of(SR_TELLER));
+        addForwardToJsp(GET, HttpRoute.REPORTS_LIST, "reports/list.jsp", Set.of(SR_TELLER));
         addCommand(GET, HttpRoute.REPORTS_X, new GetReportsXCommand(), Set.of(SR_TELLER));
         addCommand(GET, HttpRoute.REPORTS_Z, new GetReportsZCommand(), Set.of(SR_TELLER));
         // Auth
-        addCommand(GET, AUTH_LOGIN, "auth/login.jsp", Set.of(GUEST));
+        addForwardToJsp(GET, AUTH_LOGIN, "auth/login.jsp", Set.of(GUEST));
         addCommand(POST, AUTH_LOGIN, new LoginCommand(), any());
         addCommand(GET, AUTH_LOGOUT, new GetAuthLogoutCommand(), authenticated());
         // Localization
         addCommand(POST, AUTH_LANG, new ChangeLangCommand(), any());
         // Errors
-        addCommandThenForward(
+        addCommandThenForwardToJsp(
                 GET, ERROR_CLIENT, new GetErrorMessageCommand(), "error/client.jsp", any());
-        addCommand(GET, ERROR_AUTH, "error/auth.jsp", any());
-        addCommand(GET, ERROR_NOTFOUND, "error/notfound.jsp", any());
-        addCommand(GET, ERROR_SERVER, "error/server.jsp", any());
+        addForwardToJsp(GET, ERROR_AUTH, "error/auth.jsp", any());
+        addForwardToJsp(GET, ERROR_NOTFOUND, "error/notfound.jsp", any());
+        addForwardToJsp(GET, ERROR_SERVER, "error/server.jsp", any());
     }
 }

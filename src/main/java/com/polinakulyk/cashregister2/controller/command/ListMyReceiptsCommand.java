@@ -1,9 +1,8 @@
 package com.polinakulyk.cashregister2.controller.command;
 
-import com.polinakulyk.cashregister2.controller.api.Command;
-import com.polinakulyk.cashregister2.controller.api.HttpRoute;
+import com.polinakulyk.cashregister2.controller.api.RouteString;
+import com.polinakulyk.cashregister2.exception.CashRegisterAuthorizationException;
 import com.polinakulyk.cashregister2.security.AuthHelper;
-import com.polinakulyk.cashregister2.service.ProductService;
 import com.polinakulyk.cashregister2.service.ReceiptService;
 import java.util.Optional;
 import javax.servlet.http.HttpServletRequest;
@@ -20,8 +19,8 @@ public class ListMyReceiptsCommand implements Command {
     private final AuthHelper authHelper = new AuthHelper();
 
     @Override
-    public Optional<String> execute(HttpServletRequest request, HttpServletResponse response) {
-        var userId = authHelper.getUserFromSession(request).get().getId();
+    public Optional<RouteString> execute(HttpServletRequest request, HttpServletResponse response) {
+        var userId = authHelper.getUserIdFromSession(request);
         var currentPage = Integer.parseInt(
                 ofNullable(request.getParameter("currentPage")).orElse("1"));
         var receipts =

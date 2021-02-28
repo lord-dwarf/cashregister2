@@ -2,11 +2,10 @@
         import="static com.polinakulyk.cashregister2.controller.api.HttpRoute.MYRECEIPTS_ADDITEM" %>
 <%@ page
         import="static com.polinakulyk.cashregister2.controller.api.HttpRoute.MYRECEIPTS_ADDITEM_SEARCH" %>
+<%@ page import="com.polinakulyk.cashregister2.controller.router.RouterHelper" %>
+<%@ page
+        import="static com.polinakulyk.cashregister2.controller.router.RouterHelper.getRoutePath" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<jsp:useBean id="view" class="com.polinakulyk.cashregister2.view.BaseView"/>
-<%
-    view.init(request);
-%>
 
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <!DOCTYPE html>
@@ -18,7 +17,7 @@
     <%= "Add My Receipt Item" %>
 </h1>
 <form class="w-40" method="post"
-      action="<%=view.makeUrl(MYRECEIPTS_ADDITEM_SEARCH)%>?receiptId=${receiptId}&productFilterKind=NAME">
+      action="<%=getRoutePath(request, MYRECEIPTS_ADDITEM_SEARCH)%>?receiptId=${receiptId}&productFilterKind=NAME">
     <div class="form-group mt-2">
         <label for="search-by-name-input">Search by Name</label>
         <input name="filterValue" type="text" class="form-control" id="search-by-name-input"
@@ -27,7 +26,7 @@
     <button type="submit" class="btn btn-primary mt-3">Search</button>
 </form>
 <form class="w-40" method="post"
-      action="<%=view.makeUrl(MYRECEIPTS_ADDITEM_SEARCH)%>?receiptId=${receiptId}&productFilterKind=CODE">
+      action="<%=getRoutePath(request, MYRECEIPTS_ADDITEM_SEARCH)%>?receiptId=${receiptId}&productFilterKind=CODE">
     <div class="form-group mt-2">
         <label for="search-by-code-input">Search by Code</label>
         <input name="filterValue" type="text" class="form-control" id="search-by-code-input"
@@ -37,7 +36,7 @@
 </form>
 <c:forEach var="product" items="${products}">
     <form class="w-40" method="post"
-          action="<%=view.makeUrl(MYRECEIPTS_ADDITEM)%>?receiptId=${receiptId}">
+          action="<%=getRoutePath(request, MYRECEIPTS_ADDITEM)%>?receiptId=${receiptId}">
         <div class="form-group mt-2 invisible">
             <label for="product-id-input">Product Id</label>
             <input name="productId" type="text" class="form-control" id="product-id-input"

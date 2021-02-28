@@ -1,8 +1,6 @@
 <%@ page import="static com.polinakulyk.cashregister2.controller.api.HttpRoute.*" %>
-<jsp:useBean id="router" class="com.polinakulyk.cashregister2.view.BaseView"/>
-<%
-    router.init(request);
-%>
+<%@ page
+        import="static com.polinakulyk.cashregister2.controller.router.RouterHelper.getRoutePath" %>
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <!DOCTYPE html>
 <html>
@@ -10,7 +8,7 @@
 <body>
 <jsp:include page="../parts/navbar.jsp"/>
 <div class="d-flex justify-content-center align-items-center container">
-    <form class="w-25" method="post" action="<%=router.makeUrl(AUTH_LOGIN)%>">
+    <form class="w-25" method="post" action="<%=getRoutePath(request, AUTH_LOGIN)%>">
         <div class="form-group mt-2">
             <label for="login-input">${messages_loginUsernameLabel}</label>
             <input name="login" type="text" class="form-control" id="login-input"

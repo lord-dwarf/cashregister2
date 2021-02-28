@@ -1,9 +1,11 @@
 package com.polinakulyk.cashregister2.db.dto;
 
 import com.polinakulyk.cashregister2.exception.CashRegisterException;
+import com.polinakulyk.cashregister2.exception.CashRegisterValidationException;
 import java.util.Optional;
 
 import static com.polinakulyk.cashregister2.util.Util.quote;
+import static java.util.Arrays.asList;
 import static java.util.Arrays.stream;
 
 public enum ProductAmountUnit {
@@ -20,6 +22,13 @@ public enum ProductAmountUnit {
         return stream(values())
                 .filter((amountUnit) -> amountUnit.name().equals(amountUnitStr))
                 .findFirst();
+    }
+
+    public static ProductAmountUnit fromExistingString(String amountUnitStr) {
+        return fromString(amountUnitStr)
+                .orElseThrow(() -> new CashRegisterValidationException(
+                        quote("Product amount unit must be one of",
+                                asList(ProductAmountUnit.values()))));
     }
 
     /**

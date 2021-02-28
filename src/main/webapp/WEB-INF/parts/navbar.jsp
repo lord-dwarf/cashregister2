@@ -6,10 +6,12 @@
 <%@ page import="static com.polinakulyk.cashregister2.controller.api.HttpRoute.AUTH_LOGIN" %>
 <%@ page import="static com.polinakulyk.cashregister2.controller.api.HttpRoute.AUTH_LOGOUT" %>
 <%@ page import="static com.polinakulyk.cashregister2.controller.api.HttpRoute.AUTH_LANG" %>
-<jsp:useBean id="view" class="com.polinakulyk.cashregister2.view.NavBarView"/>
-<%
-    view.init(request);
-%>
+<%@ page import="com.polinakulyk.cashregister2.controller.router.RouterHelper" %>
+<%@ page
+        import="static com.polinakulyk.cashregister2.controller.router.RouterHelper.getRoutePath" %>
+<%@ page
+        import="static com.polinakulyk.cashregister2.controller.router.RouterHelper.getCurrentRouteFromJsp" %>
+
 <%@ page contentType="text/html;charset=UTF-8" pageEncoding="UTF-8" %>
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
     <div class="container-fluid">
@@ -24,28 +26,28 @@
         </button>
         <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
             <div class="navbar-nav">
-                <a href="<%=view.makeUrl(INDEX)%>"
-                   class="nav-link <%=view.getNavMenuActive(INDEX)%>"
+                <a href="<%=getRoutePath(request, INDEX)%>"
+                   class="nav-link"
                    aria-current="page">${messages_menuHome}</a>
-                <a href="<%=view.makeUrl(PRODUCTS_LIST)%>"
-                   class="nav-link <%=view.getNavMenuActive(PRODUCTS_LIST)%>">${messages_menuProducts}</a>
-                <a href="<%=view.makeUrl(RECEIPTS_LIST)%>"
-                   class="nav-link <%=view.getNavMenuActive(RECEIPTS_LIST)%>">${messages_menuReceipts}</a>
-                <a href="<%=view.makeUrl(MYRECEIPTS_LIST)%>"
-                   class="nav-link <%=view.getNavMenuActive(MYRECEIPTS_LIST)%>">${messages_menuMyReceipts}</a>
-                <a href="<%=view.makeUrl(REPORTS_LIST)%>"
-                   class="nav-link <%=view.getNavMenuActive(REPORTS_LIST)%>">${messages_menuReports}</a>
-                <a href="<%=view.makeUrl(AUTH_LOGIN)%>"
-                   class="nav-link <%=view.getNavMenuActive(AUTH_LOGIN)%>">${messages_menuLogin}</a>
-                <a href="<%=view.makeUrl(AUTH_LOGOUT)%>"
+                <a href="<%=getRoutePath(request, PRODUCTS_LIST)%>"
+                   class="nav-link">${messages_menuProducts}</a>
+                <a href="<%=getRoutePath(request, RECEIPTS_LIST)%>"
+                   class="nav-link">${messages_menuReceipts}</a>
+                <a href="<%=getRoutePath(request, MYRECEIPTS_LIST)%>"
+                   class="nav-link">${messages_menuMyReceipts}</a>
+                <a href="<%=getRoutePath(request, REPORTS_LIST)%>"
+                   class="nav-link">${messages_menuReports}</a>
+                <a href="<%=getRoutePath(request, AUTH_LOGIN)%>"
+                   class="nav-link">${messages_menuLogin}</a>
+                <a href="<%=getRoutePath(request, AUTH_LOGOUT)%>"
                    class="nav-link">${messages_menuLogout}</a>
                 <form method="post"
-                      action="<%=view.makeUrl(AUTH_LANG)%>?lang=EN&redirectRoute=<%=view.getRoute().get()%>"
+                      action="<%=getRoutePath(request, AUTH_LANG)%>?lang=EN&redirectRoute=<%=getCurrentRouteFromJsp(request)%>"
                         class="mt-1">
                     <button type="submit" class="btn btn-info btn-sm">En</button>
                 </form>
                 <form method="post"
-                      action="<%=view.makeUrl(AUTH_LANG)%>?lang=UA&redirectRoute=<%=view.getRoute().get()%>"
+                      action="<%=getRoutePath(request, AUTH_LANG)%>?lang=UA&redirectRoute=<%=getCurrentRouteFromJsp(request)%>"
                         class="mt-1">
                     <button type="submit" class="btn btn-warning btn-sm">Укр</button>
                 </form>

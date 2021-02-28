@@ -1,10 +1,9 @@
-package com.polinakulyk.cashregister2.db.repository;
+package com.polinakulyk.cashregister2.db.dao;
 
-import com.polinakulyk.cashregister2.db.DbHelper;
-import com.polinakulyk.cashregister2.db.dto.ProductAmountUnit;
+import com.polinakulyk.cashregister2.db.Transaction;
 import com.polinakulyk.cashregister2.db.entity.Product;
+import com.polinakulyk.cashregister2.db.mapper.ProductMapper;
 import com.polinakulyk.cashregister2.exception.CashRegisterException;
-import java.net.HttpURLConnection;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -14,12 +13,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import static com.polinakulyk.cashregister2.db.DbHelper.getConnection;
-import static com.polinakulyk.cashregister2.util.Util.*;
+import static com.polinakulyk.cashregister2.controller.api.HttpStatus.BAD_REQUEST;
+import static com.polinakulyk.cashregister2.db.ConnectionPool.getConnection;
+import static com.polinakulyk.cashregister2.util.Util.generateUuid;
 import static com.polinakulyk.cashregister2.util.Util.quote;
-import static java.net.HttpURLConnection.HTTP_BAD_REQUEST;
 
-public class ProductRepository {
+public class ProductDao {
     private static final String INSERT_PRODUCT_SQL =
             "INSERT INTO product " +
                     "(id, code, name, category, price, amount_unit, amount_available, details) " +
@@ -67,7 +66,7 @@ public class ProductRepository {
             return product;
         } catch (SQLIntegrityConstraintViolationException e) {
             throw new CashRegisterException(
-                    HTTP_BAD_REQUEST,
+                    BAD_REQUEST,
                     quote("Can't create product with duplicate code", product.getCode()),
                     e);
         } catch (SQLException e) {
@@ -82,7 +81,7 @@ public class ProductRepository {
             ResultSet resultSet = statement.executeQuery();
             List<Product> result = new ArrayList<>();
             while (resultSet.next()) {
-                result.add(getProduct(resultSet));
+                result.add(ProductMapper.getProduct(resultSet));
             }
             return result;
         } catch (SQLException e) {
@@ -99,7 +98,7 @@ public class ProductRepository {
             ResultSet resultSet = statement.executeQuery();
             List<Product> result = new ArrayList<>();
             while (resultSet.next()) {
-                result.add(getProduct(resultSet));
+                result.add(ProductMapper.getProduct(resultSet));
             }
             return result;
         } catch (SQLException e) {
@@ -121,8 +120,11 @@ public class ProductRepository {
     }
 
     public boolean update(Product product) {
-        try (Connection connection = getConnection()) {
-            PreparedStatement statement = connection.prepareStatement(UPDATE_PRODUCT_SQL);
+        Connection conn = null;
+        boolean succ = false;
+        try {
+            conn = Transaction.getTransactionalConnection();
+            PreparedStatement statement = conn.prepareStatement(UPDATE_PRODUCT_SQL);
             statement.setString(1, product.getCode());
             statement.setString(2, product.getName());
             statement.setString(3, product.getCategory());
@@ -133,39 +135,39 @@ public class ProductRepository {
             statement.setString(8, product.getId());
 
             int numOfRows = statement.executeUpdate();
+
+            succ = true;
             return numOfRows == 1;
         } catch (SQLException e) {
             throw new CashRegisterException(
                     quote("Can't update product with id", product.getId()), e);
+        } finally {
+            Transaction.rollbackIfNeeded(conn, succ);
         }
     }
 
     public Optional<Product> findById(String productId) {
-        try (Connection connection = getConnection()) {
-            PreparedStatement statement = connection.prepareStatement(FIND_PRODUCT_BY_ID_SQL);
+        Connection conn = null;
+        boolean succ = false;
+        try {
+            conn = Transaction.getTransactionalConnection();
+            PreparedStatement statement = conn.prepareStatement(FIND_PRODUCT_BY_ID_SQL);
             statement.setString(1, productId);
             ResultSet resultSet = statement.executeQuery();
             if (!resultSet.next()) {
+                succ = true;
                 return Optional.empty();
             }
-            var product = getProduct(resultSet);
-            return Optional.of(product);
+            var product = ProductMapper.getProduct(resultSet);
+            var result = Optional.of(product);
 
+            succ = true;
+            return result;
         } catch (SQLException e) {
             throw new CashRegisterException(
                     quote("Can't find product by id {}", productId), e);
+        } finally {
+            Transaction.rollbackIfNeeded(conn, succ);
         }
-    }
-
-    private Product getProduct(ResultSet rs) throws SQLException {
-        return new Product()
-                .setId(rs.getString("id"))
-                .setAmountAvailable(rs.getBigDecimal("amount_available"))
-                .setAmountUnit(ProductAmountUnit.fromExistingInteger(rs.getInt("amount_unit")))
-                .setCategory(rs.getString("category"))
-                .setCode(rs.getString("code"))
-                .setDetails(rs.getString("details"))
-                .setName(rs.getString("name"))
-                .setPrice(rs.getBigDecimal("price"));
     }
 }

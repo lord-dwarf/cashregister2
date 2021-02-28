@@ -11,9 +11,9 @@
     <packaging>war</packaging>
 
     <properties>
-        <java.source.version>11</java.source.version>
-        <java.target.version>11</java.target.version>
-        <java.release.version>11</java.release.version>
+        <java.source.version>15</java.source.version>
+        <java.target.version>15</java.target.version>
+        <java.release.version>15</java.release.version>
         <log4j.version>2.14.0</log4j.version>
         <junit.version>5.7.0</junit.version>
     </properties>
@@ -38,6 +38,12 @@
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>
             <version>8.0.23</version>
+        </dependency>
+        <dependency>
+            <groupId>com.zaxxer</groupId>
+            <artifactId>HikariCP</artifactId>
+            <version>3.4.5</version>
+            <type>bundle</type>
         </dependency>
         <dependency>
             <groupId>javax.servlet</groupId>
@@ -66,6 +72,11 @@
             <artifactId>junit-jupiter-engine</artifactId>
             <version>${junit.version}</version>
             <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.zaxxer</groupId>
+            <artifactId>HikariCP</artifactId>
+            <version>3.4.5</version>
         </dependency>
     </dependencies>
 

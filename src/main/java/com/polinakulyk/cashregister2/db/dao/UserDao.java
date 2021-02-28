@@ -1,21 +1,19 @@
-package com.polinakulyk.cashregister2.db.repository;
+package com.polinakulyk.cashregister2.db.dao;
 
-import com.polinakulyk.cashregister2.db.entity.Cashbox;
+import com.polinakulyk.cashregister2.db.Transaction;
 import com.polinakulyk.cashregister2.db.entity.User;
+import com.polinakulyk.cashregister2.db.mapper.UserMapper;
 import com.polinakulyk.cashregister2.exception.CashRegisterException;
-import com.polinakulyk.cashregister2.security.dto.UserRole;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Optional;
 
-import static com.polinakulyk.cashregister2.db.DbHelper.*;
-import static com.polinakulyk.cashregister2.db.DbHelper.getLocalDateTime;
-import static com.polinakulyk.cashregister2.db.dto.ShiftStatus.fromExistingInteger;
+import static com.polinakulyk.cashregister2.db.ConnectionPool.getConnection;
 import static com.polinakulyk.cashregister2.util.Util.quote;
 
-public class UserRepository {
+public class UserDao {
 
     private final static String FIND_BY_USER_ID_SQL =
             "SELECT u.id, u.username, u.password, u.role, u.full_name, u.cashbox_id, "
@@ -30,17 +28,24 @@ public class UserRepository {
                     + "WHERE u.username = ?";
 
     public Optional<User> findById(String userId) {
-        try (Connection connection = getConnection()) {
-            PreparedStatement statement = connection.prepareStatement(FIND_BY_USER_ID_SQL);
+        Connection conn = null;
+        boolean succ = false;
+        try {
+            conn = Transaction.getTransactionalConnection();
+            PreparedStatement statement = conn.prepareStatement(FIND_BY_USER_ID_SQL);
             statement.setString(1, userId);
             ResultSet resultSet = statement.executeQuery();
             if (!resultSet.next()) {
                 return Optional.empty();
             }
-            User user = getUser(resultSet);
-            return Optional.of(user);
+            User user = UserMapper.getUser(resultSet);
+            var result = Optional.of(user);
+            succ = true;
+            return result;
         } catch (SQLException e) {
             throw new CashRegisterException(quote("Can't query user by id", userId), e);
+        } finally {
+            Transaction.rollbackIfNeeded(conn, succ);
         }
     }
 
@@ -52,7 +57,7 @@ public class UserRepository {
             if (!resultSet.next()) {
                 return Optional.empty();
             }
-            User user = getUser(resultSet);
+            User user = UserMapper.getUser(resultSet);
             return Optional.of(user);
         } catch (SQLException e) {
             throw new CashRegisterException(
@@ -60,19 +65,4 @@ public class UserRepository {
         }
     }
 
-    private User getUser(ResultSet rs) throws SQLException {
-        var user = new User()
-                .setId(rs.getString("id"))
-                .setUsername(rs.getString("username"))
-                .setPassword(rs.getString("password"))
-                .setRole(UserRole.fromExistingInteger(rs.getInt("role")))
-                .setFullName(rs.getString("full_name"));
-        var cashbox = new Cashbox()
-                .setId(rs.getString("cashbox_id"))
-                .setShiftStatus(fromExistingInteger(rs.getInt("shift_status")))
-                .setShiftStatusTime(getLocalDateTime(rs, "shift_status_time"))
-                .setName(rs.getString("name"));
-        user.setCashbox(cashbox);
-        return user;
-    }
 }

@@ -1,6 +1,8 @@
 package com.polinakulyk.cashregister2.controller;
 
 import com.polinakulyk.cashregister2.controller.api.HttpMethod;
+import com.polinakulyk.cashregister2.controller.router.MainRouter;
+import com.polinakulyk.cashregister2.controller.router.Router;
 import java.io.IOException;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -8,14 +10,14 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import static com.polinakulyk.cashregister2.controller.Router.getRouteStringFromMainServlet;
-import static com.polinakulyk.cashregister2.controller.Router.redirect;
+import static com.polinakulyk.cashregister2.controller.router.RouterHelper.getCurrentRoutePathFromServlet;
+import static com.polinakulyk.cashregister2.controller.router.RouterHelper.redirect;
 import static com.polinakulyk.cashregister2.controller.api.HttpMethod.DELETE;
 import static com.polinakulyk.cashregister2.controller.api.HttpMethod.GET;
 import static com.polinakulyk.cashregister2.controller.api.HttpMethod.POST;
 import static com.polinakulyk.cashregister2.controller.api.HttpMethod.PUT;
 import static com.polinakulyk.cashregister2.controller.api.HttpRoute.ERROR_NOTFOUND;
-import static com.polinakulyk.cashregister2.controller.api.HttpRoute.fromRouteString;
+import static com.polinakulyk.cashregister2.controller.router.RouterHelper.routePathToHttpRoute;
 
 @WebServlet(name = "mainServlet", value = "/")
 public class MainServlet extends HttpServlet {
@@ -54,17 +56,17 @@ public class MainServlet extends HttpServlet {
     public void doRequest(
             HttpMethod httpMethod, HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        var routeString = getRouteStringFromMainServlet(request);
-        var command = fromRouteString(routeString)
+        var routePath = getCurrentRoutePathFromServlet(request);
+        var command = routePathToHttpRoute(routePath)
                 .flatMap((httpRoute) ->
                         router.getCommand(httpMethod, httpRoute));
         if (command.isPresent()) {
-            var redirectRoute = command.get().execute(request, response);
-            if (redirectRoute.isPresent()) {
-                redirect(request, response, redirectRoute.get());
+            var routeString = command.get().execute(request, response);
+            if (routeString.isPresent()) {
+                redirect(request, response, routeString.get());
             }
         } else {
-            router.getCommand(GET, ERROR_NOTFOUND).get().execute(request, response);
+            redirect(request, response, ERROR_NOTFOUND);
         }
     }
 }

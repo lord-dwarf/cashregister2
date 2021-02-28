@@ -1,14 +1,13 @@
 package com.polinakulyk.cashregister2.controller.command;
 
-import com.polinakulyk.cashregister2.controller.api.Command;
-import com.polinakulyk.cashregister2.controller.api.HttpRoute;
+import com.polinakulyk.cashregister2.controller.api.RouteString;
 import com.polinakulyk.cashregister2.security.AuthHelper;
 import com.polinakulyk.cashregister2.service.UserService;
 import java.util.Optional;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import static com.polinakulyk.cashregister2.controller.api.HttpRoute.toRouteString;
+import static com.polinakulyk.cashregister2.controller.api.HttpRoute.*;
 
 public class LoginCommand implements Command {
 
@@ -16,11 +15,11 @@ public class LoginCommand implements Command {
     private final AuthHelper authHelper = new AuthHelper();
 
     @Override
-    public Optional<String> execute(HttpServletRequest request, HttpServletResponse response) {
+    public Optional<RouteString> execute(HttpServletRequest request, HttpServletResponse response) {
         var login = request.getParameter("login");
         var password = request.getParameter("password");
         var user = userService.login(login, password);
         authHelper.putUserIntoSession(user, request);
-        return Optional.of(toRouteString(HttpRoute.INDEX));
+        return Optional.of(RouteString.of(INDEX));
     }
 }

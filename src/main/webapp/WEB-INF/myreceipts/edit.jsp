@@ -3,11 +3,10 @@
 <%@ page
         import="static com.polinakulyk.cashregister2.controller.api.HttpRoute.MYRECEIPTS_COMPLETE" %>
 <%@ page import="static com.polinakulyk.cashregister2.controller.api.HttpRoute.MYRECEIPTS_CANCEL" %>
+<%@ page import="com.polinakulyk.cashregister2.controller.router.RouterHelper" %>
+<%@ page
+        import="static com.polinakulyk.cashregister2.controller.router.RouterHelper.getRoutePath" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<jsp:useBean id="view" class="com.polinakulyk.cashregister2.view.MyReceiptsView"/>
-<%
-    view.init(request);
-%>
 
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <!DOCTYPE html>
@@ -21,11 +20,11 @@
 <div class="container-fluid mt-2 px-0">
     <div class="row">
             <form class="box col-auto px-0" method="post"
-                  action="<%=view.makeUrl(MYRECEIPTS_COMPLETE)%>?receiptId=${receipt.id}">
+                  action="<%=getRoutePath(request, MYRECEIPTS_COMPLETE)%>?receiptId=${receipt.id}">
                 <button type="submit" class="btn btn-success">Complete</button>
             </form>
             <form class="box col-auto px-0" method="post"
-                  action="<%=view.makeUrl(MYRECEIPTS_CANCEL)%>?receiptId=${receipt.id}">
+                  action="<%=getRoutePath(request, MYRECEIPTS_CANCEL)%>?receiptId=${receipt.id}">
                 <button type="submit" class="btn btn-danger">Cancel</button>
             </form>
             <div class="col w-100">
@@ -107,7 +106,7 @@
     </c:forEach>
     </tbody>
 </table>
-<a class="btn btn-primary" href="<%=view.makeUrl(MYRECEIPTS_ADDITEM)%>?receiptId=${receipt.id}" role="button">Add Item</a>
+<a class="btn btn-primary" href="<%=getRoutePath(request, MYRECEIPTS_ADDITEM)%>?receiptId=${receipt.id}" role="button">Add Item</a>
 <jsp:include page="../parts/bodyjs.jsp"/>
 </body>
 </html>

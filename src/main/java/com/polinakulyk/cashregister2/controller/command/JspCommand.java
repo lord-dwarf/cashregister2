@@ -1,51 +1,32 @@
 package com.polinakulyk.cashregister2.controller.command;
 
-import com.polinakulyk.cashregister2.controller.api.Command;
-import com.polinakulyk.cashregister2.controller.api.HttpRoute;
+import com.polinakulyk.cashregister2.controller.api.RouteString;
+import com.polinakulyk.cashregister2.controller.router.RouterHelper;
 import java.io.IOException;
 import java.util.Optional;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import static com.polinakulyk.cashregister2.controller.Router.*;
+import static java.util.Objects.requireNonNull;
 
-public class JspCommand implements Command {
+public final class JspCommand implements Command {
 
     private final String jspName;
 
-    public JspCommand(String jspName) {
+    private JspCommand(String jspName) {
+        requireNonNull(jspName, "JSP name must not be null");
         this.jspName = jspName;
     }
 
     @Override
-    public Optional<String> execute(HttpServletRequest request, HttpServletResponse response)
+    public Optional<RouteString> execute(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        forwardToJsp(request, response, jspName);
+        RouterHelper.forwardToJsp(request, response, jspName);
         return Optional.empty();
     }
 
-    public static JspCommand commandThenJsp(Command initCommand, String jspName) {
-        return new CommandThenJspCommand(initCommand, jspName);
-    }
-
-    public static final class CommandThenJspCommand extends JspCommand {
-
-        private final Command initCommand;
-
-        private CommandThenJspCommand(Command initCommand, String jspCommandPath) {
-            super(jspCommandPath);
-            this.initCommand = initCommand;
-        }
-
-        @Override
-        public Optional<String> execute(HttpServletRequest request, HttpServletResponse response)
-                throws ServletException, IOException {
-            var nextRoute = initCommand.execute(request, response);
-            if (nextRoute.isEmpty()) {
-                return super.execute(request, response);
-            }
-            return nextRoute;
-        }
+    public static JspCommand of(String jspName) {
+        return new JspCommand(jspName);
     }
 }

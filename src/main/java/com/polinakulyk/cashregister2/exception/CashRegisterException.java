@@ -1,12 +1,14 @@
 package com.polinakulyk.cashregister2.exception;
 
-import java.net.HttpURLConnection;
+import com.polinakulyk.cashregister2.controller.api.HttpStatus;
+
+import static com.polinakulyk.cashregister2.controller.api.HttpStatus.*;
 
 public class CashRegisterException extends RuntimeException {
 
-    private static final Integer DEFAULT_HTTP_STATUS = HttpURLConnection.HTTP_INTERNAL_ERROR;
+    private static final HttpStatus DEFAULT_HTTP_STATUS = INTERNAL_SERVER_ERROR;
 
-    private final Integer httpStatus;
+    private final HttpStatus httpStatus;
 
     public CashRegisterException(String message) {
         this(DEFAULT_HTTP_STATUS, message);
@@ -22,17 +24,17 @@ public class CashRegisterException extends RuntimeException {
         this.httpStatus = DEFAULT_HTTP_STATUS;
     }
 
-    public CashRegisterException(Integer httpStatus, String message) {
+    public CashRegisterException(HttpStatus httpStatus, String message) {
         super(message);
         this.httpStatus = httpStatus;
     }
 
-    public CashRegisterException(Integer httpStatus, String message, Throwable cause) {
+    public CashRegisterException(HttpStatus httpStatus, String message, Throwable cause) {
         super(message, cause);
         this.httpStatus = httpStatus;
     }
 
-    public Integer getHttpStatus() {
+    public HttpStatus getHttpStatus() {
         return httpStatus;
     }
 }

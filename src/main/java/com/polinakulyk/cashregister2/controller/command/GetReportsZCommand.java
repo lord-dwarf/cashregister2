@@ -1,17 +1,15 @@
 package com.polinakulyk.cashregister2.controller.command;
 
-import com.polinakulyk.cashregister2.controller.api.Command;
-import com.polinakulyk.cashregister2.controller.api.HttpRoute;
+import com.polinakulyk.cashregister2.controller.api.RouteString;
+import com.polinakulyk.cashregister2.exception.CashRegisterAuthorizationException;
 import com.polinakulyk.cashregister2.security.AuthHelper;
 import com.polinakulyk.cashregister2.service.ReportService;
-import com.polinakulyk.cashregister2.service.dto.ReportKind;
 import java.io.IOException;
 import java.util.Optional;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import static com.polinakulyk.cashregister2.service.dto.ReportKind.*;
-import static com.polinakulyk.cashregister2.service.dto.ReportKind.X;
 import static java.nio.charset.StandardCharsets.UTF_8;
 
 public class GetReportsZCommand implements Command {
@@ -20,9 +18,9 @@ public class GetReportsZCommand implements Command {
     private final AuthHelper authHelper = new AuthHelper();
 
     @Override
-    public Optional<String> execute(HttpServletRequest request, HttpServletResponse response)
+    public Optional<RouteString> execute(HttpServletRequest request, HttpServletResponse response)
             throws IOException {
-        String userId = authHelper.getUserFromSession(request).get().getId();
+        var userId = authHelper.getUserIdFromSession(request);
         var zReport = reportService.createXZReport(userId, Z);
 
         response.setContentType("application/octet-stream");

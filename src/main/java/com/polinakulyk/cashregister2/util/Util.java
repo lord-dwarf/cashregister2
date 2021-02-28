@@ -184,16 +184,24 @@ public class Util {
         }
     }
 
-    public static String getProperty(Properties properties, String propertyName) {
+    public static String getExistingProperty(Properties properties, String propertyName) {
         return ofNullable(properties.getProperty(propertyName)).orElseThrow(() ->
                 new CashRegisterException(quote("Property not found", propertyName)));
     }
 
     public static String toBase64(byte[] bytes) {
-        return Base64.getEncoder().encodeToString(bytes);
+        return new String(Base64.getUrlEncoder().encode(bytes), UTF_8);
     }
 
     public static String toBase64(String s) {
-        return Base64.getEncoder().encodeToString(s.getBytes(UTF_8));
+        return toBase64(s.getBytes(UTF_8));
+    }
+
+    public static String fromBase64(byte[] bytes) {
+        return new String(Base64.getUrlDecoder().decode(bytes), UTF_8);
+    }
+
+    public static String fromBase64(String s) {
+        return fromBase64(s.getBytes(UTF_8));
     }
 }

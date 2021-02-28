@@ -2,7 +2,6 @@ package com.polinakulyk.cashregister2.service;
 
 import com.polinakulyk.cashregister2.db.entity.Cashbox;
 import com.polinakulyk.cashregister2.db.entity.Receipt;
-import com.polinakulyk.cashregister2.db.repository.ReceiptRepository;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 
@@ -17,11 +16,6 @@ public class ServiceHelper {
     /**
      * Determines whether the given receipt belongs to a currently active shift of a
      * receipt user's cash box.
-     *
-     * WARNING change the predicate in sync:
-     * {@link ReceiptRepository#FIND_RECEIPTS_BY_TELLER_WITH_PAGINATION_SQL}
-     * {@link ReceiptRepository#COUNT_RECEIPTS_BY_TELLER_SQL}
-     * {@link ServiceHelper#isReceiptInActiveShift}
      *
      * @param receipt
      * @return

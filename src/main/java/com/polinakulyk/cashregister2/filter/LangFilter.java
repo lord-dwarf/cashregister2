@@ -1,4 +1,4 @@
-package com.polinakulyk.cashregister2.controller;
+package com.polinakulyk.cashregister2.filter;
 
 import com.polinakulyk.cashregister2.controller.api.Language;
 import com.polinakulyk.cashregister2.security.AuthHelper;

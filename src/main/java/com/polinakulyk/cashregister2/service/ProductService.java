@@ -1,12 +1,11 @@
 package com.polinakulyk.cashregister2.service;
 
+import com.polinakulyk.cashregister2.db.Transaction;
 import com.polinakulyk.cashregister2.db.entity.Product;
-import com.polinakulyk.cashregister2.db.repository.ProductRepository;
+import com.polinakulyk.cashregister2.db.dao.ProductDao;
 import com.polinakulyk.cashregister2.exception.CashRegisterEntityNotFoundException;
 import com.polinakulyk.cashregister2.service.dto.ProductFilterKind;
-import com.polinakulyk.cashregister2.util.Util;
 import java.util.List;
-import java.util.Optional;
 import java.util.function.Function;
 import java.util.regex.Pattern;
 import org.slf4j.Logger;
@@ -21,17 +20,10 @@ public class ProductService {
 
     private static final int FOUND_PRODUCTS_LIMIT = 5;
 
-    private final ProductRepository productRepository = new ProductRepository();
-
-    public List<Product> findAll() {
-        var products = productRepository.findAll();
-
-        log.debug("DONE Find products: {}", products.size());
-        return products;
-    }
+    private final ProductDao productDao = new ProductDao();
 
     public List<Product> findWithPagination(int page, int rowsPerPage) {
-        var products = productRepository.findWithPagination(
+        var products = productDao.findWithPagination(
                 rowsPerPage, (page - 1) * rowsPerPage);
 
         log.debug("DONE Find products with pagination: {}", products.size());
@@ -39,7 +31,7 @@ public class ProductService {
     }
 
     public int count() {
-        var productsTotal = productRepository.count();
+        var productsTotal = productDao.count();
 
         log.debug("DONE Count products: {}", productsTotal);
         return productsTotal;
@@ -48,22 +40,10 @@ public class ProductService {
     public Product create(String userId, Product product) {
         log.debug("BEGIN Create product by user: '{}'", userId);
 
-        product = productRepository.insert(product);
+        product = productDao.insert(product);
 
         log.info("DONE Create product by user: '{}', product: '{}'",
                 userId, product.getId());
-        return product;
-    }
-
-    public Optional<Product> findById(String productId) {
-        var product = productRepository.findById(productId);
-
-        if (product.isEmpty()) {
-            log.info("DONE Can't find product with id: {}", productId);
-            return product;
-        }
-
-        log.debug("DONE Find product with id: {}", productId);
         return product;
     }
 
@@ -78,23 +58,31 @@ public class ProductService {
      * @return
      */
     public Product findExistingById(String productId) {
-        var product = productRepository.findById(productId).orElseThrow(() ->
-                new CashRegisterEntityNotFoundException(productId));
+        try (Transaction t = Transaction.beginTransaction()) {
+            var product = productDao.findById(productId).orElseThrow(() ->
+                    new CashRegisterEntityNotFoundException(productId));
 
-        log.debug("DONE Find product: '{}'", productId);
-        return product;
+            t.commitIfNeeded();
+            log.debug("DONE Find product: '{}'", productId);
+
+            return product;
+        }
     }
 
     public boolean update(Product product) {
-        var isUpdated = productRepository.update(product);
+        try (Transaction t = Transaction.beginTransaction()) {
+            var isUpdated = productDao.update(product);
 
-        if (!isUpdated) {
-            log.info("DONE Can't update product with id: {}", product.getId());
-            return false;
+            if (!isUpdated) {
+                log.info("DONE Can't update product with id: {}", product.getId());
+                return false;
+            }
+
+            t.commitIfNeeded();
+            log.debug("DONE Update product with id: {}", product.getId());
+
+            return true;
         }
-
-        log.debug("DONE Update product with id: {}", product.getId());
-        return true;
     }
 
     public List<Product> findByFilter(ProductFilterKind filterKind, String filterValue) {
@@ -114,7 +102,7 @@ public class ProductService {
                         "Product filter kind not supported", filterKind));
         }
         var getProductFieldFun = fun;
-        var filteredProducts = stream(productRepository.findAll().spliterator(), false)
+        var filteredProducts = stream(productDao.findAll().spliterator(), false)
                 .filter(p -> filterPattern.matcher(getProductFieldFun.apply(p)).matches())
                 .limit(FOUND_PRODUCTS_LIMIT)
                 .collect(toList());

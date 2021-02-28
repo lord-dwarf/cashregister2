@@ -1,10 +1,8 @@
-<%@ page import="com.polinakulyk.cashregister2.controller.api.HttpRoute" %>
 <%@ page import="static com.polinakulyk.cashregister2.controller.api.HttpRoute.*" %>
+<%@ page import="com.polinakulyk.cashregister2.controller.router.RouterHelper" %>
+<%@ page
+        import="static com.polinakulyk.cashregister2.controller.router.RouterHelper.getRoutePath" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<jsp:useBean id="view" class="com.polinakulyk.cashregister2.view.ReceiptsView"/>
-<%
-    view.init(request);
-%>
 
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <!DOCTYPE html>
@@ -50,10 +48,10 @@
             </td>
             <td>
                 <a class="btn btn-outline-primary"
-                   href="<%=view.makeUrl(RECEIPTS_VIEW)%>?receiptId=${receipt.id}"
+                   href="<%=getRoutePath(request, RECEIPTS_VIEW)%>?receiptId=${receipt.id}"
                    role="button">View</a>
                 <a class="btn btn-outline-warning"
-                   href="<%=view.makeUrl(RECEIPTS_EDIT)%>?receiptId=${receipt.id}"
+                   href="<%=getRoutePath(request, RECEIPTS_EDIT)%>?receiptId=${receipt.id}"
                    role="button">Edit</a>
             </td>
         </tr>
@@ -74,7 +72,7 @@
                 <c:otherwise>
                     <li class="page-item">
                         <a class="page-link"
-                           href="<%=view.makeUrl(RECEIPTS_LIST)%>?currentPage=${i}"
+                           href="<%=getRoutePath(request, RECEIPTS_LIST)%>?currentPage=${i}"
                         >
                                 ${i}
                         </a>

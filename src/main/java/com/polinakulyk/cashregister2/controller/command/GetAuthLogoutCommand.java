@@ -1,7 +1,6 @@
 package com.polinakulyk.cashregister2.controller.command;
 
-import com.polinakulyk.cashregister2.controller.api.Command;
-import com.polinakulyk.cashregister2.controller.api.HttpRoute;
+import com.polinakulyk.cashregister2.controller.api.RouteString;
 import com.polinakulyk.cashregister2.security.AuthHelper;
 import java.util.Optional;
 import javax.servlet.http.HttpServletRequest;
@@ -10,7 +9,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import static com.polinakulyk.cashregister2.controller.api.HttpRoute.INDEX;
-import static com.polinakulyk.cashregister2.controller.api.HttpRoute.toRouteString;
 
 public class GetAuthLogoutCommand implements Command {
     private static final Logger log = LoggerFactory.getLogger(GetAuthLogoutCommand.class);
@@ -18,10 +16,11 @@ public class GetAuthLogoutCommand implements Command {
     private final AuthHelper authHelper = new AuthHelper();
 
     @Override
-    public Optional<String> execute(HttpServletRequest request, HttpServletResponse response) {
-        var user = authHelper.getUserFromSession(request).get();
+    public Optional<RouteString> execute(HttpServletRequest request, HttpServletResponse response) {
+        var userId = authHelper.getUserIdFromSession(request);
+        var userRole = authHelper.getUserRoleFromSession(request);
         authHelper.removeUserFromSessionIfNeeded(request);
-        log.info("DONE Logout of user '{}' with role '{}'", user.getId(), user.getRole());
-        return Optional.of(toRouteString(INDEX));
+        log.info("DONE Logout of user '{}' with role '{}'", userId, userRole);
+        return Optional.of(RouteString.of(INDEX));
     }
 }

@@ -1,8 +1,6 @@
 package com.polinakulyk.cashregister2.controller.command;
 
-import com.polinakulyk.cashregister2.controller.api.Command;
-import com.polinakulyk.cashregister2.controller.api.HttpRoute;
-import com.polinakulyk.cashregister2.service.ProductService;
+import com.polinakulyk.cashregister2.controller.api.RouteString;
 import com.polinakulyk.cashregister2.service.ReceiptService;
 import java.util.Optional;
 import javax.servlet.http.HttpServletRequest;
@@ -18,7 +16,7 @@ public class ListReceiptsCommand implements Command {
     private final ReceiptService receiptService = new ReceiptService();
 
     @Override
-    public Optional<String> execute(HttpServletRequest request, HttpServletResponse response) {
+    public Optional<RouteString> execute(HttpServletRequest request, HttpServletResponse response) {
         var currentPage = Integer.parseInt(
                 ofNullable(request.getParameter("currentPage")).orElse("1"));
         var receipts = receiptService.findWithPagination(currentPage, ROWS_PER_PAGE);
