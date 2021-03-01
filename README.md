@@ -1,7 +1,7 @@
-Тема: Касовий апарат | Cash register
+#Касовий апарат | Cash register
 
-Завдання: 
-![Task text](/src/main/resources/static/task_description.png?raw=true)
+#Task
+![Task Image](/Users/polinakulyk/workspace/cashregister2/src/main/resources/static/task_description.png)
 
-Структура БД: 
-![Task text](/src/main/resources/static/db_view.png?raw=true)
+#Database structure
+![Database Image](/Users/polinakulyk/workspace/cashregister2/src/main/resources/static/db_view.png)
