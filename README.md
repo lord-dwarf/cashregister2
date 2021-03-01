@@ -1,7 +1,7 @@
-#Касовий апарат | Cash register
+Тема: Касовий апарат | Cash register
 
-#Task
+Завдання: 
 ![Task text](/src/main/resources/static/task_description.png?raw=true)
 
-#Database structure
+Структура БД: 
 ![Task text](/src/main/resources/static/db_view.png?raw=true)
