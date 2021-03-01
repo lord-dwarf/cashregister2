@@ -15,7 +15,7 @@ import javax.servlet.annotation.WebFilter;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import static com.polinakulyk.cashregister2.controller.router.RouterHelper.getCurrentRoutePathFromServlet;
+import static com.polinakulyk.cashregister2.controller.router.RouterHelper.getRoutePathFromServletRequest;
 import static com.polinakulyk.cashregister2.controller.router.RouterHelper.redirect;
 import static com.polinakulyk.cashregister2.controller.dto.HttpMethod.fromString;
 import static com.polinakulyk.cashregister2.controller.dto.HttpRoute.ERROR_AUTH;
@@ -38,8 +38,8 @@ public class AuthFilter implements Filter {
     public void doFilter(ServletRequest req, ServletResponse res, FilterChain chain) throws IOException, ServletException {
         var request = (HttpServletRequest) req;
         var response = (HttpServletResponse) res;
-        var routeString = getCurrentRoutePathFromServlet(request);
-        var route = RouterHelper.routePathToHttpRoute(routeString);
+        var routeString = getRoutePathFromServletRequest(request);
+        var route = RouterHelper.httpRouteFromRoutePath(routeString);
         if (route.isEmpty()) {
             redirect(request, response, ERROR_NOTFOUND);
             return;

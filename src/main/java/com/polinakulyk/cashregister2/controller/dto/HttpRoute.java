@@ -1,5 +1,10 @@
 package com.polinakulyk.cashregister2.controller.dto;
 
+import com.polinakulyk.cashregister2.security.dto.UserRole;
+import java.util.Optional;
+
+import static java.util.Arrays.stream;
+
 public enum HttpRoute {
     // Home
     INDEX,
@@ -36,4 +41,17 @@ public enum HttpRoute {
     ERROR_AUTH,       // 401 and 403
     ERROR_NOTFOUND,   // 404
     ERROR_SERVER;     // 5xx
+
+    /**
+     * Finds the enum value by a given string.
+     *
+     * @param httpRouteStr
+     * @return
+     */
+    public static Optional<HttpRoute> fromString(String httpRouteStr) {
+        return stream(values())
+                .filter(httpRoute -> httpRoute.name().equals(httpRouteStr))
+                .findFirst();
+    }
 }
+

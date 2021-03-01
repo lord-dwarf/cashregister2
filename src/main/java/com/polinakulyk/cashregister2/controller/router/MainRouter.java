@@ -1,6 +1,5 @@
 package com.polinakulyk.cashregister2.controller.router;
 
-import com.polinakulyk.cashregister2.controller.dto.HttpRoute;
 import com.polinakulyk.cashregister2.controller.command.AddProductCommand;
 import com.polinakulyk.cashregister2.controller.command.AddReceiptCommand;
 import com.polinakulyk.cashregister2.controller.command.AddReceiptItemCommand;
@@ -10,6 +9,7 @@ import com.polinakulyk.cashregister2.controller.command.CancelReceiptCommand;
 import com.polinakulyk.cashregister2.controller.command.ChangeLangCommand;
 import com.polinakulyk.cashregister2.controller.command.CompleteMyReceiptCommand;
 import com.polinakulyk.cashregister2.controller.command.GetAuthLogoutCommand;
+import com.polinakulyk.cashregister2.controller.command.GetErrorMessageCommand;
 import com.polinakulyk.cashregister2.controller.command.GetProductCommand;
 import com.polinakulyk.cashregister2.controller.command.GetReceiptCommand;
 import com.polinakulyk.cashregister2.controller.command.GetReportsXCommand;
@@ -18,12 +18,13 @@ import com.polinakulyk.cashregister2.controller.command.ListMyReceiptsCommand;
 import com.polinakulyk.cashregister2.controller.command.ListProductsCommand;
 import com.polinakulyk.cashregister2.controller.command.ListReceiptsCommand;
 import com.polinakulyk.cashregister2.controller.command.LoginCommand;
-import com.polinakulyk.cashregister2.controller.command.GetErrorMessageCommand;
 import com.polinakulyk.cashregister2.controller.command.SearchReceiptItemCommand;
 import com.polinakulyk.cashregister2.controller.command.UpdateProductCommand;
+
 import java.util.Set;
 
-import static com.polinakulyk.cashregister2.controller.dto.HttpMethod.*;
+import static com.polinakulyk.cashregister2.controller.dto.HttpMethod.GET;
+import static com.polinakulyk.cashregister2.controller.dto.HttpMethod.POST;
 import static com.polinakulyk.cashregister2.controller.dto.HttpRoute.AUTH_LANG;
 import static com.polinakulyk.cashregister2.controller.dto.HttpRoute.AUTH_LOGIN;
 import static com.polinakulyk.cashregister2.controller.dto.HttpRoute.AUTH_LOGOUT;
@@ -34,11 +35,11 @@ import static com.polinakulyk.cashregister2.controller.dto.HttpRoute.ERROR_SERVE
 import static com.polinakulyk.cashregister2.controller.dto.HttpRoute.INDEX;
 import static com.polinakulyk.cashregister2.controller.dto.HttpRoute.MYRECEIPTS_ADD;
 import static com.polinakulyk.cashregister2.controller.dto.HttpRoute.MYRECEIPTS_ADDITEM;
+import static com.polinakulyk.cashregister2.controller.dto.HttpRoute.MYRECEIPTS_ADDITEM_SEARCH;
 import static com.polinakulyk.cashregister2.controller.dto.HttpRoute.MYRECEIPTS_CANCEL;
 import static com.polinakulyk.cashregister2.controller.dto.HttpRoute.MYRECEIPTS_COMPLETE;
 import static com.polinakulyk.cashregister2.controller.dto.HttpRoute.MYRECEIPTS_EDIT;
 import static com.polinakulyk.cashregister2.controller.dto.HttpRoute.MYRECEIPTS_LIST;
-import static com.polinakulyk.cashregister2.controller.dto.HttpRoute.MYRECEIPTS_ADDITEM_SEARCH;
 import static com.polinakulyk.cashregister2.controller.dto.HttpRoute.MYRECEIPTS_VIEW;
 import static com.polinakulyk.cashregister2.controller.dto.HttpRoute.PRODUCTS_ADD;
 import static com.polinakulyk.cashregister2.controller.dto.HttpRoute.PRODUCTS_EDIT;
@@ -48,6 +49,9 @@ import static com.polinakulyk.cashregister2.controller.dto.HttpRoute.RECEIPTS_CA
 import static com.polinakulyk.cashregister2.controller.dto.HttpRoute.RECEIPTS_EDIT;
 import static com.polinakulyk.cashregister2.controller.dto.HttpRoute.RECEIPTS_LIST;
 import static com.polinakulyk.cashregister2.controller.dto.HttpRoute.RECEIPTS_VIEW;
+import static com.polinakulyk.cashregister2.controller.dto.HttpRoute.REPORTS_LIST;
+import static com.polinakulyk.cashregister2.controller.dto.HttpRoute.REPORTS_X;
+import static com.polinakulyk.cashregister2.controller.dto.HttpRoute.REPORTS_Z;
 import static com.polinakulyk.cashregister2.security.dto.UserRole.GUEST;
 import static com.polinakulyk.cashregister2.security.dto.UserRole.MERCH;
 import static com.polinakulyk.cashregister2.security.dto.UserRole.SR_TELLER;
@@ -89,9 +93,9 @@ public class MainRouter extends Router {
         addCommandThenForwardToJsp(POST, MYRECEIPTS_ADDITEM_SEARCH, new SearchReceiptItemCommand(), "myreceipts/additem.jsp", tellers());
         addCommand(POST, MYRECEIPTS_ADDITEM, new AddReceiptItemCommand(), tellers());
         // Reports
-        addForwardToJsp(GET, HttpRoute.REPORTS_LIST, "reports/list.jsp", Set.of(SR_TELLER));
-        addCommand(GET, HttpRoute.REPORTS_X, new GetReportsXCommand(), Set.of(SR_TELLER));
-        addCommand(GET, HttpRoute.REPORTS_Z, new GetReportsZCommand(), Set.of(SR_TELLER));
+        addForwardToJsp(GET, REPORTS_LIST, "reports/list.jsp", Set.of(SR_TELLER));
+        addCommand(GET, REPORTS_X, new GetReportsXCommand(), Set.of(SR_TELLER));
+        addCommand(GET, REPORTS_Z, new GetReportsZCommand(), Set.of(SR_TELLER));
         // Auth
         addForwardToJsp(GET, AUTH_LOGIN, "auth/login.jsp", Set.of(GUEST));
         addCommand(POST, AUTH_LOGIN, new LoginCommand(), any());

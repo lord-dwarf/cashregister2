@@ -14,27 +14,61 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
-import static com.polinakulyk.cashregister2.controller.router.RouterHelper.httpRouteToRoutePath;
+import static com.polinakulyk.cashregister2.controller.router.RouterHelper.routePathFromHttpRoute;
 
+/**
+ * Holds mappings between:
+ * {@link HttpMethod} + {@link HttpRoute},
+ * AND
+ * {@link Command} + authorized {@link UserRole}.
+ * <p>
+ * Provides builder methods for creating routes, and methods to query commands and roles.
+ * <p>
+ * Examples to create a route:
+ * addForwardToJsp(GET, INDEX, "index.jsp", any());
+ * addForwardToJsp(GET, REPORTS_LIST, "reports/list.jsp", Set.of(SR_TELLER));
+ * <p>
+ * Example to query command:
+ * getCommand(GET, PRODUCTS_LIST)
+ * <p>
+ * Example to query roles:
+ * getRoles(GET, REPORTS_LIST)
+ */
 public abstract class Router {
 
     private final Map<Entry<HttpMethod, HttpRoute>, Entry<Command, Set<UserRole>>> routeToCommandMap =
             new ConcurrentHashMap<>();
 
+    /**
+     * Queries command associated with {@link HttpMethod} and {@link HttpRoute}.
+     *
+     * @param method
+     * @param route
+     * @return
+     */
     public Optional<Command> getCommand(HttpMethod method, HttpRoute route) {
         Entry<Command, Set<UserRole>> commandAndRoles = getCommandAndRoles(method, route);
         if (commandAndRoles == null) {
             return Optional.empty();
         }
+        // key = command
         return Optional.of(commandAndRoles.getKey());
     }
 
+    /**
+     * Queries roles associated with {@link HttpMethod} and {@link HttpRoute}.
+     *
+     * @param method
+     * @param route
+     * @return
+     */
     public Optional<Set<UserRole>> getRoles(
             HttpMethod method, HttpRoute route) {
         Entry<Command, Set<UserRole>> commandAndRoles = getCommandAndRoles(method, route);
         if (commandAndRoles == null) {
             return Optional.empty();
         }
+        // value = set of roles
         return Optional.of(commandAndRoles.getValue());
     }
 
@@ -42,7 +76,7 @@ public abstract class Router {
             HttpMethod method, HttpRoute route, Command command, Set<UserRole> roles) {
         var routeKey = new SimpleEntry<>(method, route);
         if (routeToCommandMap.containsKey(routeKey)) {
-            throw new DuplicateRouteException(method.name() + " " + httpRouteToRoutePath(route));
+            throw new DuplicateRouteException(method.name() + " " + routePathFromHttpRoute(route));
         }
         var commandAndRoles = new SimpleEntry<>(command, roles);
         routeToCommandMap.put(routeKey, commandAndRoles);

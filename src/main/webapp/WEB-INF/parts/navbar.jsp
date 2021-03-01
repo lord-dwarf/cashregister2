@@ -10,7 +10,7 @@
 <%@ page
         import="static com.polinakulyk.cashregister2.controller.router.RouterHelper.getRoutePath" %>
 <%@ page
-        import="static com.polinakulyk.cashregister2.controller.router.RouterHelper.getCurrentRouteFromJsp" %>
+        import="static com.polinakulyk.cashregister2.controller.router.RouterHelper.getRouteFromJspRequest" %>
 
 <%@ page contentType="text/html;charset=UTF-8" pageEncoding="UTF-8" %>
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
@@ -42,12 +42,12 @@
                 <a href="<%=getRoutePath(request, AUTH_LOGOUT)%>"
                    class="nav-link">${messages_menuLogout}</a>
                 <form method="post"
-                      action="<%=getRoutePath(request, AUTH_LANG)%>?lang=EN&redirectRoute=<%=getCurrentRouteFromJsp(request)%>"
+                      action="<%=getRoutePath(request, AUTH_LANG)%>?lang=EN&redirectRoute=<%=getRouteFromJspRequest(request)%>"
                         class="mt-1">
                     <button type="submit" class="btn btn-info btn-sm">En</button>
                 </form>
                 <form method="post"
-                      action="<%=getRoutePath(request, AUTH_LANG)%>?lang=UA&redirectRoute=<%=getCurrentRouteFromJsp(request)%>"
+                      action="<%=getRoutePath(request, AUTH_LANG)%>?lang=UA&redirectRoute=<%=getRouteFromJspRequest(request)%>"
                         class="mt-1">
                     <button type="submit" class="btn btn-warning btn-sm">Укр</button>
                 </form>

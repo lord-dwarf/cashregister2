@@ -25,7 +25,7 @@ public class ChangeLangCommand implements Command {
 
         // redirect to a page provided via query param, otherwise redirect to home
         var redirectRoute =
-                RouterHelper.routePathToHttpRoute(request.getParameter("redirectRoute"))
+                RouterHelper.httpRouteFromRoutePath(request.getParameter("redirectRoute"))
                 .orElse(INDEX);
 
         return Optional.of(RouteString.of(redirectRoute));
