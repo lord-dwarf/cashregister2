@@ -1,7 +1,6 @@
 package com.polinakulyk.cashregister2.exception;
 
-import com.polinakulyk.cashregister2.controller.api.HttpStatus;
-import java.net.HttpURLConnection;
+import com.polinakulyk.cashregister2.controller.dto.HttpStatus;
 
 import static com.polinakulyk.cashregister2.util.Util.quote;
 

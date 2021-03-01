@@ -1,9 +1,7 @@
 package com.polinakulyk.cashregister2.filter;
 
-import com.polinakulyk.cashregister2.controller.api.HttpStatus;
-import com.polinakulyk.cashregister2.controller.api.RouteString;
+import com.polinakulyk.cashregister2.controller.dto.RouteString;
 import com.polinakulyk.cashregister2.exception.CashRegisterException;
-import com.polinakulyk.cashregister2.util.Util;
 import java.io.IOException;
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
@@ -16,11 +14,11 @@ import javax.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import static com.polinakulyk.cashregister2.controller.api.HttpRoute.ERROR_AUTH;
-import static com.polinakulyk.cashregister2.controller.api.HttpRoute.ERROR_CLIENT;
-import static com.polinakulyk.cashregister2.controller.api.HttpRoute.ERROR_NOTFOUND;
-import static com.polinakulyk.cashregister2.controller.api.HttpRoute.ERROR_SERVER;
-import static com.polinakulyk.cashregister2.controller.api.HttpStatus.BAD_REQUEST;
+import static com.polinakulyk.cashregister2.controller.dto.HttpRoute.ERROR_AUTH;
+import static com.polinakulyk.cashregister2.controller.dto.HttpRoute.ERROR_CLIENT;
+import static com.polinakulyk.cashregister2.controller.dto.HttpRoute.ERROR_NOTFOUND;
+import static com.polinakulyk.cashregister2.controller.dto.HttpRoute.ERROR_SERVER;
+import static com.polinakulyk.cashregister2.controller.dto.HttpStatus.BAD_REQUEST;
 import static com.polinakulyk.cashregister2.controller.router.RouterHelper.redirect;
 import static com.polinakulyk.cashregister2.util.Util.toBase64;
 

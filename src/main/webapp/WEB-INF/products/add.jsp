@@ -1,4 +1,4 @@
-<%@ page import="static com.polinakulyk.cashregister2.controller.api.HttpRoute.PRODUCTS_ADD" %>
+<%@ page import="static com.polinakulyk.cashregister2.controller.dto.HttpRoute.PRODUCTS_ADD" %>
 <%@ page import="com.polinakulyk.cashregister2.controller.router.RouterHelper" %>
 <%@ page
         import="static com.polinakulyk.cashregister2.controller.router.RouterHelper.getRoutePath" %>

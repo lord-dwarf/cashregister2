@@ -1,8 +1,8 @@
 package com.polinakulyk.cashregister2.exception;
 
-import com.polinakulyk.cashregister2.controller.api.HttpStatus;
+import com.polinakulyk.cashregister2.controller.dto.HttpStatus;
 
-import static com.polinakulyk.cashregister2.controller.api.HttpStatus.*;
+import static com.polinakulyk.cashregister2.controller.dto.HttpStatus.INTERNAL_SERVER_ERROR;
 
 public class CashRegisterException extends RuntimeException {
 

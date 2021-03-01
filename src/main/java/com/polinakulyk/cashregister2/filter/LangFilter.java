@@ -1,10 +1,8 @@
 package com.polinakulyk.cashregister2.filter;
 
-import com.polinakulyk.cashregister2.controller.api.Language;
-import com.polinakulyk.cashregister2.security.AuthHelper;
+import com.polinakulyk.cashregister2.controller.dto.Language;
 import java.io.IOException;
 import java.util.Arrays;
-import java.util.Enumeration;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.ResourceBundle;

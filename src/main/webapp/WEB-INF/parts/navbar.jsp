@@ -1,11 +1,11 @@
-<%@ page import="static com.polinakulyk.cashregister2.controller.api.HttpRoute.INDEX" %>
-<%@ page import="static com.polinakulyk.cashregister2.controller.api.HttpRoute.PRODUCTS_LIST" %>
-<%@ page import="static com.polinakulyk.cashregister2.controller.api.HttpRoute.RECEIPTS_LIST" %>
-<%@ page import="static com.polinakulyk.cashregister2.controller.api.HttpRoute.MYRECEIPTS_LIST" %>
-<%@ page import="static com.polinakulyk.cashregister2.controller.api.HttpRoute.REPORTS_LIST" %>
-<%@ page import="static com.polinakulyk.cashregister2.controller.api.HttpRoute.AUTH_LOGIN" %>
-<%@ page import="static com.polinakulyk.cashregister2.controller.api.HttpRoute.AUTH_LOGOUT" %>
-<%@ page import="static com.polinakulyk.cashregister2.controller.api.HttpRoute.AUTH_LANG" %>
+<%@ page import="static com.polinakulyk.cashregister2.controller.dto.HttpRoute.INDEX" %>
+<%@ page import="static com.polinakulyk.cashregister2.controller.dto.HttpRoute.PRODUCTS_LIST" %>
+<%@ page import="static com.polinakulyk.cashregister2.controller.dto.HttpRoute.RECEIPTS_LIST" %>
+<%@ page import="static com.polinakulyk.cashregister2.controller.dto.HttpRoute.MYRECEIPTS_LIST" %>
+<%@ page import="static com.polinakulyk.cashregister2.controller.dto.HttpRoute.REPORTS_LIST" %>
+<%@ page import="static com.polinakulyk.cashregister2.controller.dto.HttpRoute.AUTH_LOGIN" %>
+<%@ page import="static com.polinakulyk.cashregister2.controller.dto.HttpRoute.AUTH_LOGOUT" %>
+<%@ page import="static com.polinakulyk.cashregister2.controller.dto.HttpRoute.AUTH_LANG" %>
 <%@ page import="com.polinakulyk.cashregister2.controller.router.RouterHelper" %>
 <%@ page
         import="static com.polinakulyk.cashregister2.controller.router.RouterHelper.getRoutePath" %>

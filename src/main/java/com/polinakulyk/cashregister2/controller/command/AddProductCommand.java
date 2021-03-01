@@ -1,6 +1,6 @@
 package com.polinakulyk.cashregister2.controller.command;
 
-import com.polinakulyk.cashregister2.controller.api.RouteString;
+import com.polinakulyk.cashregister2.controller.dto.RouteString;
 import com.polinakulyk.cashregister2.db.dto.ProductAmountUnit;
 import com.polinakulyk.cashregister2.db.entity.Product;
 import com.polinakulyk.cashregister2.security.AuthHelper;
@@ -10,8 +10,7 @@ import java.util.Optional;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import static com.polinakulyk.cashregister2.controller.api.HttpRoute.*;
-import static com.polinakulyk.cashregister2.db.dto.ProductAmountUnit.*;
+import static com.polinakulyk.cashregister2.controller.dto.HttpRoute.*;
 import static com.polinakulyk.cashregister2.util.Util.bigDecimalAmount;
 import static com.polinakulyk.cashregister2.util.Util.bigDecimalMoney;
 

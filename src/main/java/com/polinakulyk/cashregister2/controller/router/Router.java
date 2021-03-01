@@ -1,7 +1,7 @@
 package com.polinakulyk.cashregister2.controller.router;
 
-import com.polinakulyk.cashregister2.controller.api.HttpMethod;
-import com.polinakulyk.cashregister2.controller.api.HttpRoute;
+import com.polinakulyk.cashregister2.controller.dto.HttpMethod;
+import com.polinakulyk.cashregister2.controller.dto.HttpRoute;
 import com.polinakulyk.cashregister2.controller.command.BiCommand;
 import com.polinakulyk.cashregister2.controller.command.Command;
 import com.polinakulyk.cashregister2.controller.command.JspCommand;

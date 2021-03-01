@@ -1,6 +1,5 @@
 package com.polinakulyk.cashregister2.db.entity;
 
-import com.polinakulyk.cashregister2.db.DbHelper;
 import com.polinakulyk.cashregister2.db.dto.ProductAmountUnit;
 import java.math.BigDecimal;
 import java.util.StringJoiner;

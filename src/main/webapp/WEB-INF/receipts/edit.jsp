@@ -1,4 +1,4 @@
-<%@ page import="static com.polinakulyk.cashregister2.controller.api.HttpRoute.RECEIPTS_CANCEL" %>
+<%@ page import="static com.polinakulyk.cashregister2.controller.dto.HttpRoute.RECEIPTS_CANCEL" %>
 <%@ page
         import="static com.polinakulyk.cashregister2.controller.router.RouterHelper.getRoutePath" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>

@@ -13,7 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import static com.polinakulyk.cashregister2.controller.api.HttpStatus.BAD_REQUEST;
+import static com.polinakulyk.cashregister2.controller.dto.HttpStatus.BAD_REQUEST;
 import static com.polinakulyk.cashregister2.db.ConnectionPool.getConnection;
 import static com.polinakulyk.cashregister2.util.Util.generateUuid;
 import static com.polinakulyk.cashregister2.util.Util.quote;

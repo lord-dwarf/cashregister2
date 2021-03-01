@@ -1,14 +1,11 @@
 package com.polinakulyk.cashregister2.db.entity;
 
-import com.polinakulyk.cashregister2.db.DbHelper;
 import com.polinakulyk.cashregister2.db.dto.ReceiptStatus;
-import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.StringJoiner;
-
 import javax.validation.constraints.DecimalMax;
 import javax.validation.constraints.DecimalMin;
 import javax.validation.constraints.NotNull;

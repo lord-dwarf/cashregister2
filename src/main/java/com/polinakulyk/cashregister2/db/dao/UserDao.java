@@ -64,5 +64,4 @@ public class UserDao {
                     quote("Can't query user by username", username), e);
         }
     }
-
 }

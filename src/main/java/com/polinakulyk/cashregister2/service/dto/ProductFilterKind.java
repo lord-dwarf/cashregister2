@@ -1,6 +1,5 @@
 package com.polinakulyk.cashregister2.service.dto;
 
-import com.polinakulyk.cashregister2.db.dto.ProductAmountUnit;
 import com.polinakulyk.cashregister2.exception.CashRegisterValidationException;
 import java.util.Optional;
 

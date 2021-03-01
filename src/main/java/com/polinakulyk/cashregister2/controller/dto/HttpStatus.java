@@ -1,4 +1,4 @@
-package com.polinakulyk.cashregister2.controller.api;
+package com.polinakulyk.cashregister2.controller.dto;
 
 public enum HttpStatus {
     BAD_REQUEST(400),

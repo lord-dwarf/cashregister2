@@ -1,10 +1,4 @@
-package com.polinakulyk.cashregister2.controller.api;
-
-import com.polinakulyk.cashregister2.controller.router.RouterHelper;
-import java.util.Optional;
-
-import static com.polinakulyk.cashregister2.util.Util.*;
-import static java.util.Arrays.stream;
+package com.polinakulyk.cashregister2.controller.dto;
 
 public enum HttpRoute {
     // Home
@@ -42,5 +36,4 @@ public enum HttpRoute {
     ERROR_AUTH,       // 401 and 403
     ERROR_NOTFOUND,   // 404
     ERROR_SERVER;     // 5xx
-
 }

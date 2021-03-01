@@ -1,7 +1,7 @@
 <%@ page
-        import="static com.polinakulyk.cashregister2.controller.api.HttpRoute.MYRECEIPTS_ADDITEM" %>
+        import="static com.polinakulyk.cashregister2.controller.dto.HttpRoute.MYRECEIPTS_ADDITEM" %>
 <%@ page
-        import="static com.polinakulyk.cashregister2.controller.api.HttpRoute.MYRECEIPTS_ADDITEM_SEARCH" %>
+        import="static com.polinakulyk.cashregister2.controller.dto.HttpRoute.MYRECEIPTS_ADDITEM_SEARCH" %>
 <%@ page import="com.polinakulyk.cashregister2.controller.router.RouterHelper" %>
 <%@ page
         import="static com.polinakulyk.cashregister2.controller.router.RouterHelper.getRoutePath" %>

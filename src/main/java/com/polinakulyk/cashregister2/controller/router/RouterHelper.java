@@ -1,9 +1,8 @@
 package com.polinakulyk.cashregister2.controller.router;
 
-import com.polinakulyk.cashregister2.controller.api.HttpRoute;
-import com.polinakulyk.cashregister2.controller.api.RouteString;
+import com.polinakulyk.cashregister2.controller.dto.HttpRoute;
+import com.polinakulyk.cashregister2.controller.dto.RouteString;
 import com.polinakulyk.cashregister2.exception.CashRegisterException;
-import com.polinakulyk.cashregister2.util.Util;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.Optional;

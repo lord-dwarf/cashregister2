@@ -1,4 +1,4 @@
-package com.polinakulyk.cashregister2.controller.api;
+package com.polinakulyk.cashregister2.controller.dto;
 
 import java.util.Locale;
 import java.util.Optional;

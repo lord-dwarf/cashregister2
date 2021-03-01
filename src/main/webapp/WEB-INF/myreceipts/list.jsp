@@ -1,7 +1,7 @@
-<%@ page import="static com.polinakulyk.cashregister2.controller.api.HttpRoute.MYRECEIPTS_VIEW" %>
-<%@ page import="static com.polinakulyk.cashregister2.controller.api.HttpRoute.MYRECEIPTS_EDIT" %>
-<%@ page import="static com.polinakulyk.cashregister2.controller.api.HttpRoute.MYRECEIPTS_ADD" %>
-<%@ page import="static com.polinakulyk.cashregister2.controller.api.HttpRoute.MYRECEIPTS_LIST" %>
+<%@ page import="static com.polinakulyk.cashregister2.controller.dto.HttpRoute.MYRECEIPTS_VIEW" %>
+<%@ page import="static com.polinakulyk.cashregister2.controller.dto.HttpRoute.MYRECEIPTS_EDIT" %>
+<%@ page import="static com.polinakulyk.cashregister2.controller.dto.HttpRoute.MYRECEIPTS_ADD" %>
+<%@ page import="static com.polinakulyk.cashregister2.controller.dto.HttpRoute.MYRECEIPTS_LIST" %>
 <%@ page import="com.polinakulyk.cashregister2.controller.router.RouterHelper" %>
 <%@ page
         import="static com.polinakulyk.cashregister2.controller.router.RouterHelper.getRoutePath" %>

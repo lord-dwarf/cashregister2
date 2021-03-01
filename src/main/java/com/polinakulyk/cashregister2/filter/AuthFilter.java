@@ -17,9 +17,9 @@ import javax.servlet.http.HttpServletResponse;
 
 import static com.polinakulyk.cashregister2.controller.router.RouterHelper.getCurrentRoutePathFromServlet;
 import static com.polinakulyk.cashregister2.controller.router.RouterHelper.redirect;
-import static com.polinakulyk.cashregister2.controller.api.HttpMethod.fromString;
-import static com.polinakulyk.cashregister2.controller.api.HttpRoute.ERROR_AUTH;
-import static com.polinakulyk.cashregister2.controller.api.HttpRoute.ERROR_NOTFOUND;
+import static com.polinakulyk.cashregister2.controller.dto.HttpMethod.fromString;
+import static com.polinakulyk.cashregister2.controller.dto.HttpRoute.ERROR_AUTH;
+import static com.polinakulyk.cashregister2.controller.dto.HttpRoute.ERROR_NOTFOUND;
 
 @WebFilter(filterName = "authFilter")
 public class AuthFilter implements Filter {

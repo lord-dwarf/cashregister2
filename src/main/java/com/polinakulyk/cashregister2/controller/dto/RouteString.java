@@ -1,6 +1,5 @@
-package com.polinakulyk.cashregister2.controller.api;
+package com.polinakulyk.cashregister2.controller.dto;
 
-import java.util.Objects;
 import java.util.Optional;
 
 import static java.util.Objects.requireNonNull;

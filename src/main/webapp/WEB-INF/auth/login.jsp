@@ -1,4 +1,4 @@
-<%@ page import="static com.polinakulyk.cashregister2.controller.api.HttpRoute.*" %>
+<%@ page import="static com.polinakulyk.cashregister2.controller.dto.HttpRoute.*" %>
 <%@ page
         import="static com.polinakulyk.cashregister2.controller.router.RouterHelper.getRoutePath" %>
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>

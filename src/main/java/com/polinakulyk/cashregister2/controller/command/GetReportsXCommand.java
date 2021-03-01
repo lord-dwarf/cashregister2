@@ -1,6 +1,6 @@
 package com.polinakulyk.cashregister2.controller.command;
 
-import com.polinakulyk.cashregister2.controller.api.RouteString;
+import com.polinakulyk.cashregister2.controller.dto.RouteString;
 import com.polinakulyk.cashregister2.security.AuthHelper;
 import com.polinakulyk.cashregister2.service.ReportService;
 import java.io.IOException;

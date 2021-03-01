@@ -1,7 +1,7 @@
-<%@ page import="static com.polinakulyk.cashregister2.controller.api.HttpRoute.PRODUCTS_VIEW" %>
-<%@ page import="static com.polinakulyk.cashregister2.controller.api.HttpRoute.PRODUCTS_ADD" %>
-<%@ page import="static com.polinakulyk.cashregister2.controller.api.HttpRoute.PRODUCTS_EDIT" %>
-<%@ page import="static com.polinakulyk.cashregister2.controller.api.HttpRoute.PRODUCTS_LIST" %>
+<%@ page import="static com.polinakulyk.cashregister2.controller.dto.HttpRoute.PRODUCTS_VIEW" %>
+<%@ page import="static com.polinakulyk.cashregister2.controller.dto.HttpRoute.PRODUCTS_ADD" %>
+<%@ page import="static com.polinakulyk.cashregister2.controller.dto.HttpRoute.PRODUCTS_EDIT" %>
+<%@ page import="static com.polinakulyk.cashregister2.controller.dto.HttpRoute.PRODUCTS_LIST" %>
 <%@ page
         import="static com.polinakulyk.cashregister2.controller.router.RouterHelper.getRoutePath" %>
 <%@ page import="com.polinakulyk.cashregister2.controller.router.RouterHelper" %>
