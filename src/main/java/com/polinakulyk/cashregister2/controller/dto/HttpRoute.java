@@ -1,6 +1,5 @@
 package com.polinakulyk.cashregister2.controller.dto;
 
-import com.polinakulyk.cashregister2.security.dto.UserRole;
 import java.util.Optional;
 
 import static java.util.Arrays.stream;
@@ -54,4 +53,3 @@ public enum HttpRoute {
                 .findFirst();
     }
 }
-

@@ -27,7 +27,7 @@ public enum Language {
      */
     public static Optional<Language> fromString(String s) {
         return stream(values())
-                .filter((lang) -> lang.name().equals(s))
+                .filter(lang -> lang.name().equals(s))
                 .findFirst();
     }
 }

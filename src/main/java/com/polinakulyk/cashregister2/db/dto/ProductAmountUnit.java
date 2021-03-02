@@ -20,15 +20,8 @@ public enum ProductAmountUnit {
      */
     public static Optional<ProductAmountUnit> fromString(String amountUnitStr) {
         return stream(values())
-                .filter((amountUnit) -> amountUnit.name().equals(amountUnitStr))
+                .filter(amountUnit -> amountUnit.name().equals(amountUnitStr))
                 .findFirst();
-    }
-
-    public static ProductAmountUnit fromExistingString(String amountUnitStr) {
-        return fromString(amountUnitStr)
-                .orElseThrow(() -> new CashRegisterValidationException(
-                        quote("Product amount unit must be one of",
-                                asList(ProductAmountUnit.values()))));
     }
 
     /**

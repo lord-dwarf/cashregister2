@@ -12,14 +12,14 @@ import com.polinakulyk.cashregister2.controller.command.GetAuthLogoutCommand;
 import com.polinakulyk.cashregister2.controller.command.GetErrorMessageCommand;
 import com.polinakulyk.cashregister2.controller.command.GetProductCommand;
 import com.polinakulyk.cashregister2.controller.command.GetReceiptCommand;
-import com.polinakulyk.cashregister2.controller.command.GetReportsXCommand;
-import com.polinakulyk.cashregister2.controller.command.GetReportsZCommand;
+import com.polinakulyk.cashregister2.controller.command.GetReportsCommand;
 import com.polinakulyk.cashregister2.controller.command.ListMyReceiptsCommand;
 import com.polinakulyk.cashregister2.controller.command.ListProductsCommand;
 import com.polinakulyk.cashregister2.controller.command.ListReceiptsCommand;
 import com.polinakulyk.cashregister2.controller.command.LoginCommand;
 import com.polinakulyk.cashregister2.controller.command.SearchReceiptItemCommand;
 import com.polinakulyk.cashregister2.controller.command.UpdateProductCommand;
+import com.polinakulyk.cashregister2.service.dto.ReportKind;
 
 import java.util.Set;
 
@@ -94,8 +94,8 @@ public class MainRouter extends Router {
         addCommand(POST, MYRECEIPTS_ADDITEM, new AddReceiptItemCommand(), tellers());
         // Reports
         addForwardToJsp(GET, REPORTS_LIST, "reports/list.jsp", Set.of(SR_TELLER));
-        addCommand(GET, REPORTS_X, new GetReportsXCommand(), Set.of(SR_TELLER));
-        addCommand(GET, REPORTS_Z, new GetReportsZCommand(), Set.of(SR_TELLER));
+        addCommand(GET, REPORTS_X, new GetReportsCommand(ReportKind.X), Set.of(SR_TELLER));
+        addCommand(GET, REPORTS_Z, new GetReportsCommand(ReportKind.Z), Set.of(SR_TELLER));
         // Auth
         addForwardToJsp(GET, AUTH_LOGIN, "auth/login.jsp", Set.of(GUEST));
         addCommand(POST, AUTH_LOGIN, new LoginCommand(), any());

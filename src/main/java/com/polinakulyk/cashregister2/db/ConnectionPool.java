@@ -5,7 +5,7 @@ import com.zaxxer.hikari.HikariDataSource;
 import java.sql.Connection;
 import java.sql.SQLException;
 
-import static com.polinakulyk.cashregister2.util.Util.getExistingProperty;
+import static com.polinakulyk.cashregister2.util.Util.getPropertyNotBlank;
 import static com.polinakulyk.cashregister2.util.Util.getProperties;
 
 public class ConnectionPool {
@@ -16,9 +16,9 @@ public class ConnectionPool {
 
     static {
         var properties = getProperties();
-        datasourceUrl = getExistingProperty(properties, "datasource.url");
-        datasourceUsername = getExistingProperty(properties, "datasource.username");
-        datasourcePassword = getExistingProperty(properties, "datasource.password");
+        datasourceUrl = getPropertyNotBlank(properties, "datasource.url");
+        datasourceUsername = getPropertyNotBlank(properties, "datasource.username");
+        datasourcePassword = getPropertyNotBlank(properties, "datasource.password");
     }
 
     private static final HikariConfig connPoolConfig;

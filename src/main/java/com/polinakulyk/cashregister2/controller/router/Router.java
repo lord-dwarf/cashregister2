@@ -7,6 +7,7 @@ import com.polinakulyk.cashregister2.controller.command.Command;
 import com.polinakulyk.cashregister2.controller.command.JspCommand;
 import com.polinakulyk.cashregister2.exception.DuplicateRouteException;
 import com.polinakulyk.cashregister2.security.dto.UserRole;
+
 import java.util.AbstractMap.SimpleEntry;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -24,14 +25,14 @@ import static com.polinakulyk.cashregister2.controller.router.RouterHelper.route
  * <p>
  * Provides builder methods for creating routes, and methods to query commands and roles.
  * <p>
- * Examples to create a route:
- * addForwardToJsp(GET, INDEX, "index.jsp", any());
+ * EXAMPLES to create a route:
+ * addCommand(POST, MYRECEIPTS_COMPLETE, new CompleteMyReceiptCommand(), tellers());
  * addForwardToJsp(GET, REPORTS_LIST, "reports/list.jsp", Set.of(SR_TELLER));
  * <p>
- * Example to query command:
+ * EXAMPLE to query command:
  * getCommand(GET, PRODUCTS_LIST)
  * <p>
- * Example to query roles:
+ * EXAMPLE to query roles:
  * getRoles(GET, REPORTS_LIST)
  */
 public abstract class Router {
@@ -72,6 +73,21 @@ public abstract class Router {
         return Optional.of(commandAndRoles.getValue());
     }
 
+    /**
+     * Associates given command with the specific route within router.
+     * <p>
+     * The route consists of {@link HttpMethod} + {@link HttpRoute}.
+     * The authorization of command execution is specified via Set of {@link UserRole}.
+     * <p>
+     * EXAMPLE:
+     * addCommand(POST, PRODUCTS_ADD, new AddProductCommand(), Set.of(MERCH));
+     *
+     * @param method
+     * @param route
+     * @param command
+     * @param roles
+     * @return
+     */
     public Router addCommand(
             HttpMethod method, HttpRoute route, Command command, Set<UserRole> roles) {
         var routeKey = new SimpleEntry<>(method, route);
@@ -83,11 +99,41 @@ public abstract class Router {
         return this;
     }
 
+    /**
+     * Associates given JSP page with the specific route within router
+     * (see {@link Router#addCommand(HttpMethod, HttpRoute, Command, Set)}).
+     * <p>
+     * EXAMPLE:
+     * addForwardToJsp(GET, INDEX, "index.jsp", any());
+     *
+     * @param method
+     * @param route
+     * @param jspName
+     * @param roles
+     * @return
+     */
     public Router addForwardToJsp(
             HttpMethod method, HttpRoute route, String jspName, Set<UserRole> roles) {
         return addCommand(method, route, JspCommand.of(jspName), roles);
     }
 
+    /**
+     * Associates operation that consists of the execution of a given command,
+     * and subsequent forwarding to a given JSP page, with the specific route within router
+     * (see {@link Router#addCommand(HttpMethod, HttpRoute, Command, Set)}).
+     * <p>
+     * EXAMPLE:
+     * addCommandThenForwardToJsp(
+     * GET, RECEIPTS_LIST, new ListReceiptsCommand(), "receipts/list.jsp", Set.of(SR_TELLER)
+     * );
+     *
+     * @param method
+     * @param route
+     * @param command
+     * @param jspName
+     * @param roles
+     * @return
+     */
     public Router addCommandThenForwardToJsp(
             HttpMethod method,
             HttpRoute route,

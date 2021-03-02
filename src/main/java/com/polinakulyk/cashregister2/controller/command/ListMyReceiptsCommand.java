@@ -3,16 +3,22 @@ package com.polinakulyk.cashregister2.controller.command;
 import com.polinakulyk.cashregister2.controller.dto.RouteString;
 import com.polinakulyk.cashregister2.security.AuthHelper;
 import com.polinakulyk.cashregister2.service.ReceiptService;
+
 import java.util.Optional;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import static java.util.Optional.empty;
-import static java.util.Optional.ofNullable;
+import static com.polinakulyk.cashregister2.controller.ControllerHelper.calcPaginationPagesTotal;
+import static com.polinakulyk.cashregister2.controller.validator.ValidatorHelper.validIntegerNullable;
 
 public class ListMyReceiptsCommand implements Command {
 
+    private static final String RECEIPTS_ATTR = "receipts";
+
     private static final int ROWS_PER_PAGE = 10;
+    private static final Integer DEFAULT_PAGE = 1;
+    private static final String PAGES_TOTAL_ATTR = "pagesTotal";
+    private static final String CURRENT_PAGE_PARAM = "currentPage";
 
     private final ReceiptService receiptService = new ReceiptService();
     private final AuthHelper authHelper = new AuthHelper();
@@ -20,17 +26,19 @@ public class ListMyReceiptsCommand implements Command {
     @Override
     public Optional<RouteString> execute(HttpServletRequest request, HttpServletResponse response) {
         var userId = authHelper.getUserIdFromSession(request);
-        var currentPage = Integer.parseInt(
-                ofNullable(request.getParameter("currentPage")).orElse("1"));
+        var currentPage = validIntegerNullable(request, CURRENT_PAGE_PARAM)
+                .orElse(DEFAULT_PAGE);
+
+        // to paginate, get list of receipts on current page and total count of entities in DB
         var receipts =
                 receiptService.findByTellerWithPagination(userId, currentPage, ROWS_PER_PAGE);
         var receiptsTotal = receiptService.countByTeller(userId);
-        var pagesTotal = receiptsTotal / ROWS_PER_PAGE;
-        if (receiptsTotal % ROWS_PER_PAGE != 0) {
-            ++pagesTotal;
-        }
-        request.setAttribute("receipts", receipts);
-        request.setAttribute("pagesTotal", pagesTotal);
-        return empty();
+        var pagesTotal = calcPaginationPagesTotal(receiptsTotal, ROWS_PER_PAGE);
+
+        request.setAttribute(RECEIPTS_ATTR, receipts);
+        request.setAttribute(PAGES_TOTAL_ATTR, pagesTotal);
+
+        // no redirect
+        return Optional.empty();
     }
 }

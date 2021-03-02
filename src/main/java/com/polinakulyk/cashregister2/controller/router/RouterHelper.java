@@ -3,6 +3,7 @@ package com.polinakulyk.cashregister2.controller.router;
 import com.polinakulyk.cashregister2.controller.dto.HttpRoute;
 import com.polinakulyk.cashregister2.controller.dto.RouteString;
 import com.polinakulyk.cashregister2.exception.CashRegisterException;
+
 import java.io.IOException;
 import java.util.Optional;
 import javax.servlet.ServletException;
@@ -131,6 +132,18 @@ public final class RouterHelper {
                 quote("Can't get current route from JSP", routePath)));
     }
 
+    /**
+     * Ensures the route path contains "/" and then forwards to the appropriate JSP page.
+     * <p>
+     * EXAMPLE:
+     * forwardToJsp(request, response, "products/list.jsp"); // -> WEB-INF/products/list.jsp
+     *
+     * @param request
+     * @param response
+     * @param jspName
+     * @throws ServletException
+     * @throws IOException
+     */
     public static void forwardToJsp(
             HttpServletRequest request, HttpServletResponse response, String jspName)
             throws ServletException, IOException {

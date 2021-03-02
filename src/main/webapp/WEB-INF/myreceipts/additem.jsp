@@ -2,7 +2,6 @@
         import="static com.polinakulyk.cashregister2.controller.dto.HttpRoute.MYRECEIPTS_ADDITEM" %>
 <%@ page
         import="static com.polinakulyk.cashregister2.controller.dto.HttpRoute.MYRECEIPTS_ADDITEM_SEARCH" %>
-<%@ page import="com.polinakulyk.cashregister2.controller.router.RouterHelper" %>
 <%@ page
         import="static com.polinakulyk.cashregister2.controller.router.RouterHelper.getRoutePath" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
@@ -36,6 +35,7 @@
 </form>
 <c:forEach var="product" items="${products}">
     <form class="w-40" method="post"
+        <%-- receipt id to return to after adding receipt item --%>
           action="<%=getRoutePath(request, MYRECEIPTS_ADDITEM)%>?receiptId=${receiptId}">
         <div class="form-group mt-2 invisible">
             <label for="product-id-input">Product Id</label>

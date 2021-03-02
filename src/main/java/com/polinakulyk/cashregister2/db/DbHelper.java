@@ -16,7 +16,7 @@ import static com.polinakulyk.cashregister2.util.Util.RM;
 import static com.polinakulyk.cashregister2.util.Util.calendar;
 import static com.polinakulyk.cashregister2.util.Util.toLocalDateTime;
 
-public class DbHelper {
+public final class DbHelper {
 
     public static LocalDateTime getLocalDateTime(ResultSet rs, String fieldName)
             throws SQLException {

@@ -3,6 +3,7 @@ package com.polinakulyk.cashregister2.controller;
 import com.polinakulyk.cashregister2.controller.dto.HttpMethod;
 import com.polinakulyk.cashregister2.controller.router.MainRouter;
 import com.polinakulyk.cashregister2.controller.router.Router;
+
 import java.io.IOException;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -23,7 +24,7 @@ import static com.polinakulyk.cashregister2.controller.router.RouterHelper.httpR
  * The purpose of {@link MainServlet} is to map incoming HTTP requests
  * to the appropriate {@link com.polinakulyk.cashregister2.controller.command.Command}
  * functions according to routes configured in {@link MainRouter}.
- *
+ * <p>
  * Requests for all HTTP verbs go through a universal {@link MainServlet#doRequest} handler.
  */
 @WebServlet(name = "mainServlet", value = "/")
@@ -37,24 +38,40 @@ public class MainServlet extends HttpServlet {
         router = MainRouter.Singleton.INSTANCE;
     }
 
+    /**
+     * Direct all incoming requests to a general handler
+     * {@link MainServlet#doRequest(HttpMethod, HttpServletRequest, HttpServletResponse)}.
+     */
     @Override
     public void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         doRequest(GET, request, response);
     }
 
+    /**
+     * Direct all incoming requests to a general handler
+     * {@link MainServlet#doRequest(HttpMethod, HttpServletRequest, HttpServletResponse)}.
+     */
     @Override
     public void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         doRequest(POST, request, response);
     }
 
+    /**
+     * Direct all incoming requests to a general handler
+     * {@link MainServlet#doRequest(HttpMethod, HttpServletRequest, HttpServletResponse)}.
+     */
     @Override
     public void doPut(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         doRequest(PUT, request, response);
     }
 
+    /**
+     * Direct all incoming requests to a general handler
+     * {@link MainServlet#doRequest(HttpMethod, HttpServletRequest, HttpServletResponse)}.
+     */
     @Override
     public void doDelete(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -62,8 +79,7 @@ public class MainServlet extends HttpServlet {
     }
 
     /**
-     * {@link MainServlet#doRequest} handles all requests for servlet.
-     *
+     * {@link MainServlet#doRequest} handles all requests for the servlet.
      *
      * @param httpMethod
      * @param request

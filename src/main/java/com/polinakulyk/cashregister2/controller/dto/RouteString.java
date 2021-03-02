@@ -3,7 +3,12 @@ package com.polinakulyk.cashregister2.controller.dto;
 import java.util.Optional;
 
 import static java.util.Objects.requireNonNull;
+import static java.util.Optional.ofNullable;
 
+/**
+ * Represents a combination of {@link HttpRoute} and an optional string with query parameters.
+ * Used when returning a redirect from {@link com.polinakulyk.cashregister2.controller.command.Command}.
+ */
 public final class RouteString {
 
     private final HttpRoute httpRoute;
@@ -12,6 +17,7 @@ public final class RouteString {
     private RouteString(HttpRoute httpRoute) {
         requireNonNull(httpRoute, "HTTP route must not be null");
         this.httpRoute = httpRoute;
+        // optional string with query parameters
         this.queryString = null;
     }
 
@@ -27,7 +33,7 @@ public final class RouteString {
     }
 
     public Optional<String> getQueryString() {
-        return Optional.ofNullable(this.queryString);
+        return ofNullable(this.queryString);
     }
 
     public static RouteString of(HttpRoute httpRoute) {

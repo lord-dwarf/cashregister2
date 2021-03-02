@@ -8,7 +8,7 @@ import java.time.temporal.ChronoUnit;
 import static com.polinakulyk.cashregister2.db.dto.ShiftStatus.ACTIVE;
 import static com.polinakulyk.cashregister2.util.Util.now;
 
-public class ServiceHelper {
+public final class ServiceHelper {
 
     private ServiceHelper() {
     }

@@ -22,7 +22,7 @@ public enum HttpMethod {
      */
     public static Optional<HttpMethod> fromString(String s) {
         return stream(values())
-                .filter((httpMethod) -> httpMethod.name().equals(s))
+                .filter(httpMethod -> httpMethod.name().equals(s))
                 .findFirst();
     }
 }
