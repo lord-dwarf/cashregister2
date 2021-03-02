@@ -1,7 +1,6 @@
 package com.polinakulyk.cashregister2.controller.command;
 
 import com.polinakulyk.cashregister2.controller.dto.RouteString;
-import com.polinakulyk.cashregister2.security.AuthHelper;
 import com.polinakulyk.cashregister2.service.ReportService;
 import com.polinakulyk.cashregister2.service.dto.ReportKind;
 
@@ -10,7 +9,7 @@ import java.util.Optional;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import static com.polinakulyk.cashregister2.security.AuthHelper.*;
+import static com.polinakulyk.cashregister2.security.AuthHelper.getUserIdFromSession;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static java.util.Objects.requireNonNull;

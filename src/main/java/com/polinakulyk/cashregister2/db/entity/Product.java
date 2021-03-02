@@ -90,15 +90,6 @@ public class Product {
         return this;
     }
 
-    public Set<ReceiptItem> getReceiptItems() {
-        return receiptItems;
-    }
-
-    public Product setReceiptItems(Set<ReceiptItem> items) {
-        this.receiptItems = items;
-        return this;
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

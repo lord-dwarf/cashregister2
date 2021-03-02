@@ -8,10 +8,6 @@ import java.sql.SQLException;
 
 public class ProductMapper {
 
-    private ProductMapper() {
-        throw new UnsupportedOperationException("Cannot instantiate");
-    }
-
     private static final String PRODUCT_ID = "id";
     private static final String PRODUCT_AMOUNT_AVAILABLE = "amount_available";
     private static final String PRODUCT_AMOUNT_UNIT = "amount_unit";
@@ -21,6 +17,9 @@ public class ProductMapper {
     private static final String PRODUCT_NAME = "name";
     private static final String PRODUCT_PRICE = "price";
 
+    private ProductMapper() {
+        throw new UnsupportedOperationException("Cannot instantiate");
+    }
 
     public static Product getProduct(ResultSet rs) throws SQLException {
         return new Product()

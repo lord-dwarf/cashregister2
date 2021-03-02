@@ -1,6 +1,6 @@
 package com.polinakulyk.cashregister2.db.dao;
 
-import com.polinakulyk.cashregister2.db.Transaction;
+import com.polinakulyk.cashregister2.db.Transactional;
 import com.polinakulyk.cashregister2.db.entity.User;
 import com.polinakulyk.cashregister2.db.mapper.UserMapper;
 import com.polinakulyk.cashregister2.exception.CashRegisterException;
@@ -28,10 +28,8 @@ public class UserDao {
                     + "WHERE u.username = ?";
 
     public Optional<User> findById(String userId) {
-        Connection conn = null;
-        boolean succ = false;
         try {
-            conn = Transaction.getTransactionalConnection();
+            Connection conn = Transactional.getTransactionalConnection();
             PreparedStatement statement = conn.prepareStatement(FIND_BY_USER_ID_SQL);
             statement.setString(1, userId);
             ResultSet resultSet = statement.executeQuery();
@@ -39,13 +37,9 @@ public class UserDao {
                 return Optional.empty();
             }
             User user = UserMapper.getUser(resultSet);
-            var result = Optional.of(user);
-            succ = true;
-            return result;
+            return Optional.of(user);
         } catch (SQLException e) {
             throw new CashRegisterException(quote("Can't query user by id", userId), e);
-        } finally {
-            Transaction.rollbackIfNeeded(conn, succ);
         }
     }
 

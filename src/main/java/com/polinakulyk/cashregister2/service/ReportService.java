@@ -1,6 +1,6 @@
 package com.polinakulyk.cashregister2.service;
 
-import com.polinakulyk.cashregister2.db.Transaction;
+import com.polinakulyk.cashregister2.db.Transactional;
 import com.polinakulyk.cashregister2.db.entity.Cashbox;
 import com.polinakulyk.cashregister2.db.entity.User;
 import com.polinakulyk.cashregister2.db.dao.ReceiptDao;
@@ -14,6 +14,7 @@ import static com.polinakulyk.cashregister2.service.ServiceHelper.calcXZReportId
 import static com.polinakulyk.cashregister2.util.Util.now;
 
 public class ReportService {
+
     private static final Logger log = LoggerFactory.getLogger(ReportService.class);
 
     private final UserService userService = new UserService();
@@ -21,7 +22,7 @@ public class ReportService {
     private final ReceiptDao receiptDao = new ReceiptDao();
 
     public XZReportResponseDto createXZReport(String userId, ReportKind reportKind) {
-        try (Transaction t = Transaction.beginTransaction()) {
+        try (Transactional t = Transactional.beginOrContinueTransaction()) {
             log.debug("BEGIN Create XZ report by user: '{}', of report kind: '{}'", userId, reportKind);
 
             User user = userService.findExistingById(userId);

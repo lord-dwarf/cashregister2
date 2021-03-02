@@ -1,7 +1,6 @@
 package com.polinakulyk.cashregister2.controller.command;
 
 import com.polinakulyk.cashregister2.controller.dto.RouteString;
-import com.polinakulyk.cashregister2.security.AuthHelper;
 import com.polinakulyk.cashregister2.service.UserService;
 
 import java.util.Optional;
@@ -10,7 +9,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import static com.polinakulyk.cashregister2.controller.dto.HttpRoute.INDEX;
 import static com.polinakulyk.cashregister2.controller.validator.ValidatorHelper.validStringNotNull;
-import static com.polinakulyk.cashregister2.security.AuthHelper.*;
+import static com.polinakulyk.cashregister2.security.AuthHelper.putUserIntoSession;
 
 public class LoginCommand implements Command {
 

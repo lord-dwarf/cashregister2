@@ -1,7 +1,6 @@
 package com.polinakulyk.cashregister2.filter;
 
 import com.polinakulyk.cashregister2.controller.dto.Language;
-import com.polinakulyk.cashregister2.controller.router.MainRouter;
 
 import java.io.IOException;
 import java.util.Arrays;
@@ -10,7 +9,6 @@ import java.util.Optional;
 import java.util.ResourceBundle;
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
-import javax.servlet.FilterConfig;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;

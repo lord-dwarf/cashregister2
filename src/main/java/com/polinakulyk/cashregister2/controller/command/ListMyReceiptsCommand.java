@@ -1,7 +1,6 @@
 package com.polinakulyk.cashregister2.controller.command;
 
 import com.polinakulyk.cashregister2.controller.dto.RouteString;
-import com.polinakulyk.cashregister2.security.AuthHelper;
 import com.polinakulyk.cashregister2.service.ReceiptService;
 
 import java.util.Optional;
@@ -10,7 +9,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import static com.polinakulyk.cashregister2.controller.ControllerHelper.calcPaginationPagesTotal;
 import static com.polinakulyk.cashregister2.controller.validator.ValidatorHelper.validIntegerNullable;
-import static com.polinakulyk.cashregister2.security.AuthHelper.*;
+import static com.polinakulyk.cashregister2.security.AuthHelper.getUserIdFromSession;
 
 public class ListMyReceiptsCommand implements Command {
 

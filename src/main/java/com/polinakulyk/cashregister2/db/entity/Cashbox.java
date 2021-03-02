@@ -51,15 +51,6 @@ public class Cashbox implements Serializable {
         return this;
     }
 
-    public List<User> getUsers() {
-        return users;
-    }
-
-    public Cashbox setUsers(List<User> users) {
-        this.users = users;
-        return this;
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

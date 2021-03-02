@@ -33,6 +33,8 @@ public final class AuthHelper {
     private static final String PASSWORD_SALT;
 
     static {
+
+        // init password salt field via application.properties
         var properties = getProperties();
         PASSWORD_SALT = toBase64(getPropertyNotBlank(properties, "cashregister.auth.salt"));
     }

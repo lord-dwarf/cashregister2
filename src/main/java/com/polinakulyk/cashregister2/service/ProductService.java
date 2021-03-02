@@ -1,10 +1,11 @@
 package com.polinakulyk.cashregister2.service;
 
-import com.polinakulyk.cashregister2.db.Transaction;
+import com.polinakulyk.cashregister2.db.Transactional;
 import com.polinakulyk.cashregister2.db.entity.Product;
 import com.polinakulyk.cashregister2.db.dao.ProductDao;
 import com.polinakulyk.cashregister2.exception.CashRegisterEntityNotFoundException;
 import com.polinakulyk.cashregister2.service.dto.ProductFilterKind;
+
 import java.util.List;
 import java.util.function.Function;
 import java.util.regex.Pattern;
@@ -12,10 +13,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import static com.polinakulyk.cashregister2.util.Util.quote;
+
 import static java.util.stream.Collectors.toList;
 import static java.util.stream.StreamSupport.stream;
 
 public class ProductService {
+
     private static final Logger log = LoggerFactory.getLogger(ProductService.class);
 
     private static final int FOUND_PRODUCTS_LIMIT = 5;
@@ -58,7 +61,7 @@ public class ProductService {
      * @return
      */
     public Product findExistingById(String productId) {
-        try (Transaction t = Transaction.beginTransaction()) {
+        try (Transactional t = Transactional.beginOrContinueTransaction()) {
             var product = productDao.findById(productId).orElseThrow(() ->
                     new CashRegisterEntityNotFoundException(productId));
 
@@ -70,7 +73,7 @@ public class ProductService {
     }
 
     public boolean update(Product product) {
-        try (Transaction t = Transaction.beginTransaction()) {
+        try (Transactional t = Transactional.beginOrContinueTransaction()) {
             var isUpdated = productDao.update(product);
 
             if (!isUpdated) {
@@ -89,17 +92,10 @@ public class ProductService {
         Pattern filterPattern = Pattern.compile(filterValue + ".*", Pattern.CASE_INSENSITIVE);
         Function<Product, String> fun;
         switch (filterKind) {
-            case CODE: {
-                fun = Product::getCode;
-                break;
-            }
-            case NAME: {
-                fun = Product::getName;
-                break;
-            }
-            default:
-                throw new UnsupportedOperationException(quote(
-                        "Product filter kind not supported", filterKind));
+            case CODE -> fun = Product::getCode;
+            case NAME -> fun = Product::getName;
+            default -> throw new UnsupportedOperationException(
+                    quote("Product filter kind not supported", filterKind));
         }
         var getProductFieldFun = fun;
         var filteredProducts = stream(productDao.findAll().spliterator(), false)

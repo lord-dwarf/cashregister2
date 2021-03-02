@@ -1,6 +1,5 @@
 <%@ page import="static com.polinakulyk.cashregister2.controller.dto.HttpRoute.REPORTS_X" %>
 <%@ page import="static com.polinakulyk.cashregister2.controller.dto.HttpRoute.REPORTS_Z" %>
-<%@ page import="com.polinakulyk.cashregister2.controller.router.RouterHelper" %>
 <%@ page
         import="static com.polinakulyk.cashregister2.controller.router.RouterHelper.getRoutePath" %>
 

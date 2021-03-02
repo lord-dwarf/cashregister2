@@ -1,6 +1,6 @@
 package com.polinakulyk.cashregister2.service;
 
-import com.polinakulyk.cashregister2.db.Transaction;
+import com.polinakulyk.cashregister2.db.Transactional;
 import com.polinakulyk.cashregister2.db.dto.ReceiptStatus;
 import com.polinakulyk.cashregister2.db.entity.Product;
 import com.polinakulyk.cashregister2.db.entity.Receipt;
@@ -28,6 +28,7 @@ import static com.polinakulyk.cashregister2.util.Util.quote;
 import static com.polinakulyk.cashregister2.util.Util.subtract;
 
 public class ReceiptService {
+
     private static final Logger log = LoggerFactory.getLogger(ReceiptService.class);
 
     private final ReceiptDao receiptDao = new ReceiptDao();
@@ -78,7 +79,7 @@ public class ReceiptService {
      * @return
      */
     public Receipt findExistingById(String receiptId) {
-        try (Transaction t = Transaction.beginTransaction()) {
+        try (Transactional t = Transactional.beginOrContinueTransaction()) {
             var receipt = receiptDao.findById(receiptId).orElseThrow(() ->
                     new CashRegisterEntityNotFoundException(receiptId));
 
@@ -90,7 +91,7 @@ public class ReceiptService {
     }
 
     public Receipt createReceipt(String tellerId) {
-        try (Transaction t = Transaction.beginTransaction()) {
+        try (Transactional t = Transactional.beginOrContinueTransaction()) {
             log.debug("BEGIN Create receipt by user: '{}'", tellerId);
             User user = userService.findExistingById(tellerId);
 
@@ -116,7 +117,7 @@ public class ReceiptService {
             String receiptItemProductId,
             BigDecimal receiptItemAmount
     ) {
-        try (Transaction t = Transaction.beginTransaction()) {
+        try (Transactional t = Transactional.beginOrContinueTransaction()) {
 
             log.debug("BEGIN Add receipt item by user: '{}', in receipt: '{}', for product: '{}'",
                     userId, receiptId, receiptItemProductId);
@@ -179,7 +180,7 @@ public class ReceiptService {
     }
 
     public Receipt completeReceipt(String userId, String receiptId) {
-        try (Transaction t = Transaction.beginTransaction()) {
+        try (Transactional t = Transactional.beginOrContinueTransaction()) {
             log.debug("BEGIN Complete receipt by user: '{}', receipt: '{}'", userId, receiptId);
 
             Receipt receipt = findExistingById(receiptId);
@@ -217,7 +218,7 @@ public class ReceiptService {
     }
 
     public Receipt cancelReceipt(String userId, String receiptId) {
-        try (Transaction t = Transaction.beginTransaction()) {
+        try (Transactional t = Transactional.beginOrContinueTransaction()) {
             log.debug("BEGIN Cancel receipt by user: '{}', receipt: '{}'", userId, receiptId);
 
             Receipt receipt = findExistingById(receiptId);

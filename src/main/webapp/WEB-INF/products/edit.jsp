@@ -1,5 +1,4 @@
 <%@ page import="static com.polinakulyk.cashregister2.controller.dto.HttpRoute.PRODUCTS_EDIT" %>
-<%@ page import="com.polinakulyk.cashregister2.controller.router.RouterHelper" %>
 <%@ page import="static com.polinakulyk.cashregister2.controller.router.RouterHelper.*" %>
 
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>

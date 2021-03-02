@@ -23,6 +23,10 @@ public final class RouterHelper {
     public static final String INDEX_PATH = "/index";
     public static final String JSP_CONTEXT_PATH = "/WEB-INF";
 
+    private static final String JSP_EXTENSION = ".jsp";
+    private static final String FORWARD_SLASH = "/";
+    private static final String UNDERSCORE = "_";
+
     private RouterHelper() {
         throw new UnsupportedOperationException("Can not instantiate");
     }
@@ -63,9 +67,9 @@ public final class RouterHelper {
         if ("/".equals(routePath)) {
             return Optional.of(HttpRoute.INDEX);
         }
-        routePath = removePrefix(routePath, "/");
+        routePath = removePrefix(routePath, FORWARD_SLASH);
         // "products/list" -> "PRODUCTS_LIST"
-        var httpRouteString = routePath.replaceAll("/", "_").toUpperCase();
+        var httpRouteString = routePath.replaceAll(FORWARD_SLASH, UNDERSCORE).toUpperCase();
         return HttpRoute.fromString(httpRouteString);
     }
 
@@ -84,10 +88,10 @@ public final class RouterHelper {
      */
     public static String routePathFromHttpRoute(HttpRoute route) {
         if (HttpRoute.INDEX == route) {
-            return "/";
+            return FORWARD_SLASH;
         }
-        var routeString = route.name().toLowerCase().replaceAll("_", "/");
-        return addPrefix(routeString, "/");
+        var routeString = route.name().toLowerCase().replaceAll(UNDERSCORE, FORWARD_SLASH);
+        return addPrefix(routeString, FORWARD_SLASH);
     }
 
     /**
@@ -118,10 +122,10 @@ public final class RouterHelper {
      */
     public static String getRoutePathFromJspRequest(HttpServletRequest request) {
         var routePath = removePrefix(request.getRequestURI(), request.getContextPath());
-        routePath = removeSuffix(routePath, ".jsp");
+        routePath = removeSuffix(routePath, JSP_EXTENSION);
         routePath = removeSuffix(routePath, INDEX_PATH);
         routePath = removePrefix(routePath, JSP_CONTEXT_PATH);
-        return addPrefix(routePath, "/");
+        return addPrefix(routePath, FORWARD_SLASH);
     }
 
     /**
@@ -158,7 +162,7 @@ public final class RouterHelper {
     public static void forwardToJsp(
             HttpServletRequest request, HttpServletResponse response, String jspName)
             throws ServletException, IOException {
-        jspName = addPrefix(jspName, "/");
+        jspName = addPrefix(jspName, FORWARD_SLASH);
         request.getRequestDispatcher(JSP_CONTEXT_PATH + jspName).forward(request, response);
     }
 

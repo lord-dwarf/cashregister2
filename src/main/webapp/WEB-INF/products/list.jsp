@@ -4,7 +4,6 @@
 <%@ page import="static com.polinakulyk.cashregister2.controller.dto.HttpRoute.PRODUCTS_LIST" %>
 <%@ page
         import="static com.polinakulyk.cashregister2.controller.router.RouterHelper.getRoutePath" %>
-<%@ page import="com.polinakulyk.cashregister2.controller.router.RouterHelper" %>
 <%@ page
         import="static com.polinakulyk.cashregister2.controller.router.RouterHelper.getRoutePath" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>

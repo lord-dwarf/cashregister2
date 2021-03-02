@@ -7,7 +7,7 @@ import static java.util.Arrays.stream;
 
 /**
  * Represents all available localization languages.
- *
+ * <p>
  * Holds the sole locale for a given language.
  */
 public enum Language {

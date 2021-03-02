@@ -1,6 +1,6 @@
 package com.polinakulyk.cashregister2.db.dao;
 
-import com.polinakulyk.cashregister2.db.Transaction;
+import com.polinakulyk.cashregister2.db.Transactional;
 import com.polinakulyk.cashregister2.db.entity.Product;
 import com.polinakulyk.cashregister2.db.mapper.ProductMapper;
 import com.polinakulyk.cashregister2.exception.CashRegisterException;
@@ -19,6 +19,7 @@ import static com.polinakulyk.cashregister2.util.Util.generateUuid;
 import static com.polinakulyk.cashregister2.util.Util.quote;
 
 public class ProductDao {
+
     private static final String INSERT_PRODUCT_SQL =
             "INSERT INTO product " +
                     "(id, code, name, category, price, amount_unit, amount_available, details) " +
@@ -46,8 +47,8 @@ public class ProductDao {
                     "WHERE id = ?;";
 
     public Product insert(Product product) {
-        product.setId(generateUuid());
         try (Connection connection = getConnection()) {
+            product.setId(generateUuid());
             PreparedStatement statement = connection.prepareStatement(INSERT_PRODUCT_SQL);
             statement.setString(1, product.getId());
             statement.setString(2, product.getCode());
@@ -120,10 +121,8 @@ public class ProductDao {
     }
 
     public boolean update(Product product) {
-        Connection conn = null;
-        boolean succ = false;
         try {
-            conn = Transaction.getTransactionalConnection();
+            Connection conn = Transactional.getTransactionalConnection();
             PreparedStatement statement = conn.prepareStatement(UPDATE_PRODUCT_SQL);
             statement.setString(1, product.getCode());
             statement.setString(2, product.getName());
@@ -136,38 +135,27 @@ public class ProductDao {
 
             int numOfRows = statement.executeUpdate();
 
-            succ = true;
             return numOfRows == 1;
         } catch (SQLException e) {
             throw new CashRegisterException(
                     quote("Can't update product with id", product.getId()), e);
-        } finally {
-            Transaction.rollbackIfNeeded(conn, succ);
         }
     }
 
     public Optional<Product> findById(String productId) {
-        Connection conn = null;
-        boolean succ = false;
         try {
-            conn = Transaction.getTransactionalConnection();
+            Connection conn = Transactional.getTransactionalConnection();
             PreparedStatement statement = conn.prepareStatement(FIND_PRODUCT_BY_ID_SQL);
             statement.setString(1, productId);
             ResultSet resultSet = statement.executeQuery();
             if (!resultSet.next()) {
-                succ = true;
                 return Optional.empty();
             }
             var product = ProductMapper.getProduct(resultSet);
-            var result = Optional.of(product);
-
-            succ = true;
-            return result;
+            return Optional.of(product);
         } catch (SQLException e) {
             throw new CashRegisterException(
                     quote("Can't find product by id {}", productId), e);
-        } finally {
-            Transaction.rollbackIfNeeded(conn, succ);
         }
     }
 }

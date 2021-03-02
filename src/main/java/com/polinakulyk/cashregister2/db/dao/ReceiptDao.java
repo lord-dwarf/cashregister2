@@ -1,7 +1,7 @@
 package com.polinakulyk.cashregister2.db.dao;
 
 import com.polinakulyk.cashregister2.db.DbHelper;
-import com.polinakulyk.cashregister2.db.Transaction;
+import com.polinakulyk.cashregister2.db.Transactional;
 import com.polinakulyk.cashregister2.db.dto.ReceiptStatus;
 import com.polinakulyk.cashregister2.db.dto.ReceiptsStatDto;
 import com.polinakulyk.cashregister2.db.dto.ShiftStatus;
@@ -9,6 +9,7 @@ import com.polinakulyk.cashregister2.db.entity.Receipt;
 import com.polinakulyk.cashregister2.db.entity.ReceiptItem;
 import com.polinakulyk.cashregister2.db.mapper.ReceiptMapper;
 import com.polinakulyk.cashregister2.exception.CashRegisterException;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -163,39 +164,28 @@ public class ReceiptDao {
     }
 
     public Optional<Receipt> findById(String receiptId) {
-        Connection conn = null;
-        boolean succ = false;
         try {
-            conn = Transaction.getTransactionalConnection();
+            Connection conn = Transactional.getTransactionalConnection();
             PreparedStatement statement = conn.prepareStatement(FIND_RECEIPT_BY_ID_SQL);
             statement.setString(1, receiptId);
             ResultSet resultSet = statement.executeQuery();
             if (!resultSet.next()) {
-                succ = true;
                 return Optional.empty();
             }
             var receipt = ReceiptMapper.getReceiptWithUserAndCashbox(resultSet);
             var receiptItems = findReceiptItemsByReceiptId(conn, receiptId);
             receipt.setReceiptItems(receiptItems);
-            var result = Optional.of(receipt);
-
-            succ = true;
-            return result;
+            return Optional.of(receipt);
         } catch (SQLException e) {
             throw new CashRegisterException(
                     quote("Can't find receipt by id", receiptId), e);
-        } finally {
-            Transaction.rollbackIfNeeded(conn, succ);
         }
     }
 
     public Receipt insert(String tellerId, Receipt receipt) {
-        receipt.setId(generateUuid());
-
-        Connection conn = null;
-        boolean succ = false;
         try {
-            conn = Transaction.getTransactionalConnection();
+            receipt.setId(generateUuid());
+            Connection conn = Transactional.getTransactionalConnection();
             PreparedStatement statement = conn.prepareStatement(INSERT_RECEIPT_SQL);
             statement.setString(1, receipt.getId());
             statement.setTimestamp(2, DbHelper.toTimestamp(receipt.getCreatedTime()));
@@ -210,21 +200,16 @@ public class ReceiptDao {
                         quote("Can't create receipt with id", receipt.getId()));
             }
 
-            succ = true;
             return receipt;
         } catch (SQLException e) {
             throw new CashRegisterException(
                     quote("Can't create receipt with id", receipt.getId()), e);
-        } finally {
-            Transaction.rollbackIfNeeded(conn, succ);
         }
     }
 
     public Receipt update(String userId, Receipt receipt) {
-        Connection conn = null;
-        boolean succ = false;
         try {
-            conn = Transaction.getTransactionalConnection();
+            Connection conn = Transactional.getTransactionalConnection();
             PreparedStatement statement = conn.prepareStatement(UPDATE_RECEIPT_SQL);
             statement.setTimestamp(1, DbHelper.toTimestamp(receipt.getCreatedTime()));
             statement.setTimestamp(2, DbHelper.toTimestampNullable(receipt.getCheckoutTime()));
@@ -239,24 +224,18 @@ public class ReceiptDao {
                         quote("Can't update receipt with id", receipt.getId()));
             }
 
-            succ = true;
             return receipt;
         } catch (SQLException e) {
             throw new CashRegisterException(
                     quote("Can't update receipt with id", receipt.getId()), e);
-        } finally {
-            Transaction.rollbackIfNeeded(conn, succ);
         }
     }
 
     public ReceiptItem insertReceiptItem(
             String receiptId, String productId, ReceiptItem receiptItem) {
-        receiptItem.setId(generateUuid());
-
-        Connection conn = null;
-        boolean succ = false;
         try {
-            conn = Transaction.getTransactionalConnection();
+            receiptItem.setId(generateUuid());
+            Connection conn = Transactional.getTransactionalConnection();
             PreparedStatement statement = conn.prepareStatement(INSERT_RECEIPT_ITEM_SQL);
             statement.setString(1, receiptItem.getId());
             statement.setBigDecimal(2, receiptItem.getAmount());
@@ -272,22 +251,17 @@ public class ReceiptDao {
                         quote("Can't create receipt item with id", receiptItem.getId()));
             }
 
-            succ = true;
             return receiptItem;
         } catch (SQLException e) {
             throw new CashRegisterException(
                     quote("Can't create receipt item with id", receiptItem.getId()), e);
-        } finally {
-            Transaction.rollbackIfNeeded(conn, succ);
         }
     }
 
     public ReceiptItem updateReceiptItem(
             String receiptId, String productId, ReceiptItem receiptItem) {
-        Connection conn = null;
-        boolean succ = false;
         try {
-            conn = Transaction.getTransactionalConnection();
+            Connection conn = Transactional.getTransactionalConnection();
             PreparedStatement statement = conn.prepareStatement(UPDATE_RECEIPT_ITEM_SQL);
             statement.setBigDecimal(1, receiptItem.getAmount());
             statement.setInt(2, receiptItem.getAmountUnit().ordinal());
@@ -303,21 +277,16 @@ public class ReceiptDao {
                         quote("Can't update receipt item with id", receiptItem.getId()));
             }
 
-            succ = true;
             return receiptItem;
         } catch (SQLException e) {
             throw new CashRegisterException(
                     quote("Can't update receipt item with id", receiptItem.getId()), e);
-        } finally {
-            Transaction.rollbackIfNeeded(conn, succ);
         }
     }
 
     public ReceiptsStatDto getReceiptsStatInActiveShift(String cashboxId) {
-        Connection conn = null;
-        boolean succ = false;
         try {
-            conn = Transaction.getTransactionalConnection();
+            Connection conn = Transactional.getTransactionalConnection();
             PreparedStatement statement =
                     conn.prepareStatement(GET_RECEIPTS_STAT_IN_ACTIVE_SHIFT_SQL);
             statement.setString(1, cashboxId);
@@ -330,15 +299,10 @@ public class ReceiptDao {
             }
             var sum = rs.getBigDecimal("sum");
             var count = rs.getInt("count");
-            var result = new ReceiptsStatDto(sum, count);
-
-            succ = true;
-            return result;
+            return new ReceiptsStatDto(sum, count);
         } catch (SQLException e) {
             throw new CashRegisterException(
                     quote("Can't get receipts stat in active shift", cashboxId), e);
-        } finally {
-            Transaction.rollbackIfNeeded(conn, succ);
         }
     }
 

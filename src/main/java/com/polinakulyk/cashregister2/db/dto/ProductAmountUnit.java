@@ -1,11 +1,11 @@
 package com.polinakulyk.cashregister2.db.dto;
 
 import com.polinakulyk.cashregister2.exception.CashRegisterException;
-import com.polinakulyk.cashregister2.exception.CashRegisterValidationException;
+
 import java.util.Optional;
 
 import static com.polinakulyk.cashregister2.util.Util.quote;
-import static java.util.Arrays.asList;
+
 import static java.util.Arrays.stream;
 
 public enum ProductAmountUnit {
@@ -32,7 +32,7 @@ public enum ProductAmountUnit {
      */
     public static Optional<ProductAmountUnit> fromInteger(Integer amountUnitInt) {
         return stream(values())
-                .filter((amountUnit) -> amountUnit.ordinal() == amountUnitInt)
+                .filter(amountUnit -> amountUnit.ordinal() == amountUnitInt)
                 .findFirst();
     }
 
@@ -43,8 +43,8 @@ public enum ProductAmountUnit {
      * @return
      */
     public static ProductAmountUnit fromExistingInteger(Integer amountUnitInt) {
-        return fromInteger(amountUnitInt).orElseThrow(() ->
-                new CashRegisterException(
+        return fromInteger(amountUnitInt).
+                orElseThrow(() -> new CashRegisterException(
                         quote("Product amount unit not found", amountUnitInt)));
     }
 }

@@ -6,7 +6,6 @@
 <%@ page import="static com.polinakulyk.cashregister2.controller.dto.HttpRoute.AUTH_LOGIN" %>
 <%@ page import="static com.polinakulyk.cashregister2.controller.dto.HttpRoute.AUTH_LOGOUT" %>
 <%@ page import="static com.polinakulyk.cashregister2.controller.dto.HttpRoute.AUTH_LANG" %>
-<%@ page import="com.polinakulyk.cashregister2.controller.router.RouterHelper" %>
 <%@ page
         import="static com.polinakulyk.cashregister2.controller.router.RouterHelper.getRoutePath" %>
 <%@ page

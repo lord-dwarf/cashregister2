@@ -11,7 +11,6 @@ import java.math.RoundingMode;
 import java.time.Clock;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.time.ZoneOffset;
 import java.util.Base64;
 import java.util.Calendar;
 import java.util.Date;
@@ -103,18 +102,8 @@ public final class Util {
     }
 
     /**
-     * Obtains {@link Date} from {@link LocalDateTime} in UTC.
-     *
-     * @param localDateTime
-     * @return
-     */
-    public static Date toDate(LocalDateTime localDateTime) {
-        return Date.from(localDateTime.toInstant(ZoneOffset.UTC));
-    }
-
-    /**
      * Obtains {@link LocalDateTime} from {@link Date} in UTC.
-     *
+     * TODO change to convert from TIMESTAMP
      * @param date
      * @return
      */

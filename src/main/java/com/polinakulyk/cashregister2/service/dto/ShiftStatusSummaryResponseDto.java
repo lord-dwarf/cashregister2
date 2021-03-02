@@ -8,17 +8,9 @@ public class ShiftStatusSummaryResponseDto {
     private ShiftStatus shiftStatus;
     private String shiftStatusElapsedTime;
 
-    public ShiftStatus getShiftStatus() {
-        return shiftStatus;
-    }
-
     public ShiftStatusSummaryResponseDto setShiftStatus(ShiftStatus shiftStatus) {
         this.shiftStatus = shiftStatus;
         return this;
-    }
-
-    public String getShiftStatusElapsedTime() {
-        return shiftStatusElapsedTime;
     }
 
     public ShiftStatusSummaryResponseDto setShiftStatusElapsedTime(String shiftStatusElapsedTime) {

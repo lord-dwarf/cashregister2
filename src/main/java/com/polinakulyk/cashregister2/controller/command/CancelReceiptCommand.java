@@ -1,7 +1,6 @@
 package com.polinakulyk.cashregister2.controller.command;
 
 import com.polinakulyk.cashregister2.controller.dto.RouteString;
-import com.polinakulyk.cashregister2.security.AuthHelper;
 import com.polinakulyk.cashregister2.service.ReceiptService;
 
 import java.io.IOException;
@@ -11,7 +10,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import static com.polinakulyk.cashregister2.controller.dto.HttpRoute.RECEIPTS_LIST;
 import static com.polinakulyk.cashregister2.controller.validator.ValidatorHelper.validStringNotNull;
-import static com.polinakulyk.cashregister2.security.AuthHelper.*;
+import static com.polinakulyk.cashregister2.security.AuthHelper.getUserIdFromSession;
 
 public class CancelReceiptCommand implements Command {
 

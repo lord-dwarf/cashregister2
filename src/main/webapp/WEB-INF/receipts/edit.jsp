@@ -14,7 +14,7 @@
 </h1>
 <form method="post"
       action="<%=getRoutePath(request, RECEIPTS_CANCEL)%>?receiptId=${receipt.id}">
-    <button type="submit" class="btn btn-primary">Cancel Receipt</button>
+    <button type="submit" class="btn btn-danger">Cancel Receipt</button>
 </form>
 <form class="w-40">
     <div class="form-group mt-2">

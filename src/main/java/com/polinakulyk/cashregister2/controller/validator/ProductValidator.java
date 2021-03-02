@@ -4,7 +4,6 @@ import com.polinakulyk.cashregister2.db.dto.ProductAmountUnit;
 import com.polinakulyk.cashregister2.db.entity.Product;
 import com.polinakulyk.cashregister2.exception.CashRegisterValidationException;
 import com.polinakulyk.cashregister2.service.dto.ProductFilterKind;
-import com.polinakulyk.cashregister2.util.Util;
 
 import java.math.BigDecimal;
 import javax.servlet.http.HttpServletRequest;

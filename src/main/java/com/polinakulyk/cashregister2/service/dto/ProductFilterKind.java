@@ -18,7 +18,7 @@ public enum ProductFilterKind {
      */
     public static Optional<ProductFilterKind> fromString(String productFilterKindStr) {
         return stream(values())
-                .filter((productFilterKind) -> productFilterKind.name().equals(productFilterKindStr))
+                .filter(productFilterKind -> productFilterKind.name().equals(productFilterKindStr))
                 .findFirst();
     }
 

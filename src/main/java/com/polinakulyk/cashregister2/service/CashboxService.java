@@ -1,6 +1,6 @@
 package com.polinakulyk.cashregister2.service;
 
-import com.polinakulyk.cashregister2.db.Transaction;
+import com.polinakulyk.cashregister2.db.Transactional;
 import com.polinakulyk.cashregister2.db.dto.ShiftStatus;
 import com.polinakulyk.cashregister2.db.entity.Cashbox;
 import com.polinakulyk.cashregister2.db.entity.User;
@@ -19,13 +19,14 @@ import static com.polinakulyk.cashregister2.util.Util.quote;
 import static java.lang.String.format;
 
 public class CashboxService {
+
     private static final Logger log = LoggerFactory.getLogger(CashboxService.class);
 
     private final CashboxDao cashboxDao = new CashboxDao();
     private final UserService userService = new UserService();
 
     public ShiftStatusSummaryResponseDto activateShift(String userId) {
-        try (Transaction t = Transaction.beginTransaction()) {
+        try (Transactional t = Transactional.beginOrContinueTransaction()) {
 
             log.debug("BEGIN Activate shift by user: '{}'", userId);
             User user = userService.findExistingById(userId);
@@ -45,7 +46,7 @@ public class CashboxService {
     }
 
     public ShiftStatusSummaryResponseDto deactivateShift(String userId) {
-        try (Transaction t = Transaction.beginTransaction()) {
+        try (Transactional t = Transactional.beginOrContinueTransaction()) {
             log.debug("BEGIN Deactivate shift by user: '{}'", userId);
 
             User user = userService.findExistingById(userId);

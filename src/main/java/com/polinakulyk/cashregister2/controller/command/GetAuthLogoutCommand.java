@@ -1,7 +1,6 @@
 package com.polinakulyk.cashregister2.controller.command;
 
 import com.polinakulyk.cashregister2.controller.dto.RouteString;
-import com.polinakulyk.cashregister2.security.AuthHelper;
 
 import java.util.Optional;
 import javax.servlet.http.HttpServletRequest;
@@ -10,7 +9,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import static com.polinakulyk.cashregister2.controller.dto.HttpRoute.INDEX;
-import static com.polinakulyk.cashregister2.security.AuthHelper.*;
+import static com.polinakulyk.cashregister2.security.AuthHelper.getUserIdFromSession;
+import static com.polinakulyk.cashregister2.security.AuthHelper.getUserRoleFromSession;
+import static com.polinakulyk.cashregister2.security.AuthHelper.removeUserFromSessionIfNeeded;
 
 public class GetAuthLogoutCommand implements Command {
 
