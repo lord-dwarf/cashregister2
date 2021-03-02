@@ -5,10 +5,17 @@ import com.zaxxer.hikari.HikariDataSource;
 import java.sql.Connection;
 import java.sql.SQLException;
 
-import static com.polinakulyk.cashregister2.util.Util.getPropertyNotBlank;
 import static com.polinakulyk.cashregister2.util.Util.getProperties;
+import static com.polinakulyk.cashregister2.util.Util.getPropertyNotBlank;
 
-public class ConnectionPool {
+/**
+ * Connection pool utilities.
+ */
+public final class ConnectionPool {
+
+    private ConnectionPool() {
+        throw new UnsupportedOperationException("Can not instantiate");
+    }
 
     private static final String datasourceUrl;
     private static final String datasourceUsername;

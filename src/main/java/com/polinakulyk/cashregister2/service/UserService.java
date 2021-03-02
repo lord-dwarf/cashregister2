@@ -8,11 +8,12 @@ import com.polinakulyk.cashregister2.security.AuthHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import static com.polinakulyk.cashregister2.security.AuthHelper.*;
+
 public class UserService {
     private static final Logger log = LoggerFactory.getLogger(UserService.class);
 
     private final UserDao userDao = new UserDao();
-    private final AuthHelper authHelper = new AuthHelper();
 
     public User login(String login, String password) {
         log.debug("BEGIN Login of user '{}'", login);
@@ -20,7 +21,7 @@ public class UserService {
         User user = findExistingByUsername(login);
 
         // authenticate user
-        if (!authHelper.isUserPasswordMatches(password, user.getPassword())) {
+        if (!isUserPasswordMatches(password, user.getPassword())) {
             throw new CashRegisterAuthorizationException(login);
         }
 

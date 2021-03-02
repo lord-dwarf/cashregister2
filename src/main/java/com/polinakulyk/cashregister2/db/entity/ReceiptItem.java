@@ -1,37 +1,19 @@
 package com.polinakulyk.cashregister2.db.entity;
 
 import com.polinakulyk.cashregister2.db.dto.ProductAmountUnit;
+
 import java.math.BigDecimal;
 import java.util.StringJoiner;
-import javax.validation.constraints.DecimalMax;
-import javax.validation.constraints.DecimalMin;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
 
 import static com.polinakulyk.cashregister2.db.DbHelper.calcCostByPriceAndAmount;
 
 public class ReceiptItem {
-
     private String id;
-
-    @NotNull(message = "Receipt cannot be null")
     private Receipt receipt;
-
-    @NotNull(message = "Product cannot be null")
     private Product product;
-
-    @NotBlank(message = "Name cannot be blank")
     private String name;
-
-    @DecimalMin(value = "0.001", message = "Amount must be greater than 0")
-    @DecimalMax(value = "999.999", message = "Amount must be less than 1000")
     private BigDecimal amount;
-
-    @NotNull(message = "Amount unit cannot be null")
     private ProductAmountUnit amountUnit;
-
-    @DecimalMin(value = "0.01", message = "Price must be greater than 0")
-    @DecimalMax(value = "99999.99", message = "Price must be less than 100k")
     private BigDecimal price;
 
     public String getId() {

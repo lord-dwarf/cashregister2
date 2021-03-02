@@ -5,6 +5,11 @@ import java.util.Optional;
 
 import static java.util.Arrays.stream;
 
+/**
+ * Represents all available localization languages.
+ *
+ * Holds the sole locale for a given language.
+ */
 public enum Language {
     EN(Locale.US),
     UA(new Locale("uk", "UA"));

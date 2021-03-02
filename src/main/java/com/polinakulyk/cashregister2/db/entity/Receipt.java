@@ -1,38 +1,22 @@
 package com.polinakulyk.cashregister2.db.entity;
 
 import com.polinakulyk.cashregister2.db.dto.ReceiptStatus;
+
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.StringJoiner;
-import javax.validation.constraints.DecimalMax;
-import javax.validation.constraints.DecimalMin;
-import javax.validation.constraints.NotNull;
 
 import static com.polinakulyk.cashregister2.db.DbHelper.calcReceiptCode;
 
 public class Receipt {
-
     private String id;
-
-    @NotNull(message = "Created time cannot be null")
     private LocalDateTime createdTime;
-
     private LocalDateTime checkoutTime;
-
-    @NotNull(message = "Receipt status cannot be null")
     private ReceiptStatus status;
-
-    @NotNull(message = "Sum total cannot be null")
-    @DecimalMin(value = "0.00", message = "Sum total must be positive")
-    @DecimalMax(value = "99999.99", message = "Sum total must be less than 100k")
     private BigDecimal sumTotal;
-
-    @NotNull(message = "Receipt items cannot be null")
     private List<ReceiptItem> receiptItems = new ArrayList<>();
-
-    @NotNull(message = "User cannot be null")
     private User user;
 
     public String getId() {

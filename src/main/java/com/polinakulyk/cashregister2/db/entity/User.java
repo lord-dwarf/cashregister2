@@ -1,33 +1,19 @@
 package com.polinakulyk.cashregister2.db.entity;
 
 import com.polinakulyk.cashregister2.security.dto.UserRole;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.StringJoiner;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
 
 public class User implements Serializable {
-
     private String id;
-
-    @NotBlank(message = "Username cannot be blank")
     private String username;
-
-    @NotBlank(message = "Password cannot be blank")
     private String password;
-
-    @NotNull(message = "Role cannot be null")
     private UserRole role;
-
-    @NotBlank(message = "Full name cannot be blank")
     private String fullName;
-
-    @NotNull(message = "Receipts cannot be null")
     private List<Receipt> receipts = new ArrayList<>();
-
-    @NotNull(message = "Cash box cannot be null")
     private Cashbox cashbox;
 
     public String getId() {

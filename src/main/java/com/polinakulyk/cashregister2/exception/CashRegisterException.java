@@ -4,6 +4,11 @@ import com.polinakulyk.cashregister2.controller.dto.HttpStatus;
 
 import static com.polinakulyk.cashregister2.controller.dto.HttpStatus.INTERNAL_SERVER_ERROR;
 
+/**
+ * The parent exception class for all exceptions thrown by application.
+ *
+ * Holds {@link HttpStatus} code associated with exception.
+ */
 public class CashRegisterException extends RuntimeException {
 
     private static final HttpStatus DEFAULT_HTTP_STATUS = INTERNAL_SERVER_ERROR;

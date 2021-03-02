@@ -4,10 +4,6 @@ import com.polinakulyk.cashregister2.exception.CashRegisterException;
 import java.sql.Connection;
 import java.sql.SQLException;
 
-import static com.polinakulyk.cashregister2.db.DbHelper.tryClose;
-import static com.polinakulyk.cashregister2.db.DbHelper.tryCommit;
-import static com.polinakulyk.cashregister2.db.DbHelper.tryRollback;
-
 public class Transaction implements AutoCloseable {
 
     private static final ThreadLocal<Connection> transactionConnection = new ThreadLocal<>();
@@ -67,6 +63,38 @@ public class Transaction implements AutoCloseable {
             tryClose(conn);
         } finally {
             transactionConnection.remove();
+        }
+    }
+
+    /**
+     *
+     * @param conn
+     */
+    public static void tryCommit(Connection conn) {
+        try {
+            conn.commit();
+        } catch (SQLException e) {
+            throw new CashRegisterException("Could not commit", e);
+        }
+    }
+
+    public static void tryRollback(Connection conn) {
+        try {
+            if (!conn.isClosed()) {
+                conn.rollback();
+            }
+        } catch (SQLException e) {
+            throw new CashRegisterException("Could not rollback", e);
+        }
+    }
+
+    public static void tryClose(Connection conn) {
+        try {
+            if (!conn.isClosed()) {
+                conn.close();
+            }
+        } catch (SQLException e) {
+            throw new CashRegisterException("Could not close connection", e);
         }
     }
 }

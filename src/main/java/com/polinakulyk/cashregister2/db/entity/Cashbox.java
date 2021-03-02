@@ -1,28 +1,18 @@
 package com.polinakulyk.cashregister2.db.entity;
 
 import com.polinakulyk.cashregister2.db.dto.ShiftStatus;
+
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.StringJoiner;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
 
 public class Cashbox implements Serializable {
-
     private String id;
-
-    @NotBlank(message = "Name cannot be blank")
     private String name;
-
-    @NotNull(message = "Shift status cannot be null")
     private ShiftStatus shiftStatus;
-
-    @NotNull(message = "Shift status time cannot be null")
     private LocalDateTime shiftStatusTime;
-
-    @NotNull(message = "Users cannot be null")
     private List<User> users = new ArrayList<>();
 
     public String getId() {

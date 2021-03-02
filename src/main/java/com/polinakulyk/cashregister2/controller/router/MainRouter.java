@@ -59,13 +59,17 @@ import static com.polinakulyk.cashregister2.security.dto.UserRole.any;
 import static com.polinakulyk.cashregister2.security.dto.UserRole.authenticated;
 import static com.polinakulyk.cashregister2.security.dto.UserRole.tellers;
 
-public class MainRouter extends Router {
+/**
+ * The single source of routes and authorization access control in the application.
+ * For the structure of mappings, see {@link Router}.
+ */
+public final class MainRouter extends Router {
 
     public static class Singleton {
         public static final Router INSTANCE = new MainRouter();
     }
 
-    public MainRouter() {
+    private MainRouter() {
         // Home
         addForwardToJsp(GET, INDEX, "index.jsp", any());
         // Products and Products -> Product

@@ -11,16 +11,16 @@ import javax.servlet.http.HttpServletResponse;
 
 import static com.polinakulyk.cashregister2.controller.dto.HttpRoute.PRODUCTS_LIST;
 import static com.polinakulyk.cashregister2.controller.validator.ProductValidator.validProductFromRequestWithoutId;
+import static com.polinakulyk.cashregister2.security.AuthHelper.*;
 
 public class AddProductCommand implements Command {
 
     private final ProductService productService = new ProductService();
-    private final AuthHelper authHelper = new AuthHelper();
 
     @Override
     public Optional<RouteString> execute(HttpServletRequest request, HttpServletResponse response)
             throws IOException {
-        String userId = authHelper.getUserIdFromSession(request);
+        String userId = getUserIdFromSession(request);
         // validate product fields
         productService.create(userId, validProductFromRequestWithoutId(request));
 

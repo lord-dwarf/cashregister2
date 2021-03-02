@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import static com.polinakulyk.cashregister2.controller.dto.HttpRoute.INDEX;
 import static com.polinakulyk.cashregister2.controller.validator.ValidatorHelper.validStringNotNull;
+import static com.polinakulyk.cashregister2.security.AuthHelper.*;
 
 public class LoginCommand implements Command {
 
@@ -17,7 +18,6 @@ public class LoginCommand implements Command {
     private static final String PASSWORD_PARAM = "password";
 
     private final UserService userService = new UserService();
-    private final AuthHelper authHelper = new AuthHelper();
 
     @Override
     public Optional<RouteString> execute(HttpServletRequest request, HttpServletResponse response) {
@@ -27,7 +27,7 @@ public class LoginCommand implements Command {
         // log in user
         var user = userService.login(login, password);
         // set user into session
-        authHelper.putUserIntoSession(user, request);
+        putUserIntoSession(user, request);
 
         // redirect to home
         return Optional.of(RouteString.of(INDEX));

@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import static com.polinakulyk.cashregister2.controller.ControllerHelper.calcPaginationPagesTotal;
 import static com.polinakulyk.cashregister2.controller.validator.ValidatorHelper.validIntegerNullable;
+import static com.polinakulyk.cashregister2.security.AuthHelper.*;
 
 public class ListMyReceiptsCommand implements Command {
 
@@ -21,11 +22,10 @@ public class ListMyReceiptsCommand implements Command {
     private static final String CURRENT_PAGE_PARAM = "currentPage";
 
     private final ReceiptService receiptService = new ReceiptService();
-    private final AuthHelper authHelper = new AuthHelper();
 
     @Override
     public Optional<RouteString> execute(HttpServletRequest request, HttpServletResponse response) {
-        var userId = authHelper.getUserIdFromSession(request);
+        var userId = getUserIdFromSession(request);
         var currentPage = validIntegerNullable(request, CURRENT_PAGE_PARAM)
                 .orElse(DEFAULT_PAGE);
 

@@ -15,17 +15,16 @@ import static com.polinakulyk.cashregister2.util.Util.quote;
 import static com.polinakulyk.cashregister2.util.Util.removePrefix;
 import static com.polinakulyk.cashregister2.util.Util.removeSuffix;
 
+/**
+ * Utility class for application routing.
+ */
 public final class RouterHelper {
 
     public static final String INDEX_PATH = "/index";
     public static final String JSP_CONTEXT_PATH = "/WEB-INF";
 
     private RouterHelper() {
-        throw new UnsupportedOperationException("Cannot instantiate");
-    }
-
-    public static String getRoutePath(HttpServletRequest request, HttpRoute route) {
-        return request.getContextPath() + routePathFromHttpRoute(route);
+        throw new UnsupportedOperationException("Can not instantiate");
     }
 
     /**
@@ -89,6 +88,18 @@ public final class RouterHelper {
         }
         var routeString = route.name().toLowerCase().replaceAll("_", "/");
         return addPrefix(routeString, "/");
+    }
+
+    /**
+     * Converts known {@link HttpRoute} to the URL string relative to context path
+     * (to be used in JSP pages).
+     *
+     * @param request
+     * @param route
+     * @return
+     */
+    public static String getRoutePath(HttpServletRequest request, HttpRoute route) {
+        return request.getContextPath() + routePathFromHttpRoute(route);
     }
 
     /**

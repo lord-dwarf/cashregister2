@@ -8,6 +8,7 @@ import com.polinakulyk.cashregister2.db.entity.Product;
 import com.polinakulyk.cashregister2.db.entity.Receipt;
 import com.polinakulyk.cashregister2.db.entity.ReceiptItem;
 import com.polinakulyk.cashregister2.db.entity.User;
+
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
@@ -15,6 +16,11 @@ import static com.polinakulyk.cashregister2.db.DbHelper.getLocalDateTime;
 import static com.polinakulyk.cashregister2.db.DbHelper.getLocalDateTimeNullable;
 
 public class ReceiptMapper {
+
+
+    private ReceiptMapper() {
+        throw new UnsupportedOperationException("Cannot instantiate");
+    }
 
     public static ReceiptItem getReceiptItemWithProduct(ResultSet rs) throws SQLException {
         var receiptItem = new ReceiptItem()
@@ -24,6 +30,7 @@ public class ReceiptMapper {
                 .setAmountUnit(
                         ProductAmountUnit.fromExistingInteger(rs.getInt("amount_unit")))
                 .setAmount(rs.getBigDecimal("amount"));
+
         var product = new Product()
                 .setId(rs.getString("product_id"))
                 .setCode(rs.getString("code"))

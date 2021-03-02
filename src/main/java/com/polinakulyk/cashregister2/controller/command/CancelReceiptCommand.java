@@ -11,18 +11,18 @@ import javax.servlet.http.HttpServletResponse;
 
 import static com.polinakulyk.cashregister2.controller.dto.HttpRoute.RECEIPTS_LIST;
 import static com.polinakulyk.cashregister2.controller.validator.ValidatorHelper.validStringNotNull;
+import static com.polinakulyk.cashregister2.security.AuthHelper.*;
 
 public class CancelReceiptCommand implements Command {
 
     private static final String RECEIPT_ID_PARAM = "receiptId";
 
     ReceiptService receiptService = new ReceiptService();
-    AuthHelper authHelper = new AuthHelper();
 
     @Override
     public Optional<RouteString> execute(HttpServletRequest request, HttpServletResponse response)
             throws IOException {
-        var userId = authHelper.getUserIdFromSession(request);
+        var userId = getUserIdFromSession(request);
         // validate receipt id
         var receiptId = validStringNotNull(request, RECEIPT_ID_PARAM);
         // cancel receipt

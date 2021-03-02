@@ -1,44 +1,21 @@
 package com.polinakulyk.cashregister2.db.entity;
 
 import com.polinakulyk.cashregister2.db.dto.ProductAmountUnit;
+
 import java.math.BigDecimal;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.StringJoiner;
-import javax.validation.constraints.DecimalMax;
-import javax.validation.constraints.DecimalMin;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
 
 public class Product {
-
     private String id;
-
-    @NotBlank(message = "Code cannot be blank")
     private String code;
-
-    @NotBlank(message = "Category cannot be blank")
     private String category;
-
-    @NotBlank(message = "Name cannot be blank")
     private String name;
-
     private String details;
-
-    @NotNull(message = "Price cannot be null")
-    @DecimalMin(value = "0.01", message = "Price must be greater than 0")
-    @DecimalMax(value = "99999.99", message = "Price must be less than 100k")
     private BigDecimal price;
-
-    @NotNull(message = "Amount unit cannot be null")
     private ProductAmountUnit amountUnit;
-
-    @NotNull(message = "Amount available cannot be null")
-    @DecimalMin(value = "0.000", message = "Amount available must be positive")
-    @DecimalMax(value = "999.999", message = "Amount available  must be less than 1000")
     private BigDecimal amountAvailable;
-
-    @NotNull(message = "Receipt items cannot be null")
     private Set<ReceiptItem> receiptItems = new HashSet<>();
 
     public String getId() {

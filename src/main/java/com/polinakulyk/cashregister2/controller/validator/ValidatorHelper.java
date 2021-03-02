@@ -80,4 +80,14 @@ public final class ValidatorHelper {
                     quote(paramName + " value must be > 0, but was ", bigDecimal));
         }
     }
+
+    public static void validBigDecimalLessThan(
+            BigDecimal bigDecimal, BigDecimal upperBound, String paramName) {
+
+        if (bigDecimal.compareTo(upperBound) >= 0) {
+            throw new CashRegisterValidationException(quote(
+                    paramName + " value must be < " + upperBound + ", but was ", bigDecimal)
+            );
+        }
+    }
 }
