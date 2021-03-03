@@ -9,23 +9,26 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <!DOCTYPE html>
 <html>
-<jsp:include page="../parts/head.jsp" />
+<jsp:include page="../parts/head.jsp"/>
 <body>
-<jsp:include page="../parts/navbar.jsp" />
+<jsp:include page="../parts/navbar.jsp"/>
 <h1>
-    <%= "My Receipts" %>
+    ${messages_myReceipts}
 </h1>
-<a class="btn btn-primary" href="<%=getRoutePath(request, MYRECEIPTS_ADD)%>" role="button">Add Receipt</a>
+<a class="btn btn-primary"
+   href="<%=getRoutePath(request, MYRECEIPTS_ADD)%>" role="button">
+    ${messages_myReceiptsAdd}
+</a>
 <table class="table">
     <thead>
     <tr>
-        <th scope="col">Code</th>
-        <th scope="col">Created At</th>
-        <th scope="col">Closed At</th>
-        <th scope="col">Status</th>
-        <th scope="col">Teller</th>
-        <th scope="col">Sum Total</th>
-        <th scope="col">Actions</th>
+        <th scope="col">${messages_myReceiptsCode}</th>
+        <th scope="col">${messages_myReceiptsCreatedAt}</th>
+        <th scope="col">${messages_myReceiptsClosedAt}</th>
+        <th scope="col">${messages_myReceiptsStatus}</th>
+        <th scope="col">${messages_myReceiptsTeller}</th>
+        <th scope="col">${messages_myReceiptsSumTotal}</th>
+        <th scope="col">${messages_myReceiptsActions}</th>
     </tr>
     </thead>
     <tbody>
@@ -52,10 +55,10 @@
             <td>
                 <a class="btn btn-outline-primary"
                    href="<%=getRoutePath(request, MYRECEIPTS_VIEW)%>?receiptId=${receipt.id}"
-                   role="button">View</a>
+                   role="button">${messages_myReceiptsActionsView}</a>
                 <a class="btn btn-outline-warning"
                    href="<%=getRoutePath(request, MYRECEIPTS_EDIT)%>?receiptId=${receipt.id}"
-                   role="button">Edit</a>
+                   role="button">${messages_myReceiptsActionsEdit}</a>
             </td>
         </tr>
     </c:forEach>
@@ -85,6 +88,6 @@
         </c:forEach>
     </ul>
 </nav>
-<jsp:include page="../parts/bodyjs.jsp" />
+<jsp:include page="../parts/bodyjs.jsp"/>
 </body>
 </html>

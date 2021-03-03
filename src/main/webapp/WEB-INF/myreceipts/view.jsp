@@ -7,53 +7,53 @@
 <body>
 <jsp:include page="../parts/navbar.jsp" />
 <h1>
-    <%= "View My Receipt" %>
+    ${messages_myReceiptsViewOne}
 </h1>
 <form class="w-40">
     <div class="form-group mt-2">
-        <label for="code-input">Code</label>
+        <label for="code-input">${messages_myReceiptsViewOneCode}</label>
         <input name="code" type="text" class="form-control" id="code-input"
                value="${receipt.code}" readonly>
     </div>
     <div class="form-group mt-2">
-        <label for="created-time-input">Created at</label>
+        <label for="created-time-input">${messages_myReceiptsViewOneCreatedAt}</label>
         <input name="createdTime" type="text" class="form-control" id="created-time-input"
                value="${receipt.createdTime}" readonly>
     </div>
     <div class="form-group mt-2">
-        <label for="completed-time-input">Closed at</label>
+        <label for="completed-time-input">${messages_myReceiptsViewOneClosedAt}</label>
         <input name="checkoutTime" type="text" class="form-control" id="completed-time-input"
                value="${receipt.checkoutTime}" readonly>
     </div>
     <div class="form-group mt-2">
-        <label for="status-input">Status</label>
+        <label for="status-input">${messages_myReceiptsViewOneStatus}</label>
         <input name="status" type="text" class="form-control" id="status-input"
                value="${receipt.status}" readonly>
     </div>
     <div class="form-group mt-2">
-        <label for="teller-input">Teller</label>
+        <label for="teller-input">${messages_myReceiptsViewOneTeller}</label>
         <input name="teller" type="text" class="form-control" id="teller-input"
                value="${receipt.user.username}" readonly>
     </div>
     <div class="form-group mt-2">
-        <label for="sum-total-input">Sum total</label>
+        <label for="sum-total-input">${messages_myReceiptsViewOneSumTotal}</label>
         <input name="sumTotal" type="text" class="form-control" id="sum-total-input"
                value="${receipt.sumTotal}" readonly>
     </div>
 </form>
 <h1>
-    <%= "My Receipt Items" %>
+    ${messages_myReceiptItems}
 </h1>
 <table class="table">
     <thead>
     <tr>
-        <th scope="col">Code</th>
-        <th scope="col">Name</th>
-        <th scope="col">Amount</th>
-        <th scope="col">Unit</th>
-        <th scope="col">Price</th>
-        <th scope="col">Cost</th>
-        <th scope="col">Actions</th>
+        <th scope="col">${messages_myReceiptItemsCode}</th>
+        <th scope="col">${messages_myReceiptItemsName}</th>
+        <th scope="col">${messages_myReceiptItemsAmount}</th>
+        <th scope="col">${messages_myReceiptItemsAmountUnit}</th>
+        <th scope="col">${messages_myReceiptItemsPrice}</th>
+        <th scope="col">${messages_myReceiptItemsCost}</th>
+        <th scope="col">${messages_myReceiptItemsActions}</th>
     </tr>
     </thead>
     <tbody>

@@ -13,67 +13,61 @@
 <body>
 <jsp:include page="../parts/navbar.jsp"/>
 <h1>
-    <%= "Add My Receipt Item" %>
+    ${messages_myReceiptAddItem}
 </h1>
 <form class="w-40" method="post"
       action="<%=getRoutePath(request, MYRECEIPTS_ADDITEM_SEARCH)%>?receiptId=${receiptId}&productFilterKind=NAME">
     <div class="form-group mt-2">
-        <label for="search-by-name-input">Search by Name</label>
+        <label for="search-by-name-input">${messages_myReceiptAddItemSearchName}</label>
         <input name="filterValue" type="text" class="form-control" id="search-by-name-input"
-               placeholder="Enter product name">
+               placeholder="${messages_myReceiptAddItemSearchNamePlaceholder}">
     </div>
-    <button type="submit" class="btn btn-primary mt-3">Search</button>
+    <button type="submit" class="btn btn-primary mt-3">${messages_myReceiptAddItemSearch}</button>
 </form>
 <form class="w-40" method="post"
       action="<%=getRoutePath(request, MYRECEIPTS_ADDITEM_SEARCH)%>?receiptId=${receiptId}&productFilterKind=CODE">
     <div class="form-group mt-2">
-        <label for="search-by-code-input">Search by Code</label>
+        <label for="search-by-code-input">${messages_myReceiptAddItemSearchCode}</label>
         <input name="filterValue" type="text" class="form-control" id="search-by-code-input"
-               placeholder="Enter product code">
+               placeholder="${messages_myReceiptAddItemSearchCodePlaceholder}">
     </div>
-    <button type="submit" class="btn btn-primary mt-3">Search</button>
+    <button type="submit" class="btn btn-primary mt-3">${messages_myReceiptAddItemSearch}</button>
 </form>
 <c:forEach var="product" items="${products}">
     <form class="w-40" method="post"
         <%-- receipt id to return to after adding receipt item --%>
           action="<%=getRoutePath(request, MYRECEIPTS_ADDITEM)%>?receiptId=${receiptId}">
         <div class="form-group mt-2 invisible">
-            <label for="product-id-input">Product Id</label>
+            <label for="product-id-input">${messages_myReceiptAddItemId}</label>
             <input name="productId" type="text" class="form-control" id="product-id-input"
-                   placeholder="Enter product id"
                    value="${product.id}" readonly>
         </div>
         <div class="form-group mt-2">
-            <label for="product-code-input">Product Code</label>
+            <label for="product-code-input">${messages_myReceiptAddItemCode}</label>
             <input name="productCode" type="text" class="form-control" id="product-code-input"
-                   placeholder="Enter product code"
                    value="${product.code}" readonly>
         </div>
         <div class="form-group mt-2">
-            <label for="product-name-input">Product Name</label>
+            <label for="product-name-input">${messages_myReceiptAddItemName}</label>
             <input name="productName" type="text" class="form-control" id="product-name-input"
-                   placeholder="Enter product name"
                    value="${product.name}" readonly>
         </div>
         <div class="form-group mt-2">
-            <label for="product-amount-input">Amount</label>
-            <input name="productAmount" type="text" class="form-control" id="product-amount-input"
-                   placeholder="Enter amount">
+            <label for="product-amount-input">${messages_myReceiptAddItemAmount}</label>
+            <input name="productAmount" type="text" class="form-control" id="product-amount-input">
         </div>
         <div class="form-group mt-2">
-            <label for="product-amount-unit-input">Enter amount unit</label>
+            <label for="product-amount-unit-input">${messages_myReceiptAddItemAmountUnit}</label>
             <input name="productAmountUnit" type="text" class="form-control"
                    id="product-amount-unit-input"
-                   placeholder="Enter amount unit"
                    value="${product.amountUnit}" readonly>
         </div>
         <div class="form-group mt-2">
-            <label for="product-price-input">Enter price</label>
+            <label for="product-price-input">${messages_myReceiptAddItemPrice}</label>
             <input name="productPrice" type="text" class="form-control" id="product-price-input"
-                   placeholder="Enter price"
                    value="${product.price}" readonly>
         </div>
-        <button type="submit" class="btn btn-primary mt-3">Save</button>
+        <button type="submit" class="btn btn-primary mt-3">${messages_myReceiptAddItemSave}</button>
     </form>
 </c:forEach>
 <jsp:include page="../parts/bodyjs.jsp"/>

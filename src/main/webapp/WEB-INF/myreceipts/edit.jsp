@@ -14,17 +14,17 @@
 <body>
 <jsp:include page="../parts/navbar.jsp"/>
 <h1>
-    <%= "Edit My Receipt" %>
+    ${messages_editMyReceipt}
 </h1>
 <div class="container-fluid mt-2 px-0">
     <div class="row">
             <form class="box col-auto px-0" method="post"
                   action="<%=getRoutePath(request, MYRECEIPTS_COMPLETE)%>?receiptId=${receipt.id}">
-                <button type="submit" class="btn btn-success">Complete</button>
+                <button type="submit" class="btn btn-success">${messages_editMyReceiptComplete}</button>
             </form>
             <form class="box col-auto px-0" method="post"
                   action="<%=getRoutePath(request, MYRECEIPTS_CANCEL)%>?receiptId=${receipt.id}">
-                <button type="submit" class="btn btn-danger">Cancel</button>
+                <button type="submit" class="btn btn-danger">${messages_editMyReceiptCancel}</button>
             </form>
             <div class="col w-100">
             </div>
@@ -32,49 +32,49 @@
 </div>
 <form class="w-40">
     <div class="form-group mt-2">
-        <label for="code-input">Code</label>
+        <label for="code-input">${messages_editMyReceiptCode}</label>
         <input name="code" type="text" class="form-control" id="code-input"
                value="${receipt.code}" readonly>
     </div>
     <div class="form-group mt-2">
-        <label for="created-time-input">Created at</label>
+        <label for="created-time-input">${messages_editMyReceiptCreatedAt}</label>
         <input name="createdTime" type="text" class="form-control" id="created-time-input"
                value="${receipt.createdTime}" readonly>
     </div>
     <div class="form-group mt-2">
-        <label for="completed-time-input">Closed at</label>
+        <label for="completed-time-input">${messages_editMyReceiptClosedAt}</label>
         <input name="checkoutTime" type="text" class="form-control" id="completed-time-input"
                value="${receipt.checkoutTime}" readonly>
     </div>
     <div class="form-group mt-2">
-        <label for="status-input">Status</label>
+        <label for="status-input">${messages_editMyReceiptStatus}</label>
         <input name="status" type="text" class="form-control" id="status-input"
                value="${receipt.status}" readonly>
     </div>
     <div class="form-group mt-2">
-        <label for="teller-input">Teller</label>
+        <label for="teller-input">${messages_editMyReceiptTeller}</label>
         <input name="teller" type="text" class="form-control" id="teller-input"
                value="${receipt.user.username}" readonly>
     </div>
     <div class="form-group mt-2">
-        <label for="sum-total-input">Sum total</label>
+        <label for="sum-total-input">${messages_editMyReceiptSumTotal}</label>
         <input name="sumTotal" type="text" class="form-control" id="sum-total-input"
                value="${receipt.sumTotal}" readonly>
     </div>
 </form>
 <h1>
-    <%= "My Receipt Items" %>
+    ${messages_editMyReceipt}
 </h1>
 <table class="table">
     <thead>
     <tr>
-        <th scope="col">Code</th>
-        <th scope="col">Name</th>
-        <th scope="col">Amount</th>
-        <th scope="col">Unit</th>
-        <th scope="col">Price</th>
-        <th scope="col">Cost</th>
-        <th scope="col">Actions</th>
+        <th scope="col">${messages_myReceiptItemsCode}</th>
+        <th scope="col">${messages_myReceiptItemsName}</th>
+        <th scope="col">${messages_myReceiptItemsAmount}</th>
+        <th scope="col">${messages_myReceiptItemsUnit}</th>
+        <th scope="col">${messages_myReceiptItemsprice}</th>
+        <th scope="col">${messages_myReceiptItemsCost}</th>
+        <th scope="col">${messages_myReceiptItemsActions}</th>
     </tr>
     </thead>
     <tbody>
@@ -105,7 +105,9 @@
     </c:forEach>
     </tbody>
 </table>
-<a class="btn btn-primary" href="<%=getRoutePath(request, MYRECEIPTS_ADDITEM)%>?receiptId=${receipt.id}" role="button">Add Item</a>
+<a class="btn btn-primary" href="<%=getRoutePath(request, MYRECEIPTS_ADDITEM)%>?receiptId=${receipt.id}" role="button">
+    ${messages_myReceiptItemsActionsAddItem}
+</a>
 <jsp:include page="../parts/bodyjs.jsp"/>
 </body>
 </html>

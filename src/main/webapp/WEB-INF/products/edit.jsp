@@ -8,7 +8,7 @@
 <body>
 <jsp:include page="../parts/navbar.jsp"/>
 <h1>
-    <%= "Edit Product" %>
+    ${messages_editProduct}
 </h1>
 <form class="w-40" method="post"
       action="<%=getRoutePath(request, PRODUCTS_EDIT)%>?id=${product.id}">
