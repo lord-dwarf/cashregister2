@@ -13,41 +13,41 @@
 </h1>
 <form class="w-40" method="post" action="<%=getRoutePath(request, PRODUCTS_ADD)%>">
     <div class="form-group mt-2">
-        <label for="code-input">Code</label>
+        <label for="code-input">${messages_addProductCode}</label>
         <input name="code" type="text" class="form-control" id="code-input"
-               placeholder="Enter code">
+               placeholder="${messages_addProductPlaceholderCode}">
     </div>
     <div class="form-group mt-2">
-        <label for="name-input">Name</label>
+        <label for="name-input">${messages_addProductName}</label>
         <input name="name" type="text" class="form-control" id="name-input"
-               placeholder="Enter name">
+               placeholder="${messages_addProductPlaceholderName}">
     </div>
     <div class="form-group mt-2">
-        <label for="category-input">Category</label>
+        <label for="category-input">${messages_addProductCategory}</label>
         <input name="category" type="text" class="form-control" id="category-input"
-               placeholder="Enter category">
+               placeholder="${messages_addProductPlaceholderCategory}">
     </div>
     <div class="form-group mt-2">
-        <label for="price-input">Enter price</label>
+        <label for="price-input">${messages_addProductPrice}</label>
         <input name="price" type="text" class="form-control" id="price-input"
-               placeholder="Enter price">
+               placeholder="${messages_addProductPlaceholderPrice}">
     </div>
     <div class="form-group mt-2">
-        <label for="amount-available-input">Enter amount available</label>
+        <label for="amount-available-input">${messages_addProductAvailable}</label>
         <input name="amountAvailable" type="text" class="form-control" id="amount-available-input"
-               placeholder="Enter amount available">
+               placeholder="${messages_addProductPlaceholderAvailable}">
     </div>
     <div class="form-group mt-2">
-        <label for="amount-unit-input">Select amount unit</label>
+        <label for="amount-unit-input">${messages_addProductAmountUnit}</label>
         <input name="amountUnit" type="text" class="form-control" id="amount-unit-input"
-               placeholder="Select kilo or unit">
+               placeholder="${messages_addProductPlaceholderAmountUnit}">
     </div>
     <div class="form-group mt-2">
-        <label for="details-input">Enter details</label>
+        <label for="details-input">${messages_addProductDetails}</label>
         <input name="details" type="text" class="form-control" id="details-input"
-               placeholder="Enter product details">
+               placeholder="${messages_addProductPlaceholderDetails}">
     </div>
-    <button type="submit" class="btn btn-primary mt-3">Save</button>
+    <button type="submit" class="btn btn-primary mt-3">${messages_addProductSave}</button>
 </form>
 <jsp:include page="../parts/bodyjs.jsp"/>
 </body>

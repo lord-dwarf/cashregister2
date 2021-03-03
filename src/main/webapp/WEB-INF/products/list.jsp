@@ -15,19 +15,20 @@
 <body>
 <jsp:include page="../parts/navbar.jsp"/>
 <h1>
-    <%= "Products" %>
+    ${messages_productsLabel}
 </h1>
-<a class="btn btn-primary" href="<%=getRoutePath(request, PRODUCTS_ADD)%>" role="button">Add Product</a>
+<a class="btn btn-primary" href="<%=getRoutePath(request, PRODUCTS_ADD)%>"
+   role="button">${messages_addProductLabel}</a>
 <table class="table">
     <thead>
     <tr>
-        <th scope="col">Code</th>
-        <th scope="col">Name</th>
-        <th scope="col">Category</th>
-        <th scope="col">Price</th>
-        <th scope="col">In Stock</th>
-        <th scope="col">Amount Unit</th>
-        <th scope="col">Actions</th>
+        <th scope="col">${messages_codeLabel}</th>
+        <th scope="col">${messages_nameLabel}</th>
+        <th scope="col">${messages_categoryLabel}</th>
+        <th scope="col">${messages_priceLabel}</th>
+        <th scope="col">${messages_inStockLabel}</th>
+        <th scope="col">${messages_unitLabel}</th>
+        <th scope="col">${messages_actionsLabel}</th>
     </tr>
     </thead>
     <tbody>
@@ -54,10 +55,10 @@
             <td>
                 <a class="btn btn-outline-primary"
                    href="<%=getRoutePath(request, PRODUCTS_VIEW)%>?id=${product.id}"
-                   role="button">View</a>
+                   role="button">${messages_actionsViewLabel}</a>
                 <a class="btn btn-outline-warning"
                    href="<%=getRoutePath(request, PRODUCTS_EDIT)%>?id=${product.id}"
-                   role="button">Edit</a>
+                   role="button">${messages_actionsEditLabel}</a>
             </td>
         </tr>
     </c:forEach>
