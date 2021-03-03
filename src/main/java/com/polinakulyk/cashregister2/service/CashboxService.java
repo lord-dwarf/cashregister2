@@ -25,26 +25,6 @@ public class CashboxService {
     private final CashboxDao cashboxDao = new CashboxDao();
     private final UserService userService = new UserService();
 
-    public ShiftStatusSummaryResponseDto activateShift(String userId) {
-        try (Transactional t = Transactional.beginOrContinueTransaction()) {
-
-            log.debug("BEGIN Activate shift by user: '{}'", userId);
-            User user = userService.findExistingById(userId);
-
-            Cashbox cashbox = user.getCashbox();
-            validateShiftStatusTransitionToActive(cashbox);
-
-            var shiftStatusSummaryResponseDto =
-                    updateShiftStatus(cashbox, ACTIVE);
-
-            t.commitIfNeeded();
-            log.info("DONE Activate shift by user: '{}', for cash box: '{}'",
-                    userId, cashbox.getId());
-
-            return shiftStatusSummaryResponseDto;
-        }
-    }
-
     public ShiftStatusSummaryResponseDto deactivateShift(String userId) {
         try (Transactional t = Transactional.beginOrContinueTransaction()) {
             log.debug("BEGIN Deactivate shift by user: '{}'", userId);
@@ -65,7 +45,9 @@ public class CashboxService {
         }
     }
 
-    private ShiftStatusSummaryResponseDto updateShiftStatus(Cashbox cashbox, ShiftStatus shiftStatus) {
+    private ShiftStatusSummaryResponseDto updateShiftStatus(
+            Cashbox cashbox, ShiftStatus shiftStatus) {
+
         cashbox.setShiftStatus(shiftStatus);
         cashbox.setShiftStatusTime(now());
         cashbox = cashboxDao.update(cashbox);
@@ -96,13 +78,6 @@ public class CashboxService {
         );
     }
 
-    private static void validateShiftStatusTransitionToActive(Cashbox cashbox) {
-        ShiftStatus fromStatus = cashbox.getShiftStatus();
-        if (INACTIVE != fromStatus) {
-            throwOnIllegalShiftStatusTransition(fromStatus, ACTIVE);
-        }
-    }
-
     private static void validateShiftStatusTransitionToInactive(Cashbox cashbox) {
         ShiftStatus fromStatus = cashbox.getShiftStatus();
         if (ACTIVE != fromStatus) {
@@ -115,5 +90,4 @@ public class CashboxService {
         throw new CashRegisterException(quote(
                 "Illegal shift status transition", from, to));
     }
-
 }

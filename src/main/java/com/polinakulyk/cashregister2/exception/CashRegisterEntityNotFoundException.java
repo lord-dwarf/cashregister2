@@ -1,6 +1,6 @@
 package com.polinakulyk.cashregister2.exception;
 
-import static com.polinakulyk.cashregister2.controller.dto.HttpStatus.NOT_FOUND;
+import static com.polinakulyk.cashregister2.controller.dto.HttpStatusCode.NOT_FOUND;
 import static com.polinakulyk.cashregister2.util.Util.quote;
 
 /**

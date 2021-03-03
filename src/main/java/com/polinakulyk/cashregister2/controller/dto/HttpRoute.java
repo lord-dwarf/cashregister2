@@ -4,6 +4,9 @@ import java.util.Optional;
 
 import static java.util.Arrays.stream;
 
+/**
+ * HTTP route paths known to the application.
+ */
 public enum HttpRoute {
     // Home
     INDEX,

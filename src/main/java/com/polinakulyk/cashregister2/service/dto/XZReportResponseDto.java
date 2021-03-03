@@ -15,10 +15,6 @@ public class XZReportResponseDto {
     private Integer numReceiptsCompleted;
     private BigDecimal sumTotal;
 
-    public String getReportId() {
-        return reportId;
-    }
-
     public XZReportResponseDto setReportId(String reportId) {
         this.reportId = reportId;
         return this;
@@ -33,17 +29,9 @@ public class XZReportResponseDto {
         return this;
     }
 
-    public String getCashboxName() {
-        return cashboxName;
-    }
-
     public XZReportResponseDto setCashboxName(String cashboxName) {
         this.cashboxName = cashboxName;
         return this;
-    }
-
-    public String getCompanyName() {
-        return companyName;
     }
 
     public XZReportResponseDto setCompanyName(String companyName) {
@@ -51,17 +39,9 @@ public class XZReportResponseDto {
         return this;
     }
 
-    public LocalDateTime getShiftStartTime() {
-        return shiftStartTime;
-    }
-
     public XZReportResponseDto setShiftStartTime(LocalDateTime shiftStartTime) {
         this.shiftStartTime = shiftStartTime;
         return this;
-    }
-
-    public LocalDateTime getCreatedTime() {
-        return createdTime;
     }
 
     public XZReportResponseDto setCreatedTime(LocalDateTime createdTime) {
@@ -69,26 +49,14 @@ public class XZReportResponseDto {
         return this;
     }
 
-    public String getCreatedBy() {
-        return createdBy;
-    }
-
     public XZReportResponseDto setCreatedBy(String createdBy) {
         this.createdBy = createdBy;
         return this;
     }
 
-    public Integer getNumReceiptsCompleted() {
-        return numReceiptsCompleted;
-    }
-
     public XZReportResponseDto setNumReceiptsCompleted(Integer numReceiptsCompleted) {
         this.numReceiptsCompleted = numReceiptsCompleted;
         return this;
-    }
-
-    public BigDecimal getSumTotal() {
-        return sumTotal;
     }
 
     public XZReportResponseDto setSumTotal(BigDecimal sumTotal) {

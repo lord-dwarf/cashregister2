@@ -1,6 +1,11 @@
 package com.polinakulyk.cashregister2.controller.dto;
 
-public enum HttpStatus {
+/**
+ * HTTP status codes known to the application.
+ * Used extensively by {@link com.polinakulyk.cashregister2.exception.CashRegisterException}
+ * and its descendants.
+ */
+public enum HttpStatusCode {
     BAD_REQUEST(400),
     UNAUTHORIZED(401),
     FORBIDDEN(403),
@@ -9,7 +14,7 @@ public enum HttpStatus {
 
     private final int code;
 
-    HttpStatus(int httpStatusCode) {
+    HttpStatusCode(int httpStatusCode) {
         this.code = httpStatusCode;
     }
 

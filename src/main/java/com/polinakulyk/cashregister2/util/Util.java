@@ -103,7 +103,6 @@ public final class Util {
 
     /**
      * Obtains {@link LocalDateTime} from {@link Date} in UTC.
-     * TODO change to convert from TIMESTAMP
      * @param date
      * @return
      */

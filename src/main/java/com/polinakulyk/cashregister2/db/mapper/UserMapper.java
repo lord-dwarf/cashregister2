@@ -18,7 +18,7 @@ public class UserMapper {
     private static final String USER_ROLE = "role";
     private static final String USER_FULL_NAME = "full_name";
 
-    private static final String CASHBOX_ID = "id";
+    private static final String CASHBOX_ID = "cashbox_id";
     private static final String CASHBOX_NAME = "name";
     private static final String CASHBOX_SHIFT_STATUS = "shift_status";
     private static final String CASHBOX_SHIFT_STATUS_TIME = "shift_status_time";

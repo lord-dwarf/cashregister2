@@ -4,6 +4,9 @@ import java.util.Optional;
 
 import static java.util.Arrays.stream;
 
+/**
+ * HTTP methods known to the application.
+ */
 public enum HttpMethod {
     GET,
     POST,

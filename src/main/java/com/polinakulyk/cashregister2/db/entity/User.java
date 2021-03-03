@@ -2,12 +2,11 @@ package com.polinakulyk.cashregister2.db.entity;
 
 import com.polinakulyk.cashregister2.security.dto.UserRole;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.StringJoiner;
 
-public class User implements Serializable {
+public class User {
     private String id;
     private String username;
     private String password;

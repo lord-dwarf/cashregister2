@@ -2,18 +2,14 @@ package com.polinakulyk.cashregister2.db.entity;
 
 import com.polinakulyk.cashregister2.db.dto.ShiftStatus;
 
-import java.io.Serializable;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.StringJoiner;
 
-public class Cashbox implements Serializable {
+public class Cashbox {
     private String id;
     private String name;
     private ShiftStatus shiftStatus;
     private LocalDateTime shiftStatusTime;
-    private List<User> users = new ArrayList<>();
 
     public String getId() {
         return id;
@@ -74,7 +70,6 @@ public class Cashbox implements Serializable {
                 .add("name='" + name + "'")
                 .add("shiftStatus='" + shiftStatus + "'")
                 .add("shiftStatusTime='" + shiftStatusTime + "'")
-                .add("users=" + users)
                 .toString();
     }
 }

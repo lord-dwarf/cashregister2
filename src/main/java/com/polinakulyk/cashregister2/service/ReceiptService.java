@@ -1,15 +1,19 @@
 package com.polinakulyk.cashregister2.service;
 
 import com.polinakulyk.cashregister2.db.Transactional;
+import com.polinakulyk.cashregister2.db.dao.ReceiptDao;
 import com.polinakulyk.cashregister2.db.dto.ReceiptStatus;
+import com.polinakulyk.cashregister2.db.entity.Cashbox;
 import com.polinakulyk.cashregister2.db.entity.Product;
 import com.polinakulyk.cashregister2.db.entity.Receipt;
 import com.polinakulyk.cashregister2.db.entity.ReceiptItem;
 import com.polinakulyk.cashregister2.db.entity.User;
-import com.polinakulyk.cashregister2.db.dao.ReceiptDao;
-import com.polinakulyk.cashregister2.exception.CashRegisterException;
 import com.polinakulyk.cashregister2.exception.CashRegisterEntityNotFoundException;
+import com.polinakulyk.cashregister2.exception.CashRegisterException;
+import com.polinakulyk.cashregister2.exception.CashRegisterValidationException;
+
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -17,9 +21,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import static com.polinakulyk.cashregister2.db.DbHelper.calcCostByPriceAndAmount;
-import static com.polinakulyk.cashregister2.db.dto.ReceiptStatus.*;
-import static com.polinakulyk.cashregister2.db.dto.ShiftStatus.*;
-import static com.polinakulyk.cashregister2.service.ServiceHelper.isReceiptInActiveShift;
+import static com.polinakulyk.cashregister2.db.dto.ReceiptStatus.CANCELED;
+import static com.polinakulyk.cashregister2.db.dto.ReceiptStatus.COMPLETED;
+import static com.polinakulyk.cashregister2.db.dto.ReceiptStatus.CREATED;
+import static com.polinakulyk.cashregister2.db.dto.ShiftStatus.ACTIVE;
 import static com.polinakulyk.cashregister2.util.Util.ZERO_MONEY;
 import static com.polinakulyk.cashregister2.util.Util.add;
 import static com.polinakulyk.cashregister2.util.Util.generateUuid;
@@ -289,8 +294,8 @@ public class ReceiptService {
 
         // validate that receipt item amount does not exceed the product amount available
         if (receiptItemAmount.compareTo(productAmountAvailable) > 0) {
-            throw new CashRegisterException(quote(
-                    "Receipt item amount exceeds product amount available",
+            throw new CashRegisterValidationException(
+                    quote("Receipt item amount exceeds product amount available",
                     receiptItemAmount,
                     productAmountAvailable));
         }
@@ -309,7 +314,7 @@ public class ReceiptService {
             throwOnIllegalReceiptStatusTransition(fromStatus, CREATED);
         }
         if (receipt.getReceiptItems().isEmpty()) {
-            throw new CashRegisterException("Receipt without items cannot be completed");
+            throw new CashRegisterValidationException("Receipt without items cannot be completed");
         }
     }
 
@@ -317,5 +322,22 @@ public class ReceiptService {
             ReceiptStatus from, ReceiptStatus to) {
         throw new CashRegisterException(quote(
                 "Illegal receipt status transition", from, to));
+    }
+
+    /**
+     * Determines whether the given receipt belongs to a currently active shift of a
+     * receipt user's cash box.
+     *
+     * @param receipt
+     * @return
+     */
+    private static boolean isReceiptInActiveShift(Receipt receipt) {
+        Cashbox cashbox = receipt.getUser().getCashbox();
+        LocalDateTime receiptCreatedTime = receipt.getCreatedTime();
+        LocalDateTime shiftStartTime = cashbox.getShiftStatusTime();
+
+        return ACTIVE == cashbox.getShiftStatus() && (
+                receiptCreatedTime.isAfter(shiftStartTime)
+                        || receiptCreatedTime.isEqual(shiftStartTime));
     }
 }

@@ -90,16 +90,15 @@ public class ProductService {
 
     public List<Product> findByFilter(ProductFilterKind filterKind, String filterValue) {
         Pattern filterPattern = Pattern.compile(filterValue + ".*", Pattern.CASE_INSENSITIVE);
-        Function<Product, String> fun;
-        switch (filterKind) {
-            case CODE -> fun = Product::getCode;
-            case NAME -> fun = Product::getName;
+
+        Function<Product, String> fun = switch (filterKind) {
+            case CODE -> Product::getCode;
+            case NAME -> Product::getName;
             default -> throw new UnsupportedOperationException(
                     quote("Product filter kind not supported", filterKind));
-        }
-        var getProductFieldFun = fun;
-        var filteredProducts = stream(productDao.findAll().spliterator(), false)
-                .filter(p -> filterPattern.matcher(getProductFieldFun.apply(p)).matches())
+        };
+        var filteredProducts = productDao.findAll().stream()
+                .filter(p -> filterPattern.matcher(fun.apply(p)).matches())
                 .limit(FOUND_PRODUCTS_LIMIT)
                 .collect(toList());
 

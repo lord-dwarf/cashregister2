@@ -18,7 +18,7 @@ import static com.polinakulyk.cashregister2.controller.dto.HttpRoute.ERROR_AUTH;
 import static com.polinakulyk.cashregister2.controller.dto.HttpRoute.ERROR_CLIENT;
 import static com.polinakulyk.cashregister2.controller.dto.HttpRoute.ERROR_NOTFOUND;
 import static com.polinakulyk.cashregister2.controller.dto.HttpRoute.ERROR_SERVER;
-import static com.polinakulyk.cashregister2.controller.dto.HttpStatus.BAD_REQUEST;
+import static com.polinakulyk.cashregister2.controller.dto.HttpStatusCode.BAD_REQUEST;
 import static com.polinakulyk.cashregister2.controller.router.RouterHelper.redirect;
 import static com.polinakulyk.cashregister2.util.Util.toBase64;
 

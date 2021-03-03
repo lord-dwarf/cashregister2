@@ -1,6 +1,6 @@
 package com.polinakulyk.cashregister2.exception;
 
-import static com.polinakulyk.cashregister2.controller.dto.HttpStatus.BAD_REQUEST;
+import static com.polinakulyk.cashregister2.controller.dto.HttpStatusCode.BAD_REQUEST;
 
 /**
  * The exception to be thrown when validation of user input did not succeed.

@@ -20,6 +20,9 @@ import static com.polinakulyk.cashregister2.util.Util.quote;
 
 import static java.util.Arrays.asList;
 
+/**
+ * Validates product entity prior to passing to the Service layer.
+ */
 public class ProductValidator {
 
     private ProductValidator() {

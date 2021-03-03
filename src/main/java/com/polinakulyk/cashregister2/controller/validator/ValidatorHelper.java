@@ -14,6 +14,9 @@ import static com.polinakulyk.cashregister2.util.Util.stripOrNull;
 
 import static java.util.Optional.ofNullable;
 
+/**
+ * Util class for Controller layer validation.
+ */
 public final class ValidatorHelper {
 
     private ValidatorHelper() {

@@ -3,8 +3,6 @@ package com.polinakulyk.cashregister2.db.entity;
 import com.polinakulyk.cashregister2.db.dto.ProductAmountUnit;
 
 import java.math.BigDecimal;
-import java.util.HashSet;
-import java.util.Set;
 import java.util.StringJoiner;
 
 public class Product {
@@ -16,7 +14,6 @@ public class Product {
     private BigDecimal price;
     private ProductAmountUnit amountUnit;
     private BigDecimal amountAvailable;
-    private Set<ReceiptItem> receiptItems = new HashSet<>();
 
     public String getId() {
         return id;
@@ -117,7 +114,6 @@ public class Product {
                 .add("price=" + price)
                 .add("amountUnit=" + amountUnit)
                 .add("amountAvailable=" + amountAvailable)
-                .add("receiptItems=" + receiptItems)
                 .toString();
     }
 }

@@ -4,6 +4,7 @@ import com.polinakulyk.cashregister2.db.Transactional;
 import com.polinakulyk.cashregister2.db.entity.User;
 import com.polinakulyk.cashregister2.db.mapper.UserMapper;
 import com.polinakulyk.cashregister2.exception.CashRegisterException;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -13,19 +14,42 @@ import java.util.Optional;
 import static com.polinakulyk.cashregister2.db.ConnectionPool.getConnection;
 import static com.polinakulyk.cashregister2.util.Util.quote;
 
+/**
+ * Manages a database entity of {@link User}.
+ */
 public class UserDao {
 
-    private final static String FIND_BY_USER_ID_SQL =
-            "SELECT u.id, u.username, u.password, u.role, u.full_name, u.cashbox_id, "
-                    + "c.shift_status, c.shift_status_time, c.name "
-                    + "FROM user as u LEFT JOIN cashbox as c ON u.cashbox_id = c.id "
-                    + "WHERE u.id = ?";
+    private static final String FIND_BY_USER_ID_SQL = """
+                SELECT 
+                    u.id, 
+                    u.username, 
+                    u.password, 
+                    u.role, 
+                    u.full_name, 
+                    u.cashbox_id,
+                    c.shift_status, 
+                    c.shift_status_time, 
+                    c.name
+                FROM user AS u 
+                LEFT JOIN cashbox AS c ON u.cashbox_id = c.id
+                WHERE u.id = ?;
+            """;
 
-    private final static String FIND_BY_USERNAME_SQL =
-            "SELECT u.id, u.username, u.password, u.role, u.full_name, u.cashbox_id, "
-                    + "c.shift_status, c.shift_status_time, c.name "
-                    + "FROM user as u LEFT JOIN cashbox as c ON u.cashbox_id = c.id "
-                    + "WHERE u.username = ?";
+    private static final String FIND_BY_USERNAME_SQL = """
+                SELECT 
+                    u.id, 
+                    u.username, 
+                    u.password, 
+                    u.role, 
+                    u.full_name, 
+                    u.cashbox_id, 
+                    c.shift_status, 
+                    c.shift_status_time, 
+                    c.name 
+                FROM user AS u 
+                LEFT JOIN cashbox AS c ON u.cashbox_id = c.id
+                WHERE u.username = ?;
+            """;
 
     public Optional<User> findById(String userId) {
         try {

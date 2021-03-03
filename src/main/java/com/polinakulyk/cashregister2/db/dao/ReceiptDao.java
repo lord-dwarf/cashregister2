@@ -22,83 +22,186 @@ import static com.polinakulyk.cashregister2.db.ConnectionPool.getConnection;
 import static com.polinakulyk.cashregister2.util.Util.generateUuid;
 import static com.polinakulyk.cashregister2.util.Util.quote;
 
+/**
+ * Manages a database entity of {@link Receipt} and {@link ReceiptItem}.
+ */
 public class ReceiptDao {
 
-    private static final String FIND_ALL_RECEIPTS_WITH_PAGINATION_SQL =
-            "SELECT r.id, r.created_time, r.checkout_time, r.status, r.sum_total, r.user_id, " +
-                    "u.full_name, u.username, u.cashbox_id, " +
-                    "c.name, c.shift_status, c.shift_status_time " +
-                    "FROM receipt AS r LEFT JOIN user AS u ON r.user_id = u.id " +
-                    "LEFT JOIN cashbox AS c ON u.cashbox_id = c.id " +
-                    "ORDER BY r.created_time DESC LIMIT ? OFFSET ?;";
+    private static final String FIND_ALL_RECEIPTS_WITH_PAGINATION_SQL = """
+                SELECT 
+                    r.id, 
+                    r.created_time, 
+                    r.checkout_time, 
+                    r.status, 
+                    r.sum_total, 
+                    r.user_id,
+                    u.full_name, 
+                    u.username, 
+                    u.cashbox_id,
+                    c.name, 
+                    c.shift_status, 
+                    c.shift_status_time
+                FROM receipt AS r 
+                LEFT JOIN user AS u ON r.user_id = u.id
+                LEFT JOIN cashbox AS c ON u.cashbox_id = c.id
+                ORDER BY r.created_time DESC 
+                LIMIT ? OFFSET ?;
+            """;
 
-    private static final String COUNT_RECEIPTS_SQL =
-            "SELECT COUNT(1) AS count " +
-                    "FROM receipt AS r LEFT JOIN user AS u ON r.user_id = u.id " +
-                    "LEFT JOIN cashbox AS c ON u.cashbox_id = c.id;";
 
-    public static final String FIND_RECEIPTS_BY_TELLER_WITH_PAGINATION_SQL =
-            "SELECT r.id, r.created_time, r.checkout_time, r.status, r.sum_total, r.user_id, " +
-                    "u.full_name, u.username, u.cashbox_id, " +
-                    "c.name, c.shift_status, c.shift_status_time " +
-                    "FROM receipt AS r LEFT JOIN user AS u ON r.user_id = u.id " +
-                    "LEFT JOIN cashbox AS c ON u.cashbox_id = c.id " +
-                    "WHERE u.id = ? AND c.shift_status = 'ACTIVE' AND " +
-                    "r.created_time >= c.shift_status_time " +
-                    "ORDER BY r.created_time DESC LIMIT ? OFFSET ?;";
+    private static final String COUNT_RECEIPTS_SQL = """
+                SELECT
+                    COUNT(1) AS count
+                FROM receipt AS r 
+                LEFT JOIN user AS u ON r.user_id = u.id
+                LEFT JOIN cashbox AS c ON u.cashbox_id = c.id;
+            """;
 
-    public static final String COUNT_RECEIPTS_BY_TELLER_SQL =
-            "SELECT COUNT(1) as count " +
-                    "FROM receipt AS r LEFT JOIN user AS u ON r.user_id = u.id " +
-                    "LEFT JOIN cashbox AS c ON u.cashbox_id = c.id " +
-                    "WHERE u.id = ? AND c.shift_status = 'ACTIVE' AND " +
-                    "r.created_time >= c.shift_status_time;";
 
-    private static final String FIND_RECEIPT_BY_ID_SQL =
-            "SELECT r.id, r.created_time, r.checkout_time, r.status, r.sum_total, r.user_id, " +
-                    "u.full_name, u.username, u.cashbox_id, " +
-                    "c.name, c.shift_status, c.shift_status_time " +
-                    "FROM receipt AS r LEFT JOIN user AS u ON r.user_id = u.id " +
-                    "LEFT JOIN cashbox AS c ON u.cashbox_id = c.id " +
-                    "WHERE r.id = ?;";
+    public static final String FIND_RECEIPTS_BY_TELLER_WITH_PAGINATION_SQL = """
+                SELECT 
+                    r.id, 
+                    r.created_time, 
+                    r.checkout_time, 
+                    r.status, 
+                    r.sum_total, 
+                    r.user_id, 
+                    u.full_name, 
+                    u.username, 
+                    u.cashbox_id,
+                    c.name, 
+                    c.shift_status, 
+                    c.shift_status_time
+                FROM receipt AS r 
+                LEFT JOIN user AS u ON r.user_id = u.id
+                LEFT JOIN cashbox AS c ON u.cashbox_id = c.id
+                WHERE 
+                    u.id = ? 
+                    AND c.shift_status = ?
+                    AND r.created_time >= c.shift_status_time
+                ORDER BY r.created_time DESC 
+                LIMIT ? OFFSET ?;
+            """;
 
-    private static final String FIND_RECEIPT_ITEMS_BY_RECEIPT_ID_SQL =
-            "SELECT ri.id, ri.name, ri.price, ri.amount_unit, ri.amount, " +
-                    "ri.product_id , p.code, p.amount_unit, p.amount_available, " +
-                    "p.category, p.details, p.name AS product_name, p.price AS product_price " +
-                    "FROM receipt_item AS ri LEFT JOIN product AS p ON ri.product_id = p.id " +
-                    "WHERE ri.receipt_id = ?;";
+    public static final String COUNT_RECEIPTS_BY_TELLER_SQL = """
+                SELECT 
+                    COUNT(1) AS count
+                FROM receipt AS r 
+                LEFT JOIN user AS u ON r.user_id = u.id
+                LEFT JOIN cashbox AS c ON u.cashbox_id = c.id
+                WHERE 
+                    u.id = ? 
+                    AND c.shift_status = ? 
+                    AND r.created_time >= c.shift_status_time;
+            """;
 
-    private static final String INSERT_RECEIPT_SQL =
-            "INSERT INTO receipt " +
-                    "(id, created_time, checkout_time, status, sum_total, user_id) " +
-                    "VALUES (?, ?, ?, ?, ?, ?);";
 
-    private static final String UPDATE_RECEIPT_SQL =
-            "UPDATE receipt " +
-                    "SET created_time = ?, checkout_time = ?, status = ?, " +
-                    "sum_total = ?, user_id = ? " +
-                    "WHERE id = ?;";
+    private static final String FIND_RECEIPT_BY_ID_SQL = """
+                SELECT 
+                    r.id, 
+                    r.created_time, 
+                    r.checkout_time, 
+                    r.status, 
+                    r.sum_total, 
+                    r.user_id,
+                    u.full_name, 
+                    u.username, 
+                    u.cashbox_id,
+                    c.name, 
+                    c.shift_status, 
+                    c.shift_status_time
+                FROM receipt AS r 
+                LEFT JOIN user AS u ON r.user_id = u.id
+                LEFT JOIN cashbox AS c ON u.cashbox_id = c.id
+                WHERE r.id = ?;
+            """;
 
-    private static final String INSERT_RECEIPT_ITEM_SQL =
-            "INSERT INTO receipt_item " +
-                    "(id, amount, amount_unit, name, price, receipt_id, product_id) " +
-                    "VALUES (?, ?, ?, ?, ?, ?, ?);";
 
-    private static final String UPDATE_RECEIPT_ITEM_SQL =
-            "UPDATE receipt_item " +
-                    "SET amount = ?, amount_unit = ?, name = ?, " +
-                    "price = ?, receipt_id = ?, product_id = ? " +
-                    "WHERE id = ?;";
+    private static final String FIND_RECEIPT_ITEMS_BY_RECEIPT_ID_SQL = """
+                SELECT 
+                    ri.id, 
+                    ri.name, 
+                    ri.price, 
+                    ri.amount_unit, 
+                    ri.amount,
+                    ri.product_id , 
+                    p.code, 
+                    p.amount_unit, 
+                    p.amount_available,
+                    p.category, 
+                    p.details, 
+                    p.name AS product_name, 
+                    p.price AS product_price
+                FROM receipt_item AS ri 
+                LEFT JOIN product AS p ON ri.product_id = p.id
+                WHERE ri.receipt_id = ?;
+            """;
 
-    private static final String GET_RECEIPTS_STAT_IN_ACTIVE_SHIFT_SQL =
-            "SELECT CASE WHEN SUM(r.sum_total) THEN SUM(r.sum_total) ELSE 0 END AS sum, " +
-                    "COUNT(*) AS count " +
-                    "FROM receipt AS r LEFT JOIN user AS u ON r.user_id = u.id " +
-                    "LEFT JOIN cashbox AS c ON u.cashbox_id = ? " +
-                    "WHERE c.shift_status = ? " +
-                    "AND r.created_time >= c.shift_status_time " +
-                    "AND r.status = ?;";
+    private static final String INSERT_RECEIPT_SQL = """
+                INSERT INTO receipt (
+                    id, 
+                    created_time, 
+                    checkout_time, 
+                    status, 
+                    sum_total, 
+                    user_id
+                    ) VALUES (?, ?, ?, ?, ?, ?);
+            """;
+
+
+    private static final String UPDATE_RECEIPT_SQL = """
+                UPDATE receipt
+                SET 
+                    created_time = ?, 
+                    checkout_time = ?, 
+                    status = ?,
+                    sum_total = ?, 
+                    user_id = ?
+                WHERE id = ?;
+            """;
+
+
+    private static final String INSERT_RECEIPT_ITEM_SQL = """
+                INSERT INTO receipt_item (
+                    id, 
+                    amount, 
+                    amount_unit, 
+                    name, 
+                    price, 
+                    receipt_id, 
+                    product_id
+                ) VALUES (?, ?, ?, ?, ?, ?, ?);
+            """;
+
+
+    private static final String UPDATE_RECEIPT_ITEM_SQL = """
+                UPDATE receipt_item
+                SET 
+                    amount = ?, 
+                    amount_unit = ?, 
+                    name = ?,
+                    price = ?, 
+                    receipt_id = ?, 
+                    product_id = ?
+                WHERE id = ?;
+            """;
+
+
+    private static final String GET_RECEIPTS_STAT_IN_ACTIVE_SHIFT_SQL = """
+            SELECT 
+                CASE 
+                    WHEN SUM(r.sum_total) THEN SUM(r.sum_total) 
+                    ELSE 0 
+                END AS sum,
+                COUNT(*) AS count
+            FROM receipt AS r 
+            LEFT JOIN user AS u ON r.user_id = u.id
+            LEFT JOIN cashbox AS c ON u.cashbox_id = ?
+            WHERE 
+                c.shift_status = ?
+                AND r.created_time >= c.shift_status_time
+                AND r.status = ?;
+            """;
 
     public List<Receipt> findAllWithPagination(int rowsLimit, int rowsOffset) {
         try (Connection connection = getConnection()) {
@@ -136,8 +239,9 @@ public class ReceiptDao {
             PreparedStatement statement =
                     connection.prepareStatement(FIND_RECEIPTS_BY_TELLER_WITH_PAGINATION_SQL);
             statement.setString(1, tellerId);
-            statement.setInt(2, rowsLimit);
-            statement.setInt(3, rowsOffset);
+            statement.setInt(2, ShiftStatus.ACTIVE.ordinal());
+            statement.setInt(3, rowsLimit);
+            statement.setInt(4, rowsOffset);
             ResultSet resultSet = statement.executeQuery();
             List<Receipt> result = new ArrayList<>();
             while (resultSet.next()) {
@@ -153,6 +257,7 @@ public class ReceiptDao {
         try (Connection connection = getConnection()) {
             PreparedStatement statement = connection.prepareStatement(COUNT_RECEIPTS_BY_TELLER_SQL);
             statement.setString(1, tellerId);
+            statement.setInt(2, ShiftStatus.ACTIVE.ordinal());
             ResultSet resultSet = statement.executeQuery();
             if (!resultSet.next()) {
                 throw new CashRegisterException("Can't count receipts by teller");
