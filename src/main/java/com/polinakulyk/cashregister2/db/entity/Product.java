@@ -5,6 +5,10 @@ import com.polinakulyk.cashregister2.db.dto.ProductAmountUnit;
 import java.math.BigDecimal;
 import java.util.StringJoiner;
 
+/**
+ * Represents a product in stock and holds appropriate information for purchasing product
+ * and keeping track of product amount available.
+ */
 public class Product {
     private String id;
     private String code;

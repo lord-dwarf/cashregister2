@@ -4,7 +4,7 @@ import static com.polinakulyk.cashregister2.controller.dto.HttpStatusCode.*;
 import static com.polinakulyk.cashregister2.util.Util.quote;
 
 /**
- * The exception to be thrown when user not authenticated or authrorized.
+ * The exception to be thrown when user not authenticated or authorized.
  */
 public class CashRegisterAuthorizationException extends CashRegisterException {
 

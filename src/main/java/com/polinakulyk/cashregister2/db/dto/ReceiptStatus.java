@@ -5,6 +5,10 @@ import java.util.Optional;
 
 import static com.polinakulyk.cashregister2.util.Util.quote;
 
+/**
+ * Receipt status is 'CREATED' after creating a receipt, after that the receipt can be
+ * either 'COMPLETED' or 'CANCELED'.
+ */
 public enum ReceiptStatus {
     CREATED,
     COMPLETED,

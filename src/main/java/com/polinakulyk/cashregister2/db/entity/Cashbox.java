@@ -5,6 +5,9 @@ import com.polinakulyk.cashregister2.db.dto.ShiftStatus;
 import java.time.LocalDateTime;
 import java.util.StringJoiner;
 
+/**
+ * Main purpose is to hold information about a shift (status and status change time).
+ */
 public class Cashbox {
     private String id;
     private String name;

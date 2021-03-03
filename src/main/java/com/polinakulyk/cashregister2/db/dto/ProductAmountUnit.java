@@ -8,6 +8,9 @@ import static com.polinakulyk.cashregister2.util.Util.quote;
 
 import static java.util.Arrays.stream;
 
+/**
+ * Product amount unit and utility method to get it from String or Integer.
+ */
 public enum ProductAmountUnit {
     UNIT,
     KILO;

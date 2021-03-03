@@ -2,7 +2,7 @@ package com.polinakulyk.cashregister2.db.mapper;
 
 import com.polinakulyk.cashregister2.db.entity.Cashbox;
 import com.polinakulyk.cashregister2.db.entity.User;
-import com.polinakulyk.cashregister2.security.dto.UserRole;
+import com.polinakulyk.cashregister2.db.dto.UserRole;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -10,6 +10,9 @@ import java.sql.SQLException;
 import static com.polinakulyk.cashregister2.db.DbHelper.getLocalDateTime;
 import static com.polinakulyk.cashregister2.db.dto.ShiftStatus.fromExistingInteger;
 
+/**
+ * Extracts {@link User} from result set.
+ */
 public class UserMapper {
 
     private static final String USER_ID = "id";
@@ -27,7 +30,7 @@ public class UserMapper {
         throw new UnsupportedOperationException("Cannot instantiate");
     }
 
-    public static User getUser(ResultSet rs) throws SQLException {
+    public static User getUserWithCashbox(ResultSet rs) throws SQLException {
         var user = new User()
                 .setId(rs.getString((USER_ID)))
                 .setUsername(rs.getString(USER_USERNAME))

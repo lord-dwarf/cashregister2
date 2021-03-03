@@ -1,11 +1,14 @@
 package com.polinakulyk.cashregister2.db.entity;
 
-import com.polinakulyk.cashregister2.security.dto.UserRole;
+import com.polinakulyk.cashregister2.db.dto.UserRole;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.StringJoiner;
 
+/**
+ * Holds one of {@link UserRole}.
+ */
 public class User {
     private String id;
     private String username;

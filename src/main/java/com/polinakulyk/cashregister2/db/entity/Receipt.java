@@ -10,6 +10,10 @@ import java.util.StringJoiner;
 
 import static com.polinakulyk.cashregister2.db.DbHelper.calcReceiptCode;
 
+/**
+ * Receipt for purchasing products, consists of {@link ReceiptItem}-s and also holds
+ * information about {@link ReceiptStatus}.
+ */
 public class Receipt {
     private String id;
     private LocalDateTime createdTime;

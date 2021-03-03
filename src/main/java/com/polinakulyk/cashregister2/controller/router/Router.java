@@ -6,7 +6,7 @@ import com.polinakulyk.cashregister2.controller.command.BiCommand;
 import com.polinakulyk.cashregister2.controller.command.Command;
 import com.polinakulyk.cashregister2.controller.command.JspCommand;
 import com.polinakulyk.cashregister2.exception.DuplicateRouteException;
-import com.polinakulyk.cashregister2.security.dto.UserRole;
+import com.polinakulyk.cashregister2.db.dto.UserRole;
 
 import java.util.AbstractMap.SimpleEntry;
 import java.util.Map;

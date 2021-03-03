@@ -110,10 +110,20 @@ public final class Util {
         return date.toInstant().atZone(zoneId()).toLocalDateTime();
     }
 
+    /**
+     * UTC ZoneId.
+     *
+     * @return
+     */
     public static ZoneId zoneId() {
         return ZoneId.of("Z");
     }
 
+    /**
+     * UTC TimeZone.
+     *
+     * @return
+     */
     public static TimeZone timeZone() {
         return TimeZone.getTimeZone(zoneId());
     }

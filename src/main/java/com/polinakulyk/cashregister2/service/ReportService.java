@@ -14,6 +14,10 @@ import org.slf4j.LoggerFactory;
 
 import static com.polinakulyk.cashregister2.util.Util.now;
 
+/**
+ * Report service that generates {@link ReportKind#X} and {@link ReportKind#Z} reports
+ * for a {@link Cashbox}.
+ */
 public class ReportService {
 
     private static final Logger log = LoggerFactory.getLogger(ReportService.class);
@@ -22,10 +26,17 @@ public class ReportService {
     private final CashboxService cashboxService = new CashboxService();
     private final ReceiptDao receiptDao = new ReceiptDao();
 
+    /**
+     * Creates a specific report depending on a given {@link ReportKind}.
+     *
+     * @param userId
+     * @param reportKind
+     * @return
+     */
     public XZReportResponseDto createXZReport(String userId, ReportKind reportKind) {
-        try (Transactional t = Transactional.beginOrContinueTransaction()) {
-            log.debug("BEGIN Create XZ report by user: '{}', of report kind: '{}'", userId, reportKind);
+        log.debug("BEGIN Create XZ report by user: '{}', of report kind: '{}'", userId, reportKind);
 
+        try (Transactional t = Transactional.beginOrContinueTransaction()) {
             User user = userService.findExistingById(userId);
             Cashbox cashbox = user.getCashbox();
             LocalDateTime shiftStartTime = cashbox.getShiftStatusTime();

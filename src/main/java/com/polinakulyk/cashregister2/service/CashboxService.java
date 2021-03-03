@@ -18,6 +18,12 @@ import static com.polinakulyk.cashregister2.util.Util.*;
 import static com.polinakulyk.cashregister2.util.Util.quote;
 import static java.lang.String.format;
 
+/**
+ * Cashbox service.
+ * <p>
+ * The existence of {@link Cashbox} entity allows us to keep track of a current shift status.
+ * Currently, application uses a single cash box, but can be extended to use multiple cash boxes.
+ */
 public class CashboxService {
 
     private static final Logger log = LoggerFactory.getLogger(CashboxService.class);
@@ -25,9 +31,15 @@ public class CashboxService {
     private final CashboxDao cashboxDao = new CashboxDao();
     private final UserService userService = new UserService();
 
+    /**
+     * Update {@link Cashbox} shift status to {@link ShiftStatus#INACTIVE}.
+     *
+     * @param userId
+     * @return
+     */
     public ShiftStatusSummaryResponseDto deactivateShift(String userId) {
+        log.debug("BEGIN Deactivate shift by user: '{}'", userId);
         try (Transactional t = Transactional.beginOrContinueTransaction()) {
-            log.debug("BEGIN Deactivate shift by user: '{}'", userId);
 
             User user = userService.findExistingById(userId);
 

@@ -7,6 +7,12 @@ import java.util.StringJoiner;
 
 import static com.polinakulyk.cashregister2.db.DbHelper.calcCostByPriceAndAmount;
 
+/**
+ * Represents receipt item added to {@link Receipt}, holds a copy of the appropriate
+ * product details at the point of adding receipt item to receipt. This provides means
+ * to edit product information, in particular price, regardless of already created
+ * receipts (and products that are linked to their receipt items).
+ */
 public class ReceiptItem {
     private String id;
     private Receipt receipt;

@@ -60,7 +60,7 @@ public class UserDao {
             if (!resultSet.next()) {
                 return Optional.empty();
             }
-            User user = UserMapper.getUser(resultSet);
+            User user = UserMapper.getUserWithCashbox(resultSet);
             return Optional.of(user);
         } catch (SQLException e) {
             throw new CashRegisterException(quote("Can't query user by id", userId), e);
@@ -75,7 +75,7 @@ public class UserDao {
             if (!resultSet.next()) {
                 return Optional.empty();
             }
-            User user = UserMapper.getUser(resultSet);
+            User user = UserMapper.getUserWithCashbox(resultSet);
             return Optional.of(user);
         } catch (SQLException e) {
             throw new CashRegisterException(

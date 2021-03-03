@@ -6,6 +6,9 @@ import com.polinakulyk.cashregister2.db.entity.Product;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+/**
+ * Extracts {@link Product} from result set.
+ */
 public class ProductMapper {
 
     private static final String PRODUCT_ID = "id";

@@ -1,10 +1,13 @@
 package com.polinakulyk.cashregister2.db;
 
+import com.polinakulyk.cashregister2.config.Config;
+
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 import java.sql.Connection;
 import java.sql.SQLException;
 
+import static com.polinakulyk.cashregister2.config.Config.getConfig;
 import static com.polinakulyk.cashregister2.util.Util.getProperties;
 import static com.polinakulyk.cashregister2.util.Util.getPropertyNotBlank;
 
@@ -23,23 +26,18 @@ public final class ConnectionPool {
 
     private ConnectionPool() {
 
-        // get date source properties
-        var properties = getProperties();
-        var datasourceUrl = getPropertyNotBlank(properties, "datasource.url");
-        var datasourceUsername =
-                getPropertyNotBlank(properties, "datasource.username");
-        var datasourcePassword =
-                getPropertyNotBlank(properties, "datasource.password");
+        // get application config instance
+        var config = getConfig();
 
         // create connection pool config
         var connPoolConfig = new HikariConfig();
-        connPoolConfig.setJdbcUrl(datasourceUrl);
+        connPoolConfig.setJdbcUrl(config.getDatasourceUrl());
         connPoolConfig.setDriverClassName("com.mysql.cj.jdbc.Driver");
-        connPoolConfig.setUsername(datasourceUsername);
-        connPoolConfig.setPassword(datasourcePassword);
-        connPoolConfig.setAutoCommit(true); // transactions disabled by default
-        connPoolConfig.setConnectionTimeout(5000);
-        connPoolConfig.setMaximumPoolSize(50);
+        connPoolConfig.setUsername(config.getDatasourceUsername());
+        connPoolConfig.setPassword(config.getDatasourcePassword());
+        connPoolConfig.setConnectionTimeout(config.getDbpoolTimeout());
+        connPoolConfig.setMaximumPoolSize(config.getDbpoolSize());
+        connPoolConfig.setAutoCommit(true);
 
         // create connection pool
         connPool = new HikariDataSource(connPoolConfig);

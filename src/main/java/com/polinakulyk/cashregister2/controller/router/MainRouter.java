@@ -52,12 +52,12 @@ import static com.polinakulyk.cashregister2.controller.dto.HttpRoute.RECEIPTS_VI
 import static com.polinakulyk.cashregister2.controller.dto.HttpRoute.REPORTS_LIST;
 import static com.polinakulyk.cashregister2.controller.dto.HttpRoute.REPORTS_X;
 import static com.polinakulyk.cashregister2.controller.dto.HttpRoute.REPORTS_Z;
-import static com.polinakulyk.cashregister2.security.dto.UserRole.GUEST;
-import static com.polinakulyk.cashregister2.security.dto.UserRole.MERCH;
-import static com.polinakulyk.cashregister2.security.dto.UserRole.SR_TELLER;
-import static com.polinakulyk.cashregister2.security.dto.UserRole.any;
-import static com.polinakulyk.cashregister2.security.dto.UserRole.authenticated;
-import static com.polinakulyk.cashregister2.security.dto.UserRole.tellers;
+import static com.polinakulyk.cashregister2.db.dto.UserRole.GUEST;
+import static com.polinakulyk.cashregister2.db.dto.UserRole.MERCH;
+import static com.polinakulyk.cashregister2.db.dto.UserRole.SR_TELLER;
+import static com.polinakulyk.cashregister2.db.dto.UserRole.any;
+import static com.polinakulyk.cashregister2.db.dto.UserRole.authenticated;
+import static com.polinakulyk.cashregister2.db.dto.UserRole.tellers;
 
 /**
  * The single source of routes and authorization access control in the application.

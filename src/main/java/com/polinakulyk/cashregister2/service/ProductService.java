@@ -1,8 +1,8 @@
 package com.polinakulyk.cashregister2.service;
 
 import com.polinakulyk.cashregister2.db.Transactional;
-import com.polinakulyk.cashregister2.db.entity.Product;
 import com.polinakulyk.cashregister2.db.dao.ProductDao;
+import com.polinakulyk.cashregister2.db.entity.Product;
 import com.polinakulyk.cashregister2.exception.CashRegisterEntityNotFoundException;
 import com.polinakulyk.cashregister2.service.dto.ProductFilterKind;
 
@@ -15,8 +15,10 @@ import org.slf4j.LoggerFactory;
 import static com.polinakulyk.cashregister2.util.Util.quote;
 
 import static java.util.stream.Collectors.toList;
-import static java.util.stream.StreamSupport.stream;
 
+/**
+ * Product service.
+ */
 public class ProductService {
 
     private static final Logger log = LoggerFactory.getLogger(ProductService.class);
@@ -72,7 +74,15 @@ public class ProductService {
         }
     }
 
+    /**
+     * Updates product (not upserts).
+     *
+     * @param product
+     * @return
+     */
     public boolean update(Product product) {
+        log.debug("BEGIN Update product with id: '{}'", product.getId());
+
         try (Transactional t = Transactional.beginOrContinueTransaction()) {
             var isUpdated = productDao.update(product);
 
@@ -82,12 +92,20 @@ public class ProductService {
             }
 
             t.commitIfNeeded();
-            log.debug("DONE Update product with id: {}", product.getId());
+            log.info("DONE Update product with id: {}", product.getId());
 
             return true;
         }
     }
 
+    /**
+     * Provides list of products selected by a given filter. The product field for filtering
+     * depends on a supplied product filter kind.
+     *
+     * @param filterKind
+     * @param filterValue
+     * @return
+     */
     public List<Product> findByFilter(ProductFilterKind filterKind, String filterValue) {
         Pattern filterPattern = Pattern.compile(filterValue + ".*", Pattern.CASE_INSENSITIVE);
 

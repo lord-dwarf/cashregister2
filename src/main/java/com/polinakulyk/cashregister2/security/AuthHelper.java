@@ -1,9 +1,11 @@
 package com.polinakulyk.cashregister2.security;
 
+import com.polinakulyk.cashregister2.config.Config;
 import com.polinakulyk.cashregister2.db.entity.User;
 import com.polinakulyk.cashregister2.exception.CashRegisterAuthorizationException;
 import com.polinakulyk.cashregister2.exception.CashRegisterException;
-import com.polinakulyk.cashregister2.security.dto.UserRole;
+import com.polinakulyk.cashregister2.db.dto.UserRole;
+import com.polinakulyk.cashregister2.util.Util;
 
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
@@ -15,7 +17,8 @@ import javax.crypto.spec.PBEKeySpec;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
-import static com.polinakulyk.cashregister2.security.dto.UserRole.GUEST;
+import static com.polinakulyk.cashregister2.config.Config.getConfig;
+import static com.polinakulyk.cashregister2.db.dto.UserRole.GUEST;
 import static com.polinakulyk.cashregister2.util.Util.getProperties;
 import static com.polinakulyk.cashregister2.util.Util.getPropertyNotBlank;
 import static com.polinakulyk.cashregister2.util.Util.toBase64;
@@ -30,26 +33,26 @@ public final class AuthHelper {
 
     private static final String SESSION_AUTHENTICATED_USER_ATTR = "authenticatedUser";
 
-    private static final String PASSWORD_SALT;
-
-    static {
-
-        // init password salt field via application.properties
-        var properties = getProperties();
-        PASSWORD_SALT = toBase64(getPropertyNotBlank(properties, "cashregister.auth.salt"));
-    }
-
     private AuthHelper() {
         throw new UnsupportedOperationException("Can not instantiate");
     }
 
+    /**
+     * Gets standard Java KDF encoder for password encoding, with a reasonably secure complexity
+     * of execution (iteration count params), and encodes password + salt.
+     *
+     * @param password
+     * @return
+     */
     public static String encodePassword(String password) {
         KeySpec spec = new PBEKeySpec(
                 password.toCharArray(),
-                PASSWORD_SALT.getBytes(UTF_8),
+                // get salt from config
+                toBase64(getConfig().getCashregisterAuthSalt()).getBytes(UTF_8),
                 65536,
                 128);
         try {
+            // get standard Java password encoder
             var passwordEncoder = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA1");
             return toBase64(passwordEncoder.generateSecret(spec).getEncoded());
         } catch (NoSuchAlgorithmException | InvalidKeySpecException e) {
@@ -57,16 +60,35 @@ public final class AuthHelper {
         }
     }
 
+    /**
+     * Determines whether the given password matches a KDF-encoded password.
+     *
+     * @param password
+     * @param expectedEncodedPassword
+     * @return
+     */
     public static boolean isUserPasswordMatches(String password, String expectedEncodedPassword) {
         return encodePassword(password).equals(expectedEncodedPassword);
     }
 
+    /**
+     * Either gets an existing session or creates a new one and then puts user into it.
+     *
+     * @param user
+     * @param request
+     */
     public static void putUserIntoSession(User user, HttpServletRequest request) {
         HttpSession session = request.getSession(true);
+        // do not keep user password in cleartext
         user.setPassword("");
         session.setAttribute(SESSION_AUTHENTICATED_USER_ATTR, user);
     }
 
+    /**
+     * For an existing session clean up the authenticated user.
+     *
+     * @param request
+     */
     public static void removeUserFromSessionIfNeeded(HttpServletRequest request) {
         HttpSession session = request.getSession(false);
         if (session != null) {

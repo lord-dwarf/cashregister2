@@ -32,6 +32,9 @@ import static com.polinakulyk.cashregister2.util.Util.now;
 import static com.polinakulyk.cashregister2.util.Util.quote;
 import static com.polinakulyk.cashregister2.util.Util.subtract;
 
+/**
+ * Receipt service, which also includes receipt items logic.
+ */
 public class ReceiptService {
 
     private static final Logger log = LoggerFactory.getLogger(ReceiptService.class);
@@ -40,6 +43,13 @@ public class ReceiptService {
     private final ProductService productService = new ProductService();
     private final UserService userService = new UserService();
 
+    /**
+     * List receipts according to a given page and number of rows per page.
+     *
+     * @param page
+     * @param rowsPerPage
+     * @return
+     */
     public List<Receipt> findWithPagination(int page, int rowsPerPage) {
         var receipts = receiptDao.findAllWithPagination(
                 rowsPerPage, (page - 1) * rowsPerPage);
@@ -48,6 +58,11 @@ public class ReceiptService {
         return receipts;
     }
 
+    /**
+     * Get total number of receipts (to calculate number of pages for pagination).
+     *
+     * @return
+     */
     public int count() {
         var receiptsTotal = receiptDao.count();
 
@@ -55,6 +70,14 @@ public class ReceiptService {
         return receiptsTotal;
     }
 
+    /**
+     * List receipts that belong to a concrete teller, according to a given page
+     * and number of rows per page.
+     *
+     * @param page
+     * @param rowsPerPage
+     * @return
+     */
     public List<Receipt> findByTellerWithPagination(String tellerId, int page, int rowsPerPage) {
 
         // filter teller's receipts that belong to the active shift, with pagination
@@ -66,6 +89,12 @@ public class ReceiptService {
         return receipts;
     }
 
+    /**
+     * Get total number of receipts that belong to a concrete teller
+     * (to calculate number of pages for pagination).
+     *
+     * @return
+     */
     public int countByTeller(String tellerId) {
         var receiptsTotal = receiptDao.countByTeller(tellerId);
 
@@ -95,9 +124,17 @@ public class ReceiptService {
         }
     }
 
+    /**
+     * Creates a new receipt.
+     *
+     * @param tellerId
+     * @return
+     */
     public Receipt createReceipt(String tellerId) {
+        log.debug("BEGIN Create receipt by user: '{}'", tellerId);
+
         try (Transactional t = Transactional.beginOrContinueTransaction()) {
-            log.debug("BEGIN Create receipt by user: '{}'", tellerId);
+
             User user = userService.findExistingById(tellerId);
 
             validateIsUserShiftActive(user);
@@ -116,17 +153,25 @@ public class ReceiptService {
         }
     }
 
+    /**
+     * Add receipt item to a given receipt, based on item product details.
+     *
+     * @param userId
+     * @param receiptId
+     * @param receiptItemProductId
+     * @param receiptItemAmount
+     * @return
+     */
     public Receipt addReceiptItem(
             String userId,
             String receiptId,
             String receiptItemProductId,
             BigDecimal receiptItemAmount
     ) {
+        log.debug("BEGIN Add receipt item by user: '{}', in receipt: '{}', for product: '{}'",
+                userId, receiptId, receiptItemProductId);
+
         try (Transactional t = Transactional.beginOrContinueTransaction()) {
-
-            log.debug("BEGIN Add receipt item by user: '{}', in receipt: '{}', for product: '{}'",
-                    userId, receiptId, receiptItemProductId);
-
             Receipt receipt = findExistingById(receiptId);
 
             validateShiftStatus(receipt);
@@ -184,10 +229,19 @@ public class ReceiptService {
         }
     }
 
+    /**
+     * Completes a given receipt.
+     *
+     * Important: at this point amount of products available may change depending on receipt items.
+     *
+     * @param userId
+     * @param receiptId
+     * @return
+     */
     public Receipt completeReceipt(String userId, String receiptId) {
-        try (Transactional t = Transactional.beginOrContinueTransaction()) {
-            log.debug("BEGIN Complete receipt by user: '{}', receipt: '{}'", userId, receiptId);
+        log.debug("BEGIN Complete receipt by user: '{}', receipt: '{}'", userId, receiptId);
 
+        try (Transactional t = Transactional.beginOrContinueTransaction()) {
             Receipt receipt = findExistingById(receiptId);
 
             validateShiftStatus(receipt);
@@ -222,10 +276,19 @@ public class ReceiptService {
         }
     }
 
+    /**
+     * Cancels a given receipt.
+     *
+     * Important: at this point amount of products available may change depending on receipt items.
+     *
+     * @param userId
+     * @param receiptId
+     * @return
+     */
     public Receipt cancelReceipt(String userId, String receiptId) {
-        try (Transactional t = Transactional.beginOrContinueTransaction()) {
-            log.debug("BEGIN Cancel receipt by user: '{}', receipt: '{}'", userId, receiptId);
+        log.debug("BEGIN Cancel receipt by user: '{}', receipt: '{}'", userId, receiptId);
 
+        try (Transactional t = Transactional.beginOrContinueTransaction()) {
             Receipt receipt = findExistingById(receiptId);
 
             validateShiftStatus(receipt);
@@ -262,7 +325,6 @@ public class ReceiptService {
     }
 
     private static void validateShiftStatus(Receipt receipt) {
-
         // user shift must be active, receipt must belong to an active shift
         validateIsUserShiftActive(receipt.getUser());
         validateIsReceiptInActiveShift(receipt);

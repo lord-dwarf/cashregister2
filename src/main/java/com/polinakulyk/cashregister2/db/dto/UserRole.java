@@ -1,12 +1,18 @@
-package com.polinakulyk.cashregister2.security.dto;
+package com.polinakulyk.cashregister2.db.dto;
 
 import com.polinakulyk.cashregister2.exception.CashRegisterException;
+
 import java.util.Optional;
 import java.util.Set;
 
 import static com.polinakulyk.cashregister2.util.Util.quote;
+
 import static java.util.Arrays.stream;
 
+/**
+ * Used to implement access control in the application, non-authenticated user is assumed
+ * to have a 'GUEST' role.
+ */
 public enum UserRole {
     MERCH,
     TELLER,
@@ -23,7 +29,7 @@ public enum UserRole {
      */
     public static Optional<UserRole> fromString(String userRoleStr) {
         return stream(values())
-                .filter((userRole) -> userRole.name().equalsIgnoreCase(userRoleStr))
+                .filter(userRole -> userRole.name().equalsIgnoreCase(userRoleStr))
                 .findFirst();
     }
 
@@ -35,7 +41,7 @@ public enum UserRole {
      */
     public static Optional<UserRole> fromInteger(Integer userRoleInt) {
         return stream(values())
-                .filter((userRole) -> userRole.ordinal() == userRoleInt)
+                .filter(userRole -> userRole.ordinal() == userRoleInt)
                 .findFirst();
     }
 

@@ -15,16 +15,10 @@ import java.sql.SQLException;
 import static com.polinakulyk.cashregister2.db.DbHelper.getLocalDateTime;
 import static com.polinakulyk.cashregister2.db.DbHelper.getLocalDateTimeNullable;
 
+/**
+ * Extracts {@link Receipt} and {@link ReceiptItem} from result set.
+ */
 public class ReceiptMapper {
-
-    private static final String USER_ID = "user_id";
-    private static final String USER_FULL_NAME = "full_name";
-    private static final String USER_USERNAME = "username";
-
-    private static final String CASHBOX_ID = "id";
-    private static final String CASHBOX_NAME = "name";
-    private static final String CASHBOX_SHIFT_STATUS = "shift_status";
-    private static final String CASHBOX_SHIFT_STATUS_TIME = "shift_status_time";
 
     private static final String RECEIPT_ID = "id";
     private static final String RECEIPT_CREATED_TIME = "created_time";
@@ -37,6 +31,15 @@ public class ReceiptMapper {
     private static final String RECEIPT_ITEM_PRICE = "price";
     private static final String RECEIPT_ITEM_AMOUNT_UNIT = "amount_unit";
     private static final String RECEIPT_ITEM_AMOUNT = "amount";
+
+    private static final String USER_ID = "user_id";
+    private static final String USER_FULL_NAME = "full_name";
+    private static final String USER_USERNAME = "username";
+
+    private static final String CASHBOX_ID = "cashbox_id";
+    private static final String CASHBOX_NAME = "name";
+    private static final String CASHBOX_SHIFT_STATUS = "shift_status";
+    private static final String CASHBOX_SHIFT_STATUS_TIME = "shift_status_time";
 
     private static final String PRODUCT_ID = "product_id";
     private static final String PRODUCT_CODE = "code";

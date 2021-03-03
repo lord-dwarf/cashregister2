@@ -5,6 +5,12 @@ import java.util.Optional;
 
 import static com.polinakulyk.cashregister2.util.Util.quote;
 
+/**
+ * Shift status of a {@link com.polinakulyk.cashregister2.db.entity.Cashbox}
+ * is 'ACTIVE' at the beginning. Generation of
+ * {@link com.polinakulyk.cashregister2.service.dto.ReportKind#Z} kind of report
+ * sets status to 'INACTIVE'.
+ */
 public enum ShiftStatus {
     ACTIVE,
     INACTIVE;
