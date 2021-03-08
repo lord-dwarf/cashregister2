@@ -1,11 +1,9 @@
 package com.polinakulyk.cashregister2.security;
 
-import com.polinakulyk.cashregister2.config.Config;
+import com.polinakulyk.cashregister2.db.dto.UserRole;
 import com.polinakulyk.cashregister2.db.entity.User;
 import com.polinakulyk.cashregister2.exception.CashRegisterAuthorizationException;
 import com.polinakulyk.cashregister2.exception.CashRegisterException;
-import com.polinakulyk.cashregister2.db.dto.UserRole;
-import com.polinakulyk.cashregister2.util.Util;
 
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
@@ -19,8 +17,6 @@ import javax.servlet.http.HttpSession;
 
 import static com.polinakulyk.cashregister2.config.Config.getConfig;
 import static com.polinakulyk.cashregister2.db.dto.UserRole.GUEST;
-import static com.polinakulyk.cashregister2.util.Util.getProperties;
-import static com.polinakulyk.cashregister2.util.Util.getPropertyNotBlank;
 import static com.polinakulyk.cashregister2.util.Util.toBase64;
 
 import static java.nio.charset.StandardCharsets.UTF_8;

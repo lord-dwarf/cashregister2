@@ -1,6 +1,5 @@
 package com.polinakulyk.cashregister2.db.dao;
 
-import com.polinakulyk.cashregister2.db.DbHelper;
 import com.polinakulyk.cashregister2.db.Transactional;
 import com.polinakulyk.cashregister2.db.entity.Cashbox;
 import com.polinakulyk.cashregister2.exception.CashRegisterException;
